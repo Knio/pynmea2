@@ -19,7 +19,7 @@ Parsing
 -------
 
 You can parse individual NMEA sentences using the `parse()` function, which takes a string containing a
-NMEA 0183 sentence and returns a `NMEASentence` object. Note that a leading '$' and trailing whitespace
+NMEA 0183 sentence and returns a `NMEASentence` object. Note that the leading '$' is optional and trailing whitespace is ingored when parsing a sentence.
 
 Example:
 
@@ -85,6 +85,26 @@ and generate a NMEA string from a `NMEASentence` object:
 
     >>> str(msg)
     '$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,100.00,M,-33.9,M,,0000*6D'
+
+
+Streaming
+---------
+
+`pynmea2` can also process streams of NMEA sentences like so, by feeding chunks of data
+manually:
+
+    streamreader = pynmea2.NMEAStreamReader()
+    while 1:
+        data = input.read()
+        for msg in streamreader.next(data):
+            print msg
+
+or given a file-like device, automatically:
+
+    streamreader = pynmea2.NMEAStreamReader(input)
+    while 1:
+        for msg in streamreader.next():
+            print msg
 
 
 Testing

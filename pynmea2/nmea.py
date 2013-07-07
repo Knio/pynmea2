@@ -29,13 +29,13 @@ class NMEASentence(object):
     _sentence_types = {}
 
     _re = re.compile('''
-        ^\$?
+        ^[^$]*\$?
         (?P<nmea_str>
             (?P<talker>\w{2})
             (?P<sentence_type>\w{3}),
             (?P<data>[^*]+)
         )(?:\\*(?P<checksum>[A-F0-9]{2}))
-        (?:\\\r\\\n)?
+        [\\\r\\\n]*
         ''', re.X | re.IGNORECASE)
 
     @staticmethod
