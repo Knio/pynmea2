@@ -9,6 +9,15 @@ def timestamp(s):
         minute=int(s[2:4]),
         second=int(s[4:6]))
 
+
+def datestamp(s):
+    '''
+    Converts a datestamp given in "DDMMYY" ASCII format to a
+    datetime.datetime object
+    '''
+    return datetime.datetime.strptime(s, '%d%m%y')
+
+
 import re
 def dm_to_sd(dm):
     '''
