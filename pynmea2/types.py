@@ -357,7 +357,7 @@ class RMC(NMEASentence, LatLonFix):
         ("Longitude Direction", "lon_dir"),
         ("Speed Over Ground", "spd_over_grnd", float),
         ("True Course", "true_course", float),
-        ("Datestamp", "datestamp"),
+        ("Datestamp", "datestamp", datestamp),
         ("Magnetic Variation", "mag_variation"),
         ("Magnetic Variation Direction", "mag_var_dir")
     )
