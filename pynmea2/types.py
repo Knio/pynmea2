@@ -201,13 +201,13 @@ class BWW(NMEASentence):
         ("Origin Waypoint ID", "waypoint_id_orig")
     )
 
-class GLL(NMEASentence):
+class GLL(NMEASentence, LatLonFix):
     fields = (
         ('Latitude', 'lat'),
         ('Latitude Direction', 'lat_dir'),
         ('Longitude', 'lon'),
         ('Longitude Direction', 'lon_dir'),
-        ('Timestamp', 'timestamp'),
+        ('Timestamp', 'timestamp', timestamp),
         ('Data Validity', "data_valid"),
         ("FAA mode indicator", "faa_mode")
     )

@@ -55,7 +55,7 @@ class NMEASentence(object):
         '''
         match = NMEASentence._re.match(data)
         if not match:
-            raise ValueError('could not parse data')
+            raise ValueError('could not parse data: %r' % data)
 
         nmea_str        = match.group('nmea_str')
         talker          = match.group('talker').upper()

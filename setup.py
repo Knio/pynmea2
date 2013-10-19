@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='pynmea2',
-    version='0.1',
+    version='0.2',
     description='Python library for the NMEA 0183 protcol',
     url='https://github.com/Knio/pynmea2',
     author='Tom Flanagan',
