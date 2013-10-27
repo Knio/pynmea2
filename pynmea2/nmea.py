@@ -85,6 +85,8 @@ class NMEASentence(object):
         f = t.fields[i]
         v = self.data[i]
         if len(f) >= 3:
+            if v == '':
+                return None
             return f[2](v)
         else:
             return v

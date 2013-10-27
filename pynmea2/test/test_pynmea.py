@@ -20,6 +20,10 @@ def test_mixin():
     assert msg.longitude == 24.1751
 
 
+def test_missing():
+    msg = pynmea2.parse("$GPVTG,108.53,T,,M,0.04,N,0.07,K,A*31")
+    assert msg.mag_track == None
+
 #
 # ^o^
 #       |\    ship it!
