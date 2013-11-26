@@ -585,7 +585,7 @@ class VLW(NMEASentence):
         ('Trip distance nautical miles since reset','trip_distance_reset_miles'),
 
     )
-# ---------------------------------- Not Yet Implimented --------------------- #
+# ---------------------------------- Not Yet Implemented --------------------- #
 # ---------------------------------------------------------------------------- #
 
 
