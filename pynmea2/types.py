@@ -515,7 +515,7 @@ class MWV(NMEASentence):
     bow/centerline.
     """
     fields = (
-        ("Wind angle","wind_angle", Decimal), #in relation to vessels centerline
+        ("Wind angle","wind_angle", Decimal), #in relation to vessel's centerline
         ("Reference","reference"), # relative (R)/true(T)
         ("Wind speed","wind_speed", Decimal),
         ("Wind speed units","wind_speed_units"), # K/M/N
