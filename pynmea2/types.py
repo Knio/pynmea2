@@ -516,7 +516,7 @@ class MWV(NMEASentence):
     """
     fields = (
         ("Wind angle","wind_angle", Decimal), #in relation to vessels centerline
-        ("Reference","reference"), # relative (R)/theoretical(T)
+        ("Reference","reference"), # relative (R)/true(T)
         ("Wind speed","wind_speed", Decimal),
         ("Wind speed units","wind_speed_units"), # K/M/N
         ("Status","status"),
