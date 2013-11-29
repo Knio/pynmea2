@@ -38,6 +38,21 @@ class NMEASentence(object):
         [\\\r\\\n]*
         ''', re.X | re.IGNORECASE)
 
+    # This regex shoehorns a generic proprietary sentence match into
+    # the existing parser to avoid duplicating code. Thus the `talker`
+    # and `checksum` groups are always empty dummy matches to ensure
+    # the remainder of the parsing code can be used with minimal
+    # changes.
+    _re_proprietary = re.compile('''
+        ^[^$]*\$?
+        (?P<nmea_str>
+            (?P<talker>)
+            (?P<sentence_type>P)
+            (?P<data>(?P<manufacturer>\w{3})[^$]+)
+        )(?:\\*(?P<checksum>))?
+        [\\\r\\\n]*
+        ''', re.X | re.IGNORECASE)
+
     @staticmethod
     def checksum(nmea_str):
         return reduce(operator.xor, map(ord, nmea_str), 0)
@@ -50,17 +65,23 @@ class NMEASentence(object):
         Parses a string representing a NMEA 0183 sentence, and returns a
         NMEASentence object
 
+        A proprietary sentence without a custom implementation is
+        returned as an instance of a generic proprietary sentence class.
+
         Raises ValueError if the string could not be parsed, or if the checksum
         did not match.
+
+        Note: A checksum check is not performed for proprietary
+              sentences without a custom implementation.
         '''
-        match = NMEASentence._re.match(data)
+        match = NMEASentence._re.match(data) or NMEASentence._re_proprietary.match(data)
         if not match:
             raise ValueError('could not parse data: %r' % data)
 
         nmea_str        = match.group('nmea_str')
         talker          = match.group('talker').upper()
         sentence_type   = match.group('sentence_type').upper()
-        data            = match.group('data').split(',')
+        data            = match.group('data').split(',') if sentence_type != "P" else (match.group('data'),)
         checksum        = match.group('checksum')
 
         if checksum:
