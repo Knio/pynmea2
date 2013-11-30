@@ -585,6 +585,78 @@ class VLW(NMEASentence):
         ('Trip distance nautical miles since reset','trip_distance_reset_miles'),
 
     )
+
+
+class Transducer:
+    """
+    """
+    def __init__(self, transducer_type, data, units, transducer_id):
+        """
+        """
+        self.type = transducer_type
+        self.data = Decimal(data)
+        self.units = units
+        self.id = transducer_id
+
+    def __repr__(self):
+        """
+        """
+        return "Transducer('%s', '%s', '%s', '%s')" % (self.type, self.data, self.units, self.id)
+
+
+class XDR(NMEASentence):
+    """ Transducer Measurements
+    """
+    fields = ()
+
+    def __init__(self, talker, sentence_type, *data):
+        """
+        """
+        super(XDR, self).__init__(talker, sentence_type, *data)
+
+        self.transducers = []
+
+        self.data = list(self.data) # So we can use pop, below.
+
+        # We *should* be able to just check self.data isn't empty here
+        # but the LCJ Capteurs test data includes an extra comma which
+        # indicates an extra field--which there shouldn't be. If this
+        # happens we just leave the orphan in self.data and hope it
+        # doesn't break anything else.
+        while len(self.data) >= 4:
+            self.transducers.append(Transducer(self.data.pop(0),
+                                               self.data.pop(0),
+                                               self.data.pop(0),
+                                               self.data.pop(0)))
+
+    def render(self, checksum=True, dollar=True, newline=False):
+        # Overrides the default because we need to assemble things a
+        # different way.
+        res = self.talker + self.sentence_type + ','
+
+        tmp = []
+        for t in self.transducers:
+            tmp.extend((t.type, str(t.data), t.units, t.id))
+        tmp.extend(self.data)
+        res += ','.join(tmp)
+
+        if checksum:
+            res += '*' + hex(NMEASentence.checksum(res))[2:].upper()
+        if dollar:
+            res = '$' + res
+        if newline:
+            res += (newline is True) and '\r\n' or newline
+        return res
+
+    def __repr__(self):
+        """
+        """
+        # Returns a readable representation.
+        # We can't use the standard implementation because we assemble
+        # things in a different way.
+        return "<%s(transducers=%s)%s>" % (self.talker + self.sentence_type, self.transducers, ", data=%s" % self.data if self.data else "")
+
+
 # ---------------------------------- Not Yet Implemented --------------------- #
 # ---------------------------------------------------------------------------- #
 
@@ -661,11 +733,6 @@ class VLW(NMEASentence):
 
 #class VPW(NMEASentence):
 #    """ Speed, Measured Parallel to Wind
-#    """
-    #    fields = (
-    # )
-#class XDR(NMEASentence):
-#    """ Transducer Measurements
 #    """
     #    fields = (
     # )
