@@ -589,9 +589,58 @@ class VLW(NMEASentence):
 
 class Transducer:
     """
+    Represents a single transducer measurement returned as part of an
+    XDR sentence.
+
+    Since an XDR sentence can return measurements for multiple
+    transducers a separate instance of this class is used to group the
+    details for each transducer measurement.
     """
     def __init__(self, transducer_type, data, units, transducer_id):
         """
+        The parameters are as follows:
+
+            transducer_type - A single character representing the type
+            of transducer the measurement is from (see below).
+
+            data - A string representation of a decimal number for the
+            measurement value.
+
+            units - A single character representing the unit of
+            measurement associated with the value (see below).
+
+            transducer_id - A number (usually? see below) identifying
+            the particular transducer which generated the measurement.
+
+
+        Transducer Types and Units
+
+        According to <http://www.axflow.com/local/norge/manualer/instrument/vaisala/wmt52%20user%20guide%20in%20english.pdf>
+        the following transducer type/units are valid:
+
+          * Temperature / Type: "C" / Units: "C" (Celsius), "F" (Farenheit)
+
+          * Wind direction (Angular displacement) / Type: "A" / Units: "D" (degrees)
+
+          * Wind speed / Type: "S" / Units: "K" (km/h), "M" (m/s), "N" (knots), "S" (mph - non standard)
+
+          * Voltage / Type: "U" / Units: "V" (volts), "N" (not in use) (Also: "F", "W" are heating related.)
+
+          * Generic / Type: "G" / Units: None (null), "P" percent
+
+        It is unclear if this a comprehensive list.
+
+
+        Transducer ID
+
+        According to
+        <http://www.vaisala.com/Vaisala%20Documents/User%20Guides%20and%20Quick%20Ref%20Guides/M210906EN-C.pdf>
+        "the transducer IDs in the NMEA XDR messages can only be
+        numbers" but there are examples of manufacturers using
+        characters (e.g. <http://agoenvironmental.com/Temp/ewc4a.html>) or string
+        values as the identifier (e.g. <http://pcnautic.nl/shop/Datasheets/Wind%20Sensor%20manual.pdf>,
+        <http://www.airmartechnology.com/uploads/installguide/PB100TechnicalManual_rev1.007.pdf>)
+        so no manipulation of the ID is performed by this class.
         """
         self.type = transducer_type
         self.data = Decimal(data)
@@ -611,6 +660,7 @@ class XDR(NMEASentence):
 
     def __init__(self, talker, sentence_type, *data):
         """
+        Note: `data` consists of 4 fields for each transducer.
         """
         super(XDR, self).__init__(talker, sentence_type, *data)
 
