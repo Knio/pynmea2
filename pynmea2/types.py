@@ -654,7 +654,7 @@ class XDR(NMEASentence):
         # Returns a readable representation.
         # We can't use the standard implementation because we assemble
         # things in a different way.
-        return "<%s(transducers=%s)%s>" % (self.talker + self.sentence_type, self.transducers, ", data=%s" % self.data if self.data else "")
+        return "<%s(transducers=%s)%s>" % (self.sentence_type, self.transducers, ", data=%s" % self.data if self.data else "")
 
 
 # ---------------------------------- Not Yet Implemented --------------------- #
