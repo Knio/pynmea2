@@ -278,39 +278,6 @@ class HDT(NMEASentence):
     )
 
 
-class R00(NMEASentence):
-    fields = (
-        ("Waypoint List", "waypoint_list"),
-    )
-
-    def parse(self, nmea_str):
-        """ As the length of the sentence is variable (there can be many or few
-            waypoints), parse is overridden to do something special with the
-            different parts
-        """
-        self._parse(nmea_str)
-
-        new_parts = [self.parts[0]]
-        new_parts.append(self.parts[1:])
-        #new_parts.append(self.parts[-1])
-
-        self.parts = new_parts
-
-        for index, item in enumerate(self.parts[1:]):
-            setattr(self, self.fields[index
-                ][1], item)
-
-    @property
-    def nmea_sentence(self):
-        """
-        Dump the object data into a NMEA sentence
-
-        This one is over ridden since this sentence has overriden parse method
-        """
-        parts = [self.parts[0]] + self.parts[1]
-        tmp=(',').join(parts)
-        return '$' + tmp + '*' + checksum_calc(tmp)
-
 class RMA(NMEASentence):
     fields = (
         ("Data status", "data_status"),
@@ -366,41 +333,31 @@ class RTE(NMEASentence):
     """ Routes
     """
     fields = (
-
         ("Number of sentences in sequence", "num_in_seq"),
         ("Sentence Number", "sen_num"),
         ("Start Type", "start_type"), # The first in the list is either current route or waypoint
         ("Name or Number of Active Route", "active_route_id"),
-        ("Waypoint List", "waypoint_list")
-            )
-
-    def parse(self, nmea_str):
-        """ As the length of the sentence is variable (there can be many or few
-            waypoints), parse is overridden to do something special with the
-            different parts
-        """
-        self._parse(nmea_str)
-
-        new_parts = []
-        new_parts.extend(self.parts[0:5])
-        new_parts.append(self.parts[5:])
-
-        self.parts = new_parts
-
-        for index, item in enumerate(self.parts[1:]):
-            setattr(self, self.fields[index
-                ][1], item)
+    )
 
     @property
-    def nmea_sentence(self):
-        """
-        Dump the object data into a NMEA sentence
+    def waypoint_list(self):
+        return self.data[4:]
 
-        This one is over ridden since this sentence has overriden parse method
-        """
-        parts = self.parts[0:5] + self.parts[5]
-        tmp=(',').join(parts)
-        return '$' + tmp + '*' + checksum_calc(tmp)
+    @waypoint_list.setter
+    def waypoint_list(self, val):
+        self.data[4:] = val
+
+
+class R00(NMEASentence):
+    fields = ()
+    @property
+    def waypoint_list(self):
+        return self.data[:]
+
+    @waypoint_list.setter
+    def waypoint_list(self, val):
+        self.data[:] = val
+
 
 class STN(NMEASentence):
     """ NOTE: No real data could be found for examples of the actual spec so

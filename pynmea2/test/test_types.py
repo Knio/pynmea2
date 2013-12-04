@@ -38,3 +38,31 @@ def test_GGA():
     # Differential Reference Station ID
     assert msg.ref_station_id   == '0000'
 
+    msg.altitude = 200.0
+    assert str(msg) == "$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,200.0,M,-33.9,M,,0000*5E"
+
+def test_rte():
+    data = "$GPRTE,2,1,c,0,PBRCPK,PBRTO,PTELGR,PPLAND,PYAMBU,PPFAIR,PWARRN,PMORTL,PLISMR*73"
+    msg = pynmea2.parse(data)
+    assert msg.talker == 'GP'
+    assert msg.type == 'RTE'
+    assert "2" == msg.num_in_seq
+    assert "1" == msg.sen_num
+    assert "c" == msg.start_type
+    assert "0" == msg.active_route_id
+    assert msg.waypoint_list == [
+        "PBRCPK", "PBRTO", "PTELGR", "PPLAND", "PYAMBU",
+        "PPFAIR", "PWARRN", "PMORTL", "PLISMR"]
+
+    msg.waypoint_list = ['ABC','DEF']
+    assert str(msg) == "$GPRTE,2,1,c,0,ABC,DEF*03"
+
+def test_r00():
+    data = "$GPR00,A,B,C*29"
+    msg = pynmea2.parse(data)
+    assert msg.talker == 'GP'
+    assert msg.type == 'R00'
+    assert msg.waypoint_list == ['A','B','C']
+
+    msg.waypoint_list = ['ABC','DEF']
+    assert str(msg) == "$GPR00,ABC,DEF*42"

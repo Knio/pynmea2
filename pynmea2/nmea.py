@@ -65,8 +65,11 @@ class NMEASentence(object):
 
         if checksum:
             # print nmea_str
-            if int(checksum, 16) != NMEASentence.checksum(nmea_str):
-                raise ValueError('checksum does not match')
+            cs1 = int(checksum, 16)
+            cs2 = NMEASentence.checksum(nmea_str)
+            if cs1 != cs2:
+                raise ValueError('checksum does not match: %02X != %02X' %
+                    (cs1, cs2))
 
         cls = NMEASentence._sentence_types.get(sentence_type, None)
         if not cls:
@@ -77,7 +80,7 @@ class NMEASentence(object):
     def __init__(self, talker, sentence_type, *data):
         self.talker = talker
         self.type = sentence_type
-        self.data = data
+        self.data = list(data)
 
     def __getattr__(self, name):
         t = type(self)
@@ -120,7 +123,7 @@ class NMEASentence(object):
         res = self.talker + self.sentence_type + ','
         res += ','.join(self.data)
         if checksum:
-            res += '*' + hex(NMEASentence.checksum(res))[2:].upper()
+            res += '*%02X' % NMEASentence.checksum(res)
         if dollar:
             res = '$' + res
         if newline:
