@@ -3,6 +3,8 @@ import pynmea2
 
 import datetime
 
+from decimal import Decimal
+
 def test_GGA():
     data = "$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,100.00,M,-33.9,M,,0000*6D"
     msg = pynmea2.parse(data)
@@ -66,3 +68,192 @@ def test_r00():
 
     msg.waypoint_list = ['ABC','DEF']
     assert str(msg) == "$GPR00,ABC,DEF*42"
+
+def test_MWV():
+    data = "$IIMWV,271.0,R,000.2,N,A*3B"
+    msg = pynmea2.parse(data)
+
+    assert msg.talker == 'II'
+    assert msg.type == 'MWV'
+
+    # Wind angle in degrees
+    assert msg.wind_angle == Decimal('271.0')
+
+    # Reference type
+    assert msg.reference == 'R'
+
+    # Wind speed
+    assert msg.wind_speed == Decimal('0.2')
+
+    # Wind speed units
+    assert msg.wind_speed_units == 'N'
+
+    # Device status
+    assert msg.status == 'A'
+
+
+def test_proprietary_implemented():
+    # Ensure a proprietary sentence that is explicitly implemented isn't
+    # returned as a generic proprietary sentence.
+    data = "$PGRME,15.0,M,45.0,M,25.0,M*1C"
+    msg = pynmea2.parse(data)
+
+    assert repr(msg) == "<RME(hpe='15.0', hpe_unit='M', vpe='45.0', vpe_unit='M', osepe='25.0', osepe_unit='M')>"
+
+
+def test_proprietary_1():
+    # A sample proprietary sentence from a LCJ Capteurs
+    # anemometer.
+    data = "$PLCJ,5F01,66FC,AA,9390,6373"
+    msg = pynmea2.parse(data)
+
+    assert msg.manufacturer == "LCJ"
+    assert msg.type == "P"
+    assert not msg.talker
+
+    assert msg.data == (",5F01,66FC,AA,9390,6373", )
+
+    assert str(msg) == data
+
+
+def test_proprietary_2():
+    # A sample proprietary sentence from a LCJ Capteurs anemometer.
+    # Note: This sample is the main reason why we can't assume
+    #       anything about the content of the proprietary sentences
+    #       due to the lack of a comma after the manufacturer ID and
+    #       extra comma at the end.
+    data = "$PLCJE81B8,64A0,2800,2162,0E,"
+    msg = pynmea2.parse(data)
+
+    assert msg.manufacturer == "LCJ"
+    assert msg.type == "P"
+    assert not msg.talker
+
+    assert msg.data == ("E81B8,64A0,2800,2162,0E,",)
+
+    assert str(msg) == data
+
+
+def test_proprietary_3():
+    # A sample proprietary sentence from a Magellan device
+    # (via <http://www.gpsinformation.org/dale/nmea.htm#proprietary>).
+    data = "$PMGNST,02.12,3,T,534,05.0,+03327,00*40"
+    msg = pynmea2.parse(data)
+
+    assert msg.manufacturer == "MGN"
+    assert msg.type == "P"
+    assert not msg.talker
+
+    assert msg.data == ("ST,02.12,3,T,534,05.0,+03327,00*40", )
+
+    assert str(msg) == data
+
+
+def test_XDR_single():
+    # A single transducer sample XDR sentence from a LCJ Capteurs anemometer.
+    data = "$WIXDR,C,020.0,C,,*50"
+    msg = pynmea2.parse(data)
+
+    assert msg.talker == 'WI'
+    assert msg.type == 'XDR'
+
+    assert len(msg.transducers) == 1
+
+    transducer = msg.transducers[0]
+
+    # Transducer type (Temperature)
+    assert transducer.type == "C"
+
+    # Transducer data value
+    assert transducer.value == Decimal('20.0')
+
+    # Unit of transducer data (Celsius)
+    assert transducer.units == "C"
+
+    # Transducer id (Empty)
+    assert transducer.id == ""
+
+    # The sample value for the temperature is zero-padded but I can't
+    # see anything specification related to require this but the
+    # padding breaks the comparison so I'm just not going to test this case.
+    #assert str(msg) == data
+
+
+def test_XDR_multiple():
+    # A multiple-transducer sample sentence from a WSS REC wind sensor.
+    # Source: <http://www.deifwindpower.com/Files/Filer/Documentation/Files/4189350038.pdf>
+    data = "$WIXDR,C,25.0,C,2,U,23.3,N,0,U,24.3,V,1,U,3.491,V,2*75"
+    msg = pynmea2.parse(data)
+
+    assert msg.talker == 'WI'
+    assert msg.type == 'XDR'
+
+    assert len(msg.transducers) == 4
+
+
+    ## First transducer
+    transducer = msg.transducers[0]
+
+    # Transducer type (Temperature)
+    assert transducer.type == "C"
+
+    # Transducer data value
+    assert transducer.value == Decimal('25.0')
+
+    # Unit of transducer data (Celsius)
+    assert transducer.units == "C"
+
+    # Transducer id
+    assert transducer.id == "2"
+
+
+    ## Second transducer
+    transducer = msg.transducers[1]
+
+    # Transducer type (Voltage)
+    assert transducer.type == "U"
+
+    # Transducer data value
+    assert transducer.value == Decimal('23.3')
+
+    # Unit of transducer data ("heating disabled or heating temperature too high")
+    assert transducer.units == "N"
+
+    # Transducer id
+    assert transducer.id == "0"
+
+
+    ## Third transducer
+    transducer = msg.transducers[2]
+
+    # Transducer type (Voltage)
+    assert transducer.type == "U"
+
+    # Transducer data value
+    assert transducer.value == Decimal('24.3')
+
+    # Unit of transducer data (Volts)
+    assert transducer.units == "V"
+
+    # Transducer id
+    assert transducer.id == "1"
+
+
+    ## Fourth transducer
+    transducer = msg.transducers[3]
+
+    # Transducer type (Voltage)
+    assert transducer.type == "U"
+
+    # Transducer data value
+    assert transducer.value == Decimal('3.491')
+
+    # Unit of transducer data (Volts)
+    assert transducer.units == "V"
+
+    # Transducer id
+    assert transducer.id == "2"
+
+
+    assert str(msg) == data
+

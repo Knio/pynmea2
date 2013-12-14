@@ -515,8 +515,8 @@ class MWV(NMEASentence):
     bow/centerline.
     """
     fields = (
-        ("Wind angle","wind_angle", Decimal), #in relation to vessels centerline
-        ("Reference","reference"), # relative (R)/theoretical(T)
+        ("Wind angle","wind_angle", Decimal), # in relation to vessel's centerline
+        ("Reference","reference"), # relative (R)/true(T)
         ("Wind speed","wind_speed", Decimal),
         ("Wind speed units","wind_speed_units"), # K/M/N
         ("Status","status"),
@@ -585,7 +585,127 @@ class VLW(NMEASentence):
         ('Trip distance nautical miles since reset','trip_distance_reset_miles'),
 
     )
-# ---------------------------------- Not Yet Implimented --------------------- #
+
+
+class Transducer:
+    """
+    Represents a single transducer measurement returned as part of an
+    XDR sentence.
+
+    Since an XDR sentence can return measurements for multiple
+    transducers a separate instance of this class is used to group the
+    details for each transducer measurement.
+    """
+    def __init__(self, transducer_type, value, units, transducer_id):
+        """
+        The parameters are as follows:
+
+            transducer_type - A single character representing the type
+            of transducer the measurement is from (see below).
+
+            value - A string representation of a decimal number for the
+            measurement value.
+
+            units - A single character representing the unit of
+            measurement associated with the value (see below).
+
+            transducer_id - A number (usually? see below) identifying
+            the particular transducer which generated the measurement.
+
+
+        Transducer Types and Units
+
+        According to <http://www.axflow.com/local/norge/manualer/instrument/vaisala/wmt52%20user%20guide%20in%20english.pdf>
+        the following transducer type/units are valid:
+
+          * Temperature / Type: "C" / Units: "C" (Celsius), "F" (Farenheit)
+
+          * Wind direction (Angular displacement) / Type: "A" / Units: "D" (degrees)
+
+          * Wind speed / Type: "S" / Units: "K" (km/h), "M" (m/s), "N" (knots), "S" (mph - non standard)
+
+          * Voltage / Type: "U" / Units: "V" (volts), "N" (not in use) (Also: "F", "W" are heating related.)
+
+          * Generic / Type: "G" / Units: None (null), "P" percent
+
+        It is unclear if this a comprehensive list.
+
+
+        Transducer ID
+
+        According to
+        <http://www.vaisala.com/Vaisala%20Documents/User%20Guides%20and%20Quick%20Ref%20Guides/M210906EN-C.pdf>
+        "the transducer IDs in the NMEA XDR messages can only be
+        numbers" but there are examples of manufacturers using
+        characters (e.g. <http://agoenvironmental.com/Temp/ewc4a.html>) or string
+        values as the identifier (e.g. <http://pcnautic.nl/shop/Datasheets/Wind%20Sensor%20manual.pdf>,
+        <http://www.airmartechnology.com/uploads/installguide/PB100TechnicalManual_rev1.007.pdf>)
+        so no manipulation of the ID is performed by this class.
+        """
+        self.type = transducer_type
+        self.value = Decimal(value)
+        self.units = units
+        self.id = transducer_id
+
+    def __repr__(self):
+        """
+        """
+        return "Transducer('%s', '%s', '%s', '%s')" % (self.type, self.value, self.units, self.id)
+
+
+class XDR(NMEASentence):
+    """ Transducer Measurements
+    """
+    fields = ()
+
+    def __init__(self, talker, sentence_type, *data):
+        """
+        Note: `data` consists of 4 fields for each transducer.
+        """
+        super(XDR, self).__init__(talker, sentence_type, *data)
+
+        self.transducers = []
+
+        # We *should* be able to just check self.data isn't empty here
+        # but the LCJ Capteurs test data includes an extra comma which
+        # indicates an extra field--which there shouldn't be. If this
+        # happens we just leave the orphan in self.data and hope it
+        # doesn't break anything else.
+        while len(self.data) >= 4:
+            self.transducers.append(Transducer(self.data.pop(0),
+                                               self.data.pop(0),
+                                               self.data.pop(0),
+                                               self.data.pop(0)))
+
+    def render(self, checksum=True, dollar=True, newline=False):
+        # Overrides the default because we need to assemble things a
+        # different way.
+        res = self.talker + self.sentence_type + ','
+
+        tmp = []
+        for t in self.transducers:
+            tmp.extend((t.type, str(t.value), t.units, t.id))
+        tmp.extend(self.data)
+        res += ','.join(tmp)
+
+        if checksum:
+            res += '*' + hex(NMEASentence.checksum(res))[2:].upper()
+        if dollar:
+            res = '$' + res
+        if newline:
+            res += (newline is True) and '\r\n' or newline
+        return res
+
+    def __repr__(self):
+        """
+        """
+        # Returns a readable representation.
+        # We can't use the standard implementation because we assemble
+        # things in a different way.
+        return "<%s(transducers=%s)%s>" % (self.sentence_type, self.transducers, ", data=%s" % self.data if self.data else "")
+
+
+# ---------------------------------- Not Yet Implemented --------------------- #
 # ---------------------------------------------------------------------------- #
 
 
@@ -664,11 +784,6 @@ class VLW(NMEASentence):
 #    """
     #    fields = (
     # )
-#class XDR(NMEASentence):
-#    """ Transducer Measurements
-#    """
-    #    fields = (
-    # )
 #class XTR(NMEASentence):
 #    """ Cross-Track Error, Dead Reckoning
 #    """
@@ -739,3 +854,52 @@ class RMZ(NMEASentence):
 
 
 
+# -- Generic proprietary sentence -- #
+
+class P(NMEASentence):
+    """Generic Proprietary sentence
+    """
+    # Note: This implementation is sub-optimal due to a desire to
+    #       minimise changes to the `parse` routine of the
+    #       `NMEASentence` class when adding generic proprietary
+    #       sentence support.
+
+    fields = ()
+
+    MANUFACTURER_ID_LENGTH = 3
+
+    def __init__(self, talker, sentence_type, *data):
+        """
+        """
+        # Note: data[0] contains the original sentence with the `P`
+        #       prefix removed (but including the manufacturer ID and
+        #       any checksum). (This, and also `data` having only a
+        #       single element, are in order to minimise changes as
+        #       noted above.)
+
+        super(P, self).__init__(talker, sentence_type, *data)
+
+        self.manufacturer = self.data[0][:self.MANUFACTURER_ID_LENGTH]
+
+        self.data = (self.data[0][self.MANUFACTURER_ID_LENGTH:],)
+
+    def render(self, checksum=True, dollar=True, newline=False):
+        """
+        """
+        # Overrides the default because we need to assemble things a
+        # different way.
+        # Note: Ignores the checksum setting.
+        res = self.sentence_type + self.manufacturer + self.data[0]
+        if dollar:
+            res = '$' + res
+        if newline:
+            res += (newline is True) and '\r\n' or newline
+        return res
+
+    def __repr__(self):
+        """
+        """
+        # Returns a readable but not very useful representation.
+        # We can't use the standard implementation because we assemble
+        # things in a different way.
+        return "<P(manufacturer='%s', data='%s')>" % (self.manufacturer, self.data[0])
