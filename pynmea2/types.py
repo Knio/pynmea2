@@ -758,8 +758,8 @@ class P(NMEASentence):
         """
         # Note: data[0] contains the original sentence with the `P`
         #       prefix removed (but including the manufacturer ID and
-        #       any checksum). (This, and also `data` being a single
-        #       element tuple, are in order to minimise changes as
+        #       any checksum). (This, and also `data` having only a
+        #       single element, are in order to minimise changes as
         #       noted above.)
 
         super(P, self).__init__(talker, sentence_type, *data)
