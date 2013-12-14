@@ -64,6 +64,8 @@ def test_r00():
     assert msg.type == 'R00'
     assert msg.waypoint_list == ['A','B','C']
 
+    msg.waypoint_list = ['ABC','DEF']
+    assert str(msg) == "$GPR00,ABC,DEF*42"
 
 def test_proprietary_implemented():
     # Ensure a proprietary sentence that is explicitly implemented isn't
