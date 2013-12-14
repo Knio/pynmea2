@@ -91,3 +91,58 @@ def test_MWV():
     # Device status
     assert msg.status == 'A'
 
+def test_proprietary_implemented():
+    # Ensure a proprietary sentence that is explicitly implemented isn't
+    # returned as a generic proprietary sentence.
+    data = "$PGRME,15.0,M,45.0,M,25.0,M*1C"
+    msg = pynmea2.parse(data)
+
+    assert repr(msg) == "<RME(hpe='15.0', hpe_unit='M', vpe='45.0', vpe_unit='M', osepe='25.0', osepe_unit='M')>"
+
+
+def test_proprietary_1():
+    # A sample proprietary sentence from a LCJ Capteurs
+    # anemometer.
+    data = "$PLCJ,5F01,66FC,AA,9390,6373"
+    msg = pynmea2.parse(data)
+
+    assert msg.manufacturer == "LCJ"
+    assert msg.type == "P"
+    assert not msg.talker
+
+    assert msg.data == (",5F01,66FC,AA,9390,6373", )
+
+    assert str(msg) == data
+
+
+def test_proprietary_2():
+    # A sample proprietary sentence from a LCJ Capteurs anemometer.
+    # Note: This sample is the main reason why we can't assume
+    #       anything about the content of the proprietary sentences
+    #       due to the lack of a comma after the manufacturer ID and
+    #       extra comma at the end.
+    data = "$PLCJE81B8,64A0,2800,2162,0E,"
+    msg = pynmea2.parse(data)
+
+    assert msg.manufacturer == "LCJ"
+    assert msg.type == "P"
+    assert not msg.talker
+
+    assert msg.data == ("E81B8,64A0,2800,2162,0E,",)
+
+    assert str(msg) == data
+
+
+def test_proprietary_3():
+    # A sample proprietary sentence from a Magellan device
+    # (via <http://www.gpsinformation.org/dale/nmea.htm#proprietary>).
+    data = "$PMGNST,02.12,3,T,534,05.0,+03327,00*40"
+    msg = pynmea2.parse(data)
+
+    assert msg.manufacturer == "MGN"
+    assert msg.type == "P"
+    assert not msg.talker
+
+    assert msg.data == ("ST,02.12,3,T,534,05.0,+03327,00*40", )
+
+    assert str(msg) == data

@@ -739,3 +739,52 @@ class RMZ(NMEASentence):
 
 
 
+# -- Generic proprietary sentence -- #
+
+class P(NMEASentence):
+    """Generic Proprietary sentence
+    """
+    # Note: This implementation is sub-optimal due to a desire to
+    #       minimise changes to the `parse` routine of the
+    #       `NMEASentence` class when adding generic proprietary
+    #       sentence support.
+
+    fields = ()
+
+    MANUFACTURER_ID_LENGTH = 3
+
+    def __init__(self, talker, sentence_type, *data):
+        """
+        """
+        # Note: data[0] contains the original sentence with the `P`
+        #       prefix removed (but including the manufacturer ID and
+        #       any checksum). (This, and also `data` having only a
+        #       single element, are in order to minimise changes as
+        #       noted above.)
+
+        super(P, self).__init__(talker, sentence_type, *data)
+
+        self.manufacturer = self.data[0][:self.MANUFACTURER_ID_LENGTH]
+
+        self.data = (self.data[0][self.MANUFACTURER_ID_LENGTH:],)
+
+    def render(self, checksum=True, dollar=True, newline=False):
+        """
+        """
+        # Overrides the default because we need to assemble things a
+        # different way.
+        # Note: Ignores the checksum setting.
+        res = self.sentence_type + self.manufacturer + self.data[0]
+        if dollar:
+            res = '$' + res
+        if newline:
+            res += (newline is True) and '\r\n' or newline
+        return res
+
+    def __repr__(self):
+        """
+        """
+        # Returns a readable but not very useful representation.
+        # We can't use the standard implementation because we assemble
+        # things in a different way.
+        return "<P(manufacturer='%s', data='%s')>" % (self.manufacturer, self.data[0])
