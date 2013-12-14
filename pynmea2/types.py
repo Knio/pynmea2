@@ -596,14 +596,14 @@ class Transducer:
     transducers a separate instance of this class is used to group the
     details for each transducer measurement.
     """
-    def __init__(self, transducer_type, data, units, transducer_id):
+    def __init__(self, transducer_type, value, units, transducer_id):
         """
         The parameters are as follows:
 
             transducer_type - A single character representing the type
             of transducer the measurement is from (see below).
 
-            data - A string representation of a decimal number for the
+            value - A string representation of a decimal number for the
             measurement value.
 
             units - A single character representing the unit of
@@ -643,14 +643,14 @@ class Transducer:
         so no manipulation of the ID is performed by this class.
         """
         self.type = transducer_type
-        self.data = Decimal(data)
+        self.value = Decimal(value)
         self.units = units
         self.id = transducer_id
 
     def __repr__(self):
         """
         """
-        return "Transducer('%s', '%s', '%s', '%s')" % (self.type, self.data, self.units, self.id)
+        return "Transducer('%s', '%s', '%s', '%s')" % (self.type, self.value, self.units, self.id)
 
 
 class XDR(NMEASentence):
@@ -686,7 +686,7 @@ class XDR(NMEASentence):
 
         tmp = []
         for t in self.transducers:
-            tmp.extend((t.type, str(t.data), t.units, t.id))
+            tmp.extend((t.type, str(t.value), t.units, t.id))
         tmp.extend(self.data)
         res += ','.join(tmp)
 

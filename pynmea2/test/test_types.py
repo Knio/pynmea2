@@ -165,7 +165,7 @@ def test_XDR_single():
     assert transducer.type == "C"
 
     # Transducer data value
-    assert transducer.data == Decimal('20.0')
+    assert transducer.value == Decimal('20.0')
 
     # Unit of transducer data (Celsius)
     assert transducer.units == "C"
@@ -198,7 +198,7 @@ def test_XDR_multiple():
     assert transducer.type == "C"
 
     # Transducer data value
-    assert transducer.data == Decimal('25.0')
+    assert transducer.value == Decimal('25.0')
 
     # Unit of transducer data (Celsius)
     assert transducer.units == "C"
@@ -214,7 +214,7 @@ def test_XDR_multiple():
     assert transducer.type == "U"
 
     # Transducer data value
-    assert transducer.data == Decimal('23.3')
+    assert transducer.value == Decimal('23.3')
 
     # Unit of transducer data ("heating disabled or heating temperature too high")
     assert transducer.units == "N"
@@ -230,7 +230,7 @@ def test_XDR_multiple():
     assert transducer.type == "U"
 
     # Transducer data value
-    assert transducer.data == Decimal('24.3')
+    assert transducer.value == Decimal('24.3')
 
     # Unit of transducer data (Volts)
     assert transducer.units == "V"
@@ -246,7 +246,7 @@ def test_XDR_multiple():
     assert transducer.type == "U"
 
     # Transducer data value
-    assert transducer.data == Decimal('3.491')
+    assert transducer.value == Decimal('3.491')
 
     # Unit of transducer data (Volts)
     assert transducer.units == "V"
