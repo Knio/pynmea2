@@ -3,6 +3,8 @@ import pynmea2
 
 import datetime
 
+from decimal import Decimal
+
 def test_GGA():
     data = "$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,100.00,M,-33.9,M,,0000*6D"
     msg = pynmea2.parse(data)
@@ -66,3 +68,26 @@ def test_r00():
 
     msg.waypoint_list = ['ABC','DEF']
     assert str(msg) == "$GPR00,ABC,DEF*42"
+
+def test_MWV():
+    data = "$IIMWV,271.0,R,000.2,N,A*3B"
+    msg = pynmea2.parse(data)
+
+    assert msg.talker == 'II'
+    assert msg.type == 'MWV'
+
+    # Wind angle in degrees
+    assert msg.wind_angle == Decimal('271.0')
+
+    # Reference type
+    assert msg.reference == 'R'
+
+    # Wind speed
+    assert msg.wind_speed == Decimal('0.2')
+
+    # Wind speed units
+    assert msg.wind_speed_units == 'N'
+
+    # Device status
+    assert msg.status == 'A'
+
