@@ -515,8 +515,8 @@ class MWV(NMEASentence):
     bow/centerline.
     """
     fields = (
-        ("Wind angle","wind_angle", Decimal), #in relation to vessels centerline
-        ("Reference","reference"), # relative (R)/theoretical(T)
+        ("Wind angle","wind_angle", Decimal), # in relation to vessel's centerline
+        ("Reference","reference"), # relative (R)/true(T)
         ("Wind speed","wind_speed", Decimal),
         ("Wind speed units","wind_speed_units"), # K/M/N
         ("Status","status"),
@@ -585,7 +585,7 @@ class VLW(NMEASentence):
         ('Trip distance nautical miles since reset','trip_distance_reset_miles'),
 
     )
-# ---------------------------------- Not Yet Implimented --------------------- #
+# ---------------------------------- Not Yet Implemented --------------------- #
 # ---------------------------------------------------------------------------- #
 
 
