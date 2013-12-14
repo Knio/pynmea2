@@ -666,8 +666,6 @@ class XDR(NMEASentence):
 
         self.transducers = []
 
-        self.data = list(self.data) # So we can use pop, below.
-
         # We *should* be able to just check self.data isn't empty here
         # but the LCJ Capteurs test data includes an extra comma which
         # indicates an extra field--which there shouldn't be. If this
