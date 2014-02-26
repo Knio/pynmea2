@@ -1,8 +1,21 @@
 import re
 import operator
+from functools import reduce
 
 
-class NMEASentence(object):
+class NMEASentenceType(type):
+    sentence_types = {}
+    def __init__(cls, name, bases, dict):
+        type.__init__(cls, name, bases, dict)
+        if 'NMEASentence' in [b.__name__ for b in bases]:
+            cls.sentence_types[name] = cls
+            cls.sentence_type = name
+            cls.name_to_idx = {f[1]:i for i,f in enumerate(cls.fields)}
+
+
+NMEASentenceBase = NMEASentenceType('NMEASentenceBase', (object,), {})
+
+class NMEASentence(NMEASentenceBase):
     '''
     Base NMEA Sentence
 
@@ -11,20 +24,8 @@ class NMEASentence(object):
     Examples:
 
     >>> s = NMEASentence.parse("$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,100.00,M,-33.9,M,,0000*6D")
-    >>> print s
-
-
-    Sentence types are implemented as
+    >>> print(s)
     '''
-
-    class __metaclass__(type):
-        def __init__(cls, name, bases, dict):
-            type.__init__(cls, name, bases, dict)
-            if 'NMEASentence' in [b.__name__ for b in bases]:
-                sentence_type = name.replace('Sentence', '')
-                NMEASentence._sentence_types[name] = cls
-                cls.sentence_type = name
-                cls.name_to_idx = {f[1]:i for i,f in enumerate(cls.fields)}
 
     _sentence_types = {}
 
@@ -71,7 +72,7 @@ class NMEASentence(object):
                 raise ValueError('checksum does not match: %02X != %02X' %
                     (cs1, cs2))
 
-        cls = NMEASentence._sentence_types.get(sentence_type, None)
+        cls = NMEASentence.sentence_types.get(sentence_type, None)
         if not cls:
             raise ValueError('Unknown sentence type %s' % sentence_type)
 

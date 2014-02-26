@@ -5,9 +5,14 @@ pynmea2
 
 `pynmea2` is based on [`pynmea`](https://code.google.com/p/pynmea/) by Becky Lewis
 
+The `pynmea2` homepage is located at http://github.com/Knio/pynmea2
 
-Installation
-------------
+
+### Compatibility
+
+`pynmea2` is compatable with Python 2.7 and Python 3.3
+
+### Installation
 
 The recommended way to install `pynmea2` is with
 [pip](http://pypi.python.org/pypi/pip/):

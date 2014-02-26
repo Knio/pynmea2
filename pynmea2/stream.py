@@ -1,4 +1,4 @@
-import nmea
+from . import nmea
 
 class NMEAStreamReader(object):
     '''

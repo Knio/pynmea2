@@ -10,6 +10,7 @@ def test_GGA():
     msg = pynmea2.parse(data)
     assert msg.talker == 'GP'
     assert msg.type == 'GGA'
+    assert isinstance(msg, pynmea2.GGA) 
 
     # Timestamp
     assert msg.timestamp        == datetime.time(18, 43, 53)
