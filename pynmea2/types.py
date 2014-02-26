@@ -99,9 +99,9 @@ class BOD(NMEASentence):
     # 045.
     # ,T,023.,M,DEST,START
     fields = (
-        ('Bearing True', 'bearing_t','decimal' ),
+        ('Bearing True', 'bearing_t', Decimal),
         ('Bearing True Type', 'bearing_t_type'),
-        ('Bearing Magnetic', 'bearing_mag','decimal'),
+        ('Bearing Magnetic', 'bearing_mag', Decimal),
         ('Bearing Magnetic Type', 'bearing_mag_type'),
         ('Destination', 'dest'),
         ('Start', 'start')
@@ -556,7 +556,7 @@ class MTW(NMEASentence):
     """ Water Temperature
     """
     fields = (
-        ('Water temperature','temperature','decimal'),
+        ('Water temperature','temperature', Decimal),
         ('Unit of measurement','units')
     )
 
@@ -564,13 +564,13 @@ class VHW(NMEASentence):
     """ Water Speed and Heading
     """
     fields = (
-        ('Heading true degrees','heading_true','decimal'),
+        ('Heading true degrees','heading_true', Decimal),
         ('heading true','true'),
-        ('Heading Magnetic degrees','heading_magnetic','decimal'),
+        ('Heading Magnetic degrees','heading_magnetic', Decimal),
         ('Magnetic','magnetic'),
-        ('Water speed knots','water_speed_knots','decimal'),
+        ('Water speed knots','water_speed_knots', Decimal),
         ('Knots','knots'),
-        ('Water speed kilometers','water_speed_km','decimal'),
+        ('Water speed kilometers','water_speed_km', Decimal),
         ('Kilometers','kilometers'),
     )
 
@@ -579,9 +579,9 @@ class VLW(NMEASentence):
     """
     fields = (
 
-        ('Water trip distance','trip_distance','decimal'),
+        ('Water trip distance','trip_distance', Decimal),
         ('Trip distance nautical miles','trip_distance_miles'),
-        ('Water trip distance since reset','trip_distance_reset','decimal'),
+        ('Water trip distance since reset','trip_distance_reset', Decimal),
         ('Trip distance nautical miles since reset','trip_distance_reset_miles'),
 
     )
