@@ -92,3 +92,8 @@ def test_MWV():
     # Device status
     assert msg.status == 'A'
 
+def test_proprietary():
+    data = '$PAAA,1,2*00'
+    msg = pynmea2.parse(data)
+
+    assert False
