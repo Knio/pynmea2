@@ -15,7 +15,9 @@ class NMEASentenceType(type):
         cls.name_to_idx = {f[1]:i for i,f in enumerate(cls.fields)}
 
 
+# http://mikewatkins.ca/2008/11/29/python-2-and-3-metaclasses/
 NMEASentenceBase = NMEASentenceType('NMEASentenceBase', (object,), {})
+
 
 class NMEASentence(NMEASentenceBase):
     '''
@@ -123,7 +125,10 @@ class NMEASentence(NMEASentenceBase):
         t = type(self)
         i = t.name_to_idx[name]
         f = t.fields[i]
-        v = self.data[i]
+        if i < len(self.data):
+            v = self.data[i]
+        else:
+            v = None
         if len(f) >= 3:
             if v == '':
                 return None
