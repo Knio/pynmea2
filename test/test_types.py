@@ -9,7 +9,7 @@ def test_GGA():
     data = "$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,100.00,M,-33.9,M,,0000*6D"
     msg = pynmea2.parse(data)
     assert msg.talker == 'GP'
-    assert msg.type == 'GGA'
+    assert msg.sentence_type == 'GGA'
     assert isinstance(msg, pynmea2.GGA) 
 
     # Timestamp
@@ -48,7 +48,7 @@ def test_rte():
     data = "$GPRTE,2,1,c,0,PBRCPK,PBRTO,PTELGR,PPLAND,PYAMBU,PPFAIR,PWARRN,PMORTL,PLISMR*73"
     msg = pynmea2.parse(data)
     assert msg.talker == 'GP'
-    assert msg.type == 'RTE'
+    assert msg.sentence_type == 'RTE'
     assert "2" == msg.num_in_seq
     assert "1" == msg.sen_num
     assert "c" == msg.start_type
@@ -64,7 +64,7 @@ def test_r00():
     data = "$GPR00,A,B,C*29"
     msg = pynmea2.parse(data)
     assert msg.talker == 'GP'
-    assert msg.type == 'R00'
+    assert msg.sentence_type == 'R00'
     assert msg.waypoint_list == ['A','B','C']
 
     msg.waypoint_list = ['ABC','DEF']
@@ -75,7 +75,7 @@ def test_MWV():
     msg = pynmea2.parse(data)
 
     assert msg.talker == 'II'
-    assert msg.type == 'MWV'
+    assert msg.sentence_type == 'MWV'
 
     # Wind angle in degrees
     assert msg.wind_angle == Decimal('271.0')
@@ -92,8 +92,18 @@ def test_MWV():
     # Device status
     assert msg.status == 'A'
 
-def test_proprietary():
-    data = '$PAAA,1,2*00'
-    msg = pynmea2.parse(data)
+from pynmea2 import nmea
 
-    assert False
+def test_proprietary():
+    class AAA(nmea.ProprietarySentence):
+        fields = (
+            ('First', 'a'),
+            ('Second', 'b'),
+        )
+
+
+    data = '$PAAA,1,2*12'
+    msg = pynmea2.parse(data)
+    assert isinstance(msg, AAA)
+    assert msg.a == '1'
+    assert msg.b == '2'

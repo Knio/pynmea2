@@ -13,7 +13,7 @@ def test_version():
 def test_sentence():
     msg = pynmea2.parse(data)
     assert msg.talker == 'GP'
-    assert msg.type == 'GGA'
+    assert msg.sentence_type == 'GGA'
     assert str(msg) == data
 
 def test_checksum():

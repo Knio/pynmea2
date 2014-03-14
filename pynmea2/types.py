@@ -1,8 +1,8 @@
-from .nmea import NMEASentence
+from .nmea import TalkerSentence
 from .nmea_utils import *
 from decimal import Decimal
 
-class AAM(NMEASentence):
+class AAM(TalkerSentence):
     """ Waypoint Arrival Alarm
     """
     fields = (
@@ -13,7 +13,7 @@ class AAM(NMEASentence):
         ("Waypoint ID", "waypoint_id")
     )
 
-class ALM(NMEASentence):
+class ALM(TalkerSentence):
     """ GPS Almanac data
     """
     fields = (
@@ -35,7 +35,7 @@ class ALM(NMEASentence):
     )
 
 
-class APA(NMEASentence):
+class APA(TalkerSentence):
     """ Autopilot Sentence "A"
     """
 
@@ -53,7 +53,7 @@ class APA(NMEASentence):
     )
 
 
-class APB(NMEASentence):
+class APB(TalkerSentence):
     """ Autopilot Sentence "B"
     """
 
@@ -75,7 +75,7 @@ class APB(NMEASentence):
     ) # M = Magnetic, T = True
 
 
-class BEC(NMEASentence):
+class BEC(TalkerSentence):
     """ Bearing & Distance to Waypoint, Dead Reckoning
     """
     fields = (
@@ -95,7 +95,7 @@ class BEC(NMEASentence):
     )
 
 
-class BOD(NMEASentence):
+class BOD(TalkerSentence):
     # 045.
     # ,T,023.,M,DEST,START
     fields = (
@@ -123,7 +123,7 @@ class BOD(NMEASentence):
     def origin(self):
         return self.start
 
-class BWC(NMEASentence):
+class BWC(TalkerSentence):
     fields = (
         ('Timestamp', 'timestamp'),
         ('Latitude of next Waypoint', 'lat_next'),
@@ -139,7 +139,7 @@ class BWC(NMEASentence):
         ('Waypoint Name', 'waypoint_name')
     )
 
-class BWR(NMEASentence):
+class BWR(TalkerSentence):
     fields = (
         ('Timestamp', 'timestamp'),
         ('Latitude of next Waypoint', 'lat_next'),
@@ -155,7 +155,7 @@ class BWR(NMEASentence):
         ('Waypoint Name', 'waypoint_name')
     )
 
-class GGA(NMEASentence, LatLonFix):
+class GGA(TalkerSentence, LatLonFix):
     fields = (
         ('Timestamp', 'timestamp', timestamp),
         ('Latitude', 'lat'),
@@ -173,7 +173,7 @@ class GGA(NMEASentence, LatLonFix):
         ('Differential Reference Station ID', 'ref_station_id')
     )
 
-class GNS(NMEASentence, LatLonFix):
+class GNS(TalkerSentence, LatLonFix):
     fields = (
         ('Timestamp', 'timestamp', timestamp),
         ('Latitude', 'lat'),
@@ -189,7 +189,7 @@ class GNS(NMEASentence, LatLonFix):
         ('Differential reference station ID', 'diferential')
     )
 
-class BWW(NMEASentence):
+class BWW(TalkerSentence):
     """ Bearing, Waypoint to Waypoint
     """
     fields = (
@@ -201,7 +201,7 @@ class BWW(NMEASentence):
         ("Origin Waypoint ID", "waypoint_id_orig")
     )
 
-class GLL(NMEASentence, LatLonFix):
+class GLL(TalkerSentence, LatLonFix):
     fields = (
         ('Latitude', 'lat'),
         ('Latitude Direction', 'lat_dir'),
@@ -212,7 +212,7 @@ class GLL(NMEASentence, LatLonFix):
         ("FAA mode indicator", "faa_mode")
     )
 
-class GSA(NMEASentence):
+class GSA(TalkerSentence):
     fields = (
         ('Mode', 'mode'),
         ('Mode fix type', 'mode_fix_type'),
@@ -234,7 +234,7 @@ class GSA(NMEASentence):
             )
 
 
-class GSV(NMEASentence):
+class GSV(TalkerSentence):
     fields = (
         ('Number of messages of type in cycle', 'num_messages'),
         ('Message Number', 'msg_num'),
@@ -258,7 +258,7 @@ class GSV(NMEASentence):
     )  # 00-99 dB
 
 
-class HDG(NMEASentence):
+class HDG(TalkerSentence):
     """ NOTE! This is a GUESS as I cannot find an actual spec
         telling me the fields. Updates are welcome!
     """
@@ -271,14 +271,14 @@ class HDG(NMEASentence):
     )
 
 
-class HDT(NMEASentence):
+class HDT(TalkerSentence):
     fields = (
         ("Heading", "heading", Decimal),
         ("True", "hdg_true")
     )
 
 
-class RMA(NMEASentence):
+class RMA(TalkerSentence):
     fields = (
         ("Data status", "data_status"),
         ("Latitude", "lat"),
@@ -293,7 +293,7 @@ class RMA(NMEASentence):
         ("Variation Direction", "var_dir")
     )
 
-class RMB(NMEASentence):
+class RMB(TalkerSentence):
     """ Recommended Minimum Navigation Information
     """
     fields = (
@@ -312,7 +312,7 @@ class RMB(NMEASentence):
         ("Arrival Alarm", "arrival_alarm")
     ) # A = Arrived, V = Not arrived
 
-class RMC(NMEASentence, LatLonFix):
+class RMC(TalkerSentence, LatLonFix):
     """ Recommended Minimum Specific GPS/TRANSIT Data
     """
     fields = (
@@ -329,7 +329,7 @@ class RMC(NMEASentence, LatLonFix):
         ("Magnetic Variation Direction", "mag_var_dir")
     )
 
-class RTE(NMEASentence):
+class RTE(TalkerSentence):
     """ Routes
     """
     fields = (
@@ -348,7 +348,7 @@ class RTE(NMEASentence):
         self.data[4:] = val
 
 
-class R00(NMEASentence):
+class R00(TalkerSentence):
     fields = ()
     @property
     def waypoint_list(self):
@@ -359,7 +359,7 @@ class R00(NMEASentence):
         self.data[:] = val
 
 
-class STN(NMEASentence):
+class STN(TalkerSentence):
     """ NOTE: No real data could be found for examples of the actual spec so
             it is a guess that there may be a checksum on the end
     """
@@ -368,7 +368,7 @@ class STN(NMEASentence):
     ) # 00 - 99
 
 
-class TRF(NMEASentence):
+class TRF(TalkerSentence):
     """ Transit Fix Data
     """
     fields = (
@@ -386,7 +386,7 @@ class TRF(NMEASentence):
     )
 
 
-class VBW(NMEASentence):
+class VBW(TalkerSentence):
     """ Dual Ground/Water Speed
     """
     fields = (
@@ -398,7 +398,7 @@ class VBW(NMEASentence):
         ("Ground Speed Data Validity", "data_validity_grnd_spd")
     )
 
-class VTG(NMEASentence):
+class VTG(TalkerSentence):
     """
     Track Made Good and Ground Speed
     """
@@ -415,7 +415,7 @@ class VTG(NMEASentence):
     )
 
 
-class WCV(NMEASentence):
+class WCV(TalkerSentence):
     """ Waypoint Closure Velocity
     """
     fields = (
@@ -425,7 +425,7 @@ class WCV(NMEASentence):
     )
 
 
-class WNC(NMEASentence):
+class WNC(TalkerSentence):
     """ Distance, Waypoint to Waypoint
     """
     fields = (
@@ -438,7 +438,7 @@ class WNC(NMEASentence):
     )
 
 
-class WPL(NMEASentence):
+class WPL(TalkerSentence):
     """ Waypoint Location
     """
     fields = (
@@ -450,7 +450,7 @@ class WPL(NMEASentence):
     )
 
 
-class XTE(NMEASentence):
+class XTE(TalkerSentence):
     """ Cross-Track Error, Measured
     """
     fields = (
@@ -462,7 +462,7 @@ class XTE(NMEASentence):
     )
 
 
-class ZDA(NMEASentence):
+class ZDA(TalkerSentence):
     fields = (
         ("Timestamp", "timestamp"), # hhmmss.ss = UTC
         ("Day", "day", Decimal), # 01 to 31
@@ -473,7 +473,7 @@ class ZDA(NMEASentence):
     ) # same sign as hours
 
 # Implemented by Janez Stupar for Visionect
-class RSA(NMEASentence):
+class RSA(TalkerSentence):
     """ Rudder Sensor Angle
     """
     fields = (
@@ -483,7 +483,7 @@ class RSA(NMEASentence):
         ("Port rudder sensor status","rsa_port_status"),
     )
 
-class HSC(NMEASentence):
+class HSC(TalkerSentence):
     """ Heading Steering Command
     """
     fields = (
@@ -494,7 +494,7 @@ class HSC(NMEASentence):
         ("Magnetic","magnetic"),
 
     )
-class MWD(NMEASentence):
+class MWD(TalkerSentence):
     """ Wind Direction
     NMEA 0183 standard Wind Direction and Speed, with respect to north.
     """
@@ -509,7 +509,7 @@ class MWD(NMEASentence):
         ("Wind speed","meters"),
     )
 
-class MWV(NMEASentence):
+class MWV(TalkerSentence):
     """ Wind Speed and Angle
     NMEA 0183 standard Wind Speed and Angle, in relation to the vessel's
     bow/centerline.
@@ -522,7 +522,7 @@ class MWV(NMEASentence):
         ("Status","status"),
     )
 
-class DBT(NMEASentence):
+class DBT(TalkerSentence):
     """ Depth Below Transducer
     """
     fields = (
@@ -534,7 +534,7 @@ class DBT(NMEASentence):
         ("fathoms","fathoms"),
     )
 
-class DPT(NMEASentence):
+class DPT(TalkerSentence):
     """ Depth of Water
     """
     fields = (
@@ -543,7 +543,7 @@ class DPT(NMEASentence):
         ("Maximum range on scale","max_range", Decimal)
     )
 
-class HDM(NMEASentence):
+class HDM(TalkerSentence):
     """
     Heading, Magnetic
     """
@@ -552,7 +552,7 @@ class HDM(NMEASentence):
         ("Magnetic","magnetic"),
     )
 
-class MTW(NMEASentence):
+class MTW(TalkerSentence):
     """ Water Temperature
     """
     fields = (
@@ -560,7 +560,7 @@ class MTW(NMEASentence):
         ('Unit of measurement','units')
     )
 
-class VHW(NMEASentence):
+class VHW(TalkerSentence):
     """ Water Speed and Heading
     """
     fields = (
@@ -574,7 +574,7 @@ class VHW(NMEASentence):
         ('Kilometers','kilometers'),
     )
 
-class VLW(NMEASentence):
+class VLW(TalkerSentence):
     """ Distance Traveled through the Water
     """
     fields = (
@@ -590,96 +590,96 @@ class VLW(NMEASentence):
 
 
 
-#class FSI(NMEASentence):
+#class FSI(TalkerSentence):
 #    """ Frequency Set Information
 #    """
     #    fields = (
     # )
-#class GLC(NMEASentence):
+#class GLC(TalkerSentence):
 #    """ Geographic Position, Loran-C
 #    """
     #    fields = (
     # )
-#class GXA(NMEASentence):
+#class GXA(TalkerSentence):
 #    """ TRANSIT Position
 #    """
     #    fields = (
     # )
-#class LCD(NMEASentence):
+#class LCD(TalkerSentence):
 #    """ Loran-C Signal Data
 #    """
     #    fields = (
     # )
-#class MTA(NMEASentence):
+#class MTA(TalkerSentence):
 #    """ Air Temperature (to be phased out)
 #    """
     #    fields = (
     # )
 
 
-#class OLN(NMEASentence):
+#class OLN(TalkerSentence):
 #    """ Omega Lane Numbers
 #    """
     #    fields = (
     # )
-#class OSD(NMEASentence):
+#class OSD(TalkerSentence):
 #    """ Own Ship Data
 #    """
     #    fields = (
     # )
-#class ROT(NMEASentence):
+#class ROT(TalkerSentence):
 #    """ Rate of Turn
 #    """
     #    fields = (
     # )
-#class RPM(NMEASentence):
+#class RPM(TalkerSentence):
 #    """ Revolutions
 #    """
     #    fields = (
     # )
 
-#class RSD(NMEASentence):
+#class RSD(TalkerSentence):
 #    """ RADAR System Data
 #    """
     #    fields = (
     # )
-#class SFI(NMEASentence):
+#class SFI(TalkerSentence):
 #    """ Scanning Frequency Information
 #    """
     #    fields = (
     # )
-#class TTM(NMEASentence):
+#class TTM(TalkerSentence):
 #    """ Tracked Target Message
 #    """
     #    fields = (
     # )
-#class VDR(NMEASentence):
+#class VDR(TalkerSentence):
 #    """ Set and Drift
 #    """
     #    fields = (
     # )
 
-#class VPW(NMEASentence):
+#class VPW(TalkerSentence):
 #    """ Speed, Measured Parallel to Wind
 #    """
     #    fields = (
     # )
-#class XDR(NMEASentence):
+#class XDR(TalkerSentence):
 #    """ Transducer Measurements
 #    """
     #    fields = (
     # )
-#class XTR(NMEASentence):
+#class XTR(TalkerSentence):
 #    """ Cross-Track Error, Dead Reckoning
 #    """
     #    fields = (
     # )
-#class ZFO(NMEASentence):
+#class ZFO(TalkerSentence):
 #    """ UTC & Time from Origin Waypoint
 #    """
     #    fields = (
     # )
-#class ZTG(NMEASentence):
+#class ZTG(TalkerSentence):
 #    """ UTC & Time to Destination Waypoint
 #    """
     #    fields = (
@@ -689,7 +689,7 @@ class VLW(NMEASentence):
 # -------------------------- Unknown Formats --------------------------------- #
 # ---------------------------------------------------------------------------- #
 
-#class ASD(NMEASentence):
+#class ASD(TalkerSentence):
 #    """ Auto-pilot system data (Unknown format)
 #    """
     #    fields = (
@@ -698,7 +698,7 @@ class VLW(NMEASentence):
 # -------------------------- Obsolete Formats -------------------------------- #
 # ---------------------------------------------------------------------------- #
 
-#class DCN(NMEASentence):
+#class DCN(TalkerSentence):
 #    """ Decca Position (obsolete)
 #    """
     #    fields = (
@@ -707,7 +707,7 @@ class VLW(NMEASentence):
 # PROPRIETRY SENTENCES
 
 # -- GARMIN -- #
-class RME(NMEASentence):
+class RME(TalkerSentence):
     """ GARMIN Estimated position error
     """
     fields = (
@@ -720,7 +720,7 @@ class RME(NMEASentence):
     )
 
 
-class RMM(NMEASentence):
+class RMM(TalkerSentence):
     """ GARMIN Map Datum
     """
     fields = (
@@ -728,7 +728,7 @@ class RMM(NMEASentence):
     )
 
 
-class RMZ(NMEASentence):
+class RMZ(TalkerSentence):
     """ GARMIN Altitude Information
     """
     fields = (

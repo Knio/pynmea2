@@ -7,10 +7,9 @@ class NMEASentenceType(type):
     sentence_types = {}
     def __init__(cls, name, bases, dict):
         type.__init__(cls, name, bases, dict)
-        if not 'NMEASentence' in [b.__name__ for b in bases]:
-            return
         if not hasattr(cls, 'fields'):
             return
+        # print cls, id(cls.sentence_types)
         cls.sentence_types[name] = cls
         cls.sentence_type = name
         cls.name_to_idx = {f[1]:i for i,f in enumerate(cls.fields)}
@@ -29,8 +28,6 @@ class NMEASentence(NMEASentenceBase):
     >>> s = NMEASentence.parse("$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,100.00,M,-33.9,M,,0000*6D")
     >>> print(s)
     '''
-
-    _sentence_types = {}
 
     _re = re.compile('''
         ^[^$]*\$?
@@ -64,7 +61,7 @@ class NMEASentence(NMEASentenceBase):
 
 
         nmea_str        = match.group('nmea_str')
-        data            = match.group('data').split(',')
+        data            = tuple(match.group('data').split(','))
         checksum        = match.group('checksum')
         
         talker_talker   = match.group('talker_talker')
@@ -90,7 +87,7 @@ class NMEASentence(NMEASentenceBase):
                 talker_talker.upper(),
                 sentence_type.upper()
             )
-            cls = TalkerSentence.sentence_types[key]
+            cls = TalkerSentence.sentence_types[key[1]]
             data = key + data
 
         elif query_talker:
@@ -106,8 +103,8 @@ class NMEASentence(NMEASentenceBase):
             ) + data
 
         elif proprietary_sentence_type:
-            key = proprietary_sentence_type.upper()
-            cls = ProprietarySentence.sentence_types[key]
+            key = (proprietary_sentence_type.upper(),)
+            cls = ProprietarySentence.sentence_types[key[0]]
             data = key + data
 
         else:
@@ -176,17 +173,17 @@ class TalkerSentence(NMEASentence):
         self.data = list(data)
 
 
-class ProprietarySentence(NMEASentence):
-    sentence_types = {}
-    def __init__(self, sentence_type, *data):
-        self.sentence_type = sentence_type
-        self.data = list(data)
-
-
 class QuerySentence(NMEASentence):
     sentence_types = {}
     def __init__(self, talker, listener, sentence_type, *data):
         self.talker = talker
         self.listener = listener
+        self.sentence_type = sentence_type
+        self.data = list(data)
+
+
+class ProprietarySentence(NMEASentence):
+    sentence_types = {}
+    def __init__(self, sentence_type, *data):
         self.sentence_type = sentence_type
         self.data = list(data)
