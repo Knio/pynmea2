@@ -94,16 +94,19 @@ def test_MWV():
 
 from pynmea2 import nmea
 
+
 def test_proprietary():
-    class AAA(nmea.ProprietarySentence):
+    class AAACC(nmea.ProprietarySentence):
         fields = (
             ('First', 'a'),
             ('Second', 'b'),
         )
 
 
-    data = '$PAAA,1,2*12'
+    data = '$PAAACC,1,2*12'
     msg = pynmea2.parse(data)
-    assert isinstance(msg, AAA)
+    assert isinstance(msg, AAACC)
+    assert msg.manufacturer == 'AAA'
+    assert msg.sentence_type == 'CC'
     assert msg.a == '1'
     assert msg.b == '2'

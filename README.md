@@ -12,6 +12,8 @@ The `pynmea2` homepage is located at http://github.com/Knio/pynmea2
 
 `pynmea2` is compatable with Python 2.7 and Python 3.3
 
+[![Build Status](https://travis-ci.org/Knio/pynmea2.png?branch=master)](https://travis-ci.org/Knio/pynmea2)
+
 ### Installation
 
 The recommended way to install `pynmea2` is with
@@ -19,6 +21,7 @@ The recommended way to install `pynmea2` is with
 
     pip install pynmea2
 
+[![PyPI version](https://badge.fury.io/py/pynmea2.png)](http://badge.fury.io/py/pynmea2)
 
 Parsing
 -------

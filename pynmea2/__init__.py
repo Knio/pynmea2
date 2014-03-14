@@ -1,8 +1,8 @@
-version = __version__ = '0.6.0'
+from ._version import __version__
+version = __version__
 
 from .nmea import NMEASentence
 from .types import *
 from .stream import NMEAStreamReader
-
 
 parse = NMEASentence.parse

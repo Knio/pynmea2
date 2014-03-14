@@ -33,7 +33,7 @@ class NMEASentence(NMEASentenceBase):
         ^[^$]*\$?
         (?P<nmea_str>(
             ((?P<talker_talker>\w{2})(?P<talker_sentence_type>\w{3}))|
-            (P(?P<proprietary_sentence_type>\w{3}))|
+            (P(?P<proprietary_sentence_manufacturer>\w{3})(?P<proprietary_sentence_type>\w+))|
             ((?P<query_talker>\w{2})(?P<query_requester>\w{2})Q,(?P<query_sentence_type>\w{3}))
             ),(?P<data>[^*]+)
         )(?:\\*(?P<checksum>[A-F0-9]{2}))
@@ -66,8 +66,12 @@ class NMEASentence(NMEASentenceBase):
         
         talker_talker   = match.group('talker_talker')
         sentence_type   = match.group('talker_sentence_type')
+        
+        proprietary_sentence_manufacturer \
+                        = match.group('proprietary_sentence_manufacturer')
         proprietary_sentence_type \
                         = match.group('proprietary_sentence_type')
+        
         query_talker    = match.group('query_talker')
         query_requester = match.group('query_requester')
         query_sentence_type \
@@ -102,9 +106,12 @@ class NMEASentence(NMEASentenceBase):
                 query_sentence_type.upper(),
             ) + data
 
-        elif proprietary_sentence_type:
-            key = (proprietary_sentence_type.upper(),)
-            cls = ProprietarySentence.sentence_types[key[0]]
+        elif proprietary_sentence_manufacturer:
+            key = (
+                proprietary_sentence_manufacturer.upper(),
+                proprietary_sentence_type.upper(),
+            )
+            cls = ProprietarySentence.sentence_types[''.join(key)]
             data = key + data
 
         else:
@@ -184,6 +191,7 @@ class QuerySentence(NMEASentence):
 
 class ProprietarySentence(NMEASentence):
     sentence_types = {}
-    def __init__(self, sentence_type, *data):
+    def __init__(self, manufacturer, sentence_type, *data):
+        self.manufacturer = manufacturer
         self.sentence_type = sentence_type
         self.data = list(data)
