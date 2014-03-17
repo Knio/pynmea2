@@ -110,3 +110,4 @@ def test_proprietary():
     assert msg.sentence_type == 'CC'
     assert msg.a == '1'
     assert msg.b == '2'
+    assert str(msg)== data
