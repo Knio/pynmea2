@@ -200,3 +200,13 @@ class ProprietarySentence(NMEASentence):
         self.manufacturer = manufacturer
         self.sentence_type = sentence_type
         self.data = list(data)
+    def render(self, checksum=True, dollar=True, newline=False):
+        res = 'P' + self.manufacturer + self.sentence_type + ','
+        res += ','.join(self.data)
+        if checksum:
+           res += '*%02X' % NMEASentence.checksum(res)
+        if dollar:
+           res= '$' + res
+        if newline:
+           res += (newline is True) and '\r\n' or newline
+        return res
