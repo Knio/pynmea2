@@ -35,7 +35,7 @@ class NMEASentence(NMEASentenceBase):
         ^[^$]*\$?
         (?P<nmea_str>(
             ((?P<talker_talker>\w{2})(?P<talker_sentence_type>\w{3}))|
-            (P(?P<proprietary_sentence_manufacturer>\w{3})(?P<proprietary_sentence_type>\w+))|
+            (P(?P<proprietary_sentence_manufacturer>\w{3}),?(?P<proprietary_sentence_type>\w+))|
             ((?P<query_talker>\w{2})(?P<query_requester>\w{2})Q,(?P<query_sentence_type>\w{3}))
             ),(?P<data>[^*]+)
         )(?:\\*(?P<checksum>[A-F0-9]{2}))
