@@ -10,7 +10,7 @@ def test_GGA():
     msg = pynmea2.parse(data)
     assert msg.talker == 'GP'
     assert msg.sentence_type == 'GGA'
-    assert isinstance(msg, pynmea2.GGA) 
+    assert isinstance(msg, pynmea2.GGA)
 
     # Timestamp
     assert msg.timestamp        == datetime.time(18, 43, 53)
@@ -96,18 +96,16 @@ from pynmea2 import nmea
 
 
 def test_proprietary():
-    class AAACC(nmea.ProprietarySentence):
+    class ABC(nmea.ProprietarySentence):
         fields = (
             ('First', 'a'),
             ('Second', 'b'),
         )
 
-
-    data = '$PAAACC,1,2*12'
+    data = '$PABC,1,2*13'
     msg = pynmea2.parse(data)
-    assert isinstance(msg, AAACC)
-    assert msg.manufacturer == 'AAA'
-    assert msg.sentence_type == 'CC'
+    assert isinstance(msg, ABC)
+    assert msg.manufacturer == 'ABC'
     assert msg.a == '1'
     assert msg.b == '2'
     assert str(msg)== data
