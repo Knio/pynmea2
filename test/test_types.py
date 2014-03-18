@@ -96,15 +96,44 @@ from pynmea2 import nmea
 
 
 def test_proprietary():
-    class ABC(nmea.ProprietarySentence):
+    class ABCX(nmea.ProprietarySentence):
         fields = (
             ('First', 'a'),
             ('Second', 'b'),
         )
 
-    data = '$PABC,1,2*13'
+    data = '$PABCX,1,2*4B'
     msg = pynmea2.parse(data)
-    assert isinstance(msg, ABC)
+    assert isinstance(msg, ABCX)
     assert msg.manufacturer == 'ABC'
+    assert msg.sentence_type =='X'
     assert msg.a == '1'
     assert msg.b == '2'
+    assert str(msg)== data
+
+def test_proprietary_with_comma():
+    class TNLPJT(nmea.ProprietarySentence):
+        fields = (
+                  ('Coordinate System', 'coord_name'),
+                  ('Project Name', 'project_name'),
+                  )
+        def render(self, checksum=True, dollar=True, newline=False):
+            res = 'P' + self.manufacturer + ',' + self.sentence_type + ','
+            res += ','.join(self.data)
+            if checksum:
+                res += '*%02X' % nmea.NMEASentence.checksum(res)
+            if dollar:
+                res= '$' + res
+            if newline:
+                res += (newline is True) and '\r\n' or newline
+            return res
+    
+    
+    data = '$PTNL,PJT,NAD83(Conus),CaliforniaZone 4 0404*51'
+    msg = pynmea2.parse(data)
+    assert isinstance(msg, TNLPJT)
+    assert msg.manufacturer == 'TNL'
+    assert msg.sentence_type == 'PJT'
+    assert msg.coord_name == 'NAD83(Conus)'
+    assert msg.project_name == 'CaliforniaZone 4 0404'
+    assert str(msg)== data
