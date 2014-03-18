@@ -31,25 +31,58 @@ class NMEASentence(NMEASentenceBase):
     >>> print(s)
     '''
 
-    _re = re.compile('''
+    sentence_re = re.compile('''
+        # start of string, anything up to optional '$'
         ^[^$]*\$?
-        (?P<nmea_str>(
-            ((?P<talker_talker>\w{2})(?P<talker_sentence_type>\w{3}))|
-            (P(?P<proprietary_sentence_manufacturer>\w{3}),?(?P<proprietary_sentence_type>\w+))|
-            ((?P<query_talker>\w{2})(?P<query_requester>\w{2})Q,(?P<query_sentence_type>\w{3}))
-            ),(?P<data>[^*]+)
-        )(?:\\*(?P<checksum>[A-F0-9]{2}))
-        [\\\r\\\n]*
+
+        # message (from '$' or start to checksum or end, non-inclusve)
+        (?P<nmea_str>
+            # sentence type identifier
+            (?P<sentence_type>
+
+                # proprietary sentence
+                (P\w{3},?\w+)|
+
+                # query sentence, ie: 'CCGPQ,GGA'
+                # NOTE: this should have no data
+                (\w{2}\w{2}Q,{\w{3}})|
+
+                # taker sentence, ie: 'GPGGA'
+                (\w{2}\w{3})
+            )
+
+            # optional comma between sentence identifier (data may be empty)
+            ,?
+
+            # rest of message
+            (?P<data>[^*]*)
+
+        )
+        # checksum: *HH
+        (?:[*](?P<checksum>[A-F0-9]{2}))?
+
+        # optional trailing whitespace
+        \s*[\\\r\\\n]*$
         ''', re.X | re.IGNORECASE)
+
+    talker_re = \
+        re.compile('(?P<talker>\w{2})(?P<sentence>\w{3})')
+    query_re = \
+        re.compile('(?P<talker>\w{2})(?P<listener>\w{2})Q,(?P<sentence>\w{3})')
+    proprietary_re = \
+        re.compile('P(?P<manufacturer>\w{3}),?(?P<sentence>\w+)')
+
+    name_to_idx = {}
+    fields = ()
 
     @staticmethod
     def checksum(nmea_str):
         return reduce(operator.xor, map(ord, nmea_str), 0)
 
     @staticmethod
-    def parse(data):
+    def parse(input):
         '''
-        parse(data)
+        parse(input)
 
         Parses a string representing a NMEA 0183 sentence, and returns a
         NMEASentence object
@@ -57,73 +90,50 @@ class NMEASentence(NMEASentenceBase):
         Raises ValueError if the string could not be parsed, or if the checksum
         did not match.
         '''
-        match = NMEASentence._re.match(data)
+        match = NMEASentence.sentence_re.match(input)
         if not match:
-            raise ValueError('could not parse data: %r' % data)
-
+            raise ValueError('could not parse data: %r' % input)
 
         nmea_str        = match.group('nmea_str')
-        data            = tuple(match.group('data').split(','))
+        data            = match.group('data').split(',')
         checksum        = match.group('checksum')
-        
-        talker_talker   = match.group('talker_talker')
-        sentence_type   = match.group('talker_sentence_type')
-        
-        proprietary_sentence_manufacturer \
-                        = match.group('proprietary_sentence_manufacturer')
-        proprietary_sentence_type \
-                        = match.group('proprietary_sentence_type')
-        
-        query_talker    = match.group('query_talker')
-        query_requester = match.group('query_requester')
-        query_sentence_type \
-                        = match.group('query_sentence_type')
+        sentence_type   = match.group('sentence_type').upper()
 
         if checksum:
-            # print nmea_str
             cs1 = int(checksum, 16)
             cs2 = NMEASentence.checksum(nmea_str)
             if cs1 != cs2:
                 raise ValueError('checksum does not match: %02X != %02X' %
                     (cs1, cs2))
-
         
-        if talker_talker:
-            key = (
-                talker_talker.upper(),
-                sentence_type.upper()
-            )
-            cls = TalkerSentence.sentence_types[key[1]]
-            data = key + data
+        proprietary_match = NMEASentence.proprietary_re.match(sentence_type)
+        if proprietary_match:
+            manufacturer = proprietary_match.group('manufacturer')
+            sentence = proprietary_match.group('sentence')
+            key= (''.join((manufacturer.upper(),sentence.upper())))
+            cls = ProprietarySentence.sentence_types.get(key)
+            return cls(manufacturer,sentence, *data)
+        
+        talker_match = NMEASentence.talker_re.match(sentence_type)
+        if talker_match:
+            talker = talker_match.group('talker')
+            sentence = talker_match.group('sentence')
+            cls = TalkerSentence.sentence_types.get(sentence)
 
-        elif query_talker:
-            key = (
-                query_talker.upper(),
-                query_sentence_type.upper()
-            )
-            cls = QuerySentence.sentence_types[key]
-            data = (
-                query_talker.upper(),
-                query_requester.upper(),
-                query_sentence_type.upper(),
-            ) + data
+            if not cls:
+                # TODO instantiate base type instead of fail
+                raise ValueError('Unknown sentence type %s' % sentence_type)
+            return cls(talker, sentence, *data)
 
-        elif proprietary_sentence_manufacturer:
-            key = (
-                proprietary_sentence_manufacturer.upper(),
-                proprietary_sentence_type.upper(),
-            )
-            cls = ProprietarySentence.sentence_types[''.join(key)]
-            data = key + data
 
-        else:
-            raise ValueError('Unknown sentence type %s' % sentence_type)
 
-        return cls(*data)
+        raise ValueError('could not parse sentence type: %r' % sentence_type)
 
     def __getattr__(self, name):
         t = type(self)
-        i = t.name_to_idx[name]
+        try:
+            i = t.name_to_idx[name]
+        except KeyError: raise AttributeError(name)
         f = t.fields[i]
         if i < len(self.data):
             v = self.data[i]
