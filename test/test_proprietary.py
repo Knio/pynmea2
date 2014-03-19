@@ -1,15 +1,22 @@
 import pynmea2
 
 
-def test_follower_1():
+def test_proprietary_1():
+    # A sample proprietary sentence from a LCJ Capteurs
+    # anemometer.
     data = "$PLCJ,5F01,66FC,AA,9390,6373"
     msg = pynmea2.parse(data)
-    assert msg.manufacturer == 'LCJ'
+    assert msg.manufacturer == "LCJ"
+    assert msg.data == ['','5F01','66FC','AA','9390','6373']
     assert msg.render(checksum=False) == data
 
 
-def test_follower_2():
-    # missing comma in front, extra comma at end
+def test_proprietary_2():
+    # A sample proprietary sentence from a LCJ Capteurs anemometer.
+    # Note: This sample is the main reason why we can't assume
+    #       anything about the content of the proprietary sentences
+    #       due to the lack of a comma after the manufacturer ID and
+    #       extra comma at the end.
     data = "$PLCJE81B8,64A0,2800,2162,0E,"
     msg = pynmea2.parse(data)
     assert msg.manufacturer == 'LCJ'
@@ -18,11 +25,15 @@ def test_follower_2():
     assert msg.render(checksum=False) == data
 
 
-def test_follower_3():
+def test_proprietary_3():
+    # A sample proprietary sentence from a Magellan device
+    # (via <http://www.gpsinformation.org/dale/nmea.htm#proprietary>).
     data = "$PMGNST,02.12,3,T,534,05.0,+03327,00*40"
     msg = pynmea2.parse(data)
     assert msg.manufacturer == 'MGN'
+    assert msg.data == ['ST','02.12','3','T','534','05.0','+03327','00']
     assert msg.render() == data
+
 
 def test_extra_comma():
     # extra comma after name
@@ -32,7 +43,8 @@ def test_extra_comma():
     assert msg.data == ['', 'AVR','212604.30','+52.1800','Yaw','','','-0.0807','Roll','12.579','3','1.4','16']
     assert msg.render() == data
 
-def test_proprietary():
+
+def test_proprietary_type():
     class ABC(pynmea2.ProprietarySentence):
         fields = (
             ('Empty', '_'),
