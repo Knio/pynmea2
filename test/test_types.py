@@ -92,19 +92,3 @@ def test_MWV():
     # Device status
     assert msg.status == 'A'
 
-from pynmea2 import nmea
-
-
-def test_proprietary():
-    class ABC(nmea.ProprietarySentence):
-        fields = (
-            ('First', 'a'),
-            ('Second', 'b'),
-        )
-
-    data = '$PABC,1,2*13'
-    msg = pynmea2.parse(data)
-    assert isinstance(msg, ABC)
-    assert msg.manufacturer == 'ABC'
-    assert msg.a == '1'
-    assert msg.b == '2'
