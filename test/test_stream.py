@@ -22,3 +22,6 @@ def test_stream():
     t.seek(0)
     sr = pynmea2.NMEAStreamReader(t)
     assert len(sr.next()) == 1
+
+    sr = pynmea2.NMEAStreamReader(data)
+    assert sr.stream == None
