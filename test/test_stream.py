@@ -1,4 +1,5 @@
 import pynmea2
+from tempfile import TemporaryFile
 
 def test_stream():
     data = "$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,100.00,M,-33.9,M,,0000*6D\n"
@@ -13,3 +14,11 @@ def test_stream():
     assert len(sr.next(data[:10])) == 0
     assert len(sr.next(data[10:])) == 1
 
+    sr = pynmea2.NMEAStreamReader()
+    assert sr.next() == []
+
+    t = TemporaryFile()
+    t.write(data)
+    t.seek(0)
+    sr = pynmea2.NMEAStreamReader(t)
+    assert len(sr.next()) == 1

@@ -11,7 +11,7 @@ class NMEAStreamReader(object):
         `stream`: file-like object to read from, can be omitted to
         pass data to `next` manually
         '''
-        self.stream = None
+        self.stream = stream
         self.buffer = ''
 
     def next(self, data=None):
