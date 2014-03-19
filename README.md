@@ -12,6 +12,9 @@ The `pynmea2` homepage is located at http://github.com/Knio/pynmea2
 
 `pynmea2` is compatable with Python 2.7 and Python 3.3
 
+[![Build Status](https://travis-ci.org/Knio/pynmea2.png?branch=master)](https://travis-ci.org/Knio/pynmea2)
+[![Coverage Status](https://coveralls.io/repos/Knio/pynmea2/badge.png?branch=master)](https://coveralls.io/r/Knio/pynmea2?branch=master)
+
 ### Installation
 
 The recommended way to install `pynmea2` is with
@@ -19,12 +22,13 @@ The recommended way to install `pynmea2` is with
 
     pip install pynmea2
 
+[![PyPI version](https://badge.fury.io/py/pynmea2.png)](http://badge.fury.io/py/pynmea2)
 
 Parsing
 -------
 
 You can parse individual NMEA sentences using the `parse()` function, which takes a string containing a
-NMEA 0183 sentence and returns a `NMEASentence` object. Note that the leading '$' is optional and trailing whitespace is ingored when parsing a sentence.
+NMEA 0183 sentence and returns a `NMEASentence` object. Note that the leading '$' is optional and trailing whitespace is ignored when parsing a sentence.
 
 Example:
 
@@ -98,25 +102,22 @@ Streaming
 `pynmea2` can also process streams of NMEA sentences like so, by feeding chunks of data
 manually:
 
-    streamreader = pynmea2.NMEAStreamReader()
-    while 1:
-        data = input.read()
-        for msg in streamreader.next(data):
-            print msg
+```python
+streamreader = pynmea2.NMEAStreamReader()
+while 1:
+    data = input.read()
+    for msg in streamreader.next(data):
+        print msg
+```
 
 or given a file-like device, automatically:
 
+```python
     streamreader = pynmea2.NMEAStreamReader(input)
     while 1:
         for msg in streamreader.next():
             print msg
-
-
-Testing
--------
-
-`pynmea2` can be tested with [pytest](http://pytest.org/)
-
+```
 
 TODO
 ----

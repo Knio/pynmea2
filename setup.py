@@ -1,8 +1,11 @@
 from setuptools import setup
 
+import imp
+_version = imp.load_source("pynmea2._version", "pynmea2/_version.py")
+
 setup(
     name='pynmea2',
-    version='0.6.0',
+    version=_version.__version__,
     author='Tom Flanagan',
     author_email='tom@zkpq.ca',
     license='MIT',
@@ -10,7 +13,7 @@ setup(
     
     description='Python library for the NMEA 0183 protcol',
     packages=['pynmea2'],
-    keywords='python nmea gps parse parsing',
+    keywords='python nmea gps parse parsing nmea0183 0183',
 
     classifiers=[
         'Intended Audience :: Developers',
@@ -19,6 +22,7 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
         'Topic :: Scientific/Engineering :: GIS',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ]
