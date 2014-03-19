@@ -1,3 +1,4 @@
+from __future__ import print_function
 import pynmea2
 from tempfile import TemporaryFile
 
@@ -18,7 +19,7 @@ def test_stream():
     assert sr.next() == []
 
     t = TemporaryFile()
-    t.write(data)
+    print(data,end='',file=t)
     t.seek(0)
     sr = pynmea2.NMEAStreamReader(t)
     assert len(sr.next()) == 1
