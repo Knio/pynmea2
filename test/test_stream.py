@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import unicode_literals
 import pynmea2
 from tempfile import TemporaryFile
 
@@ -19,7 +19,12 @@ def test_stream():
     assert sr.next() == []
 
     t = TemporaryFile()
-    print(data,end='',file=t)
+    ''' Handle Exception for Python 2.7 and 3.3 Compatibility '''
+    try:
+       bdata = bytes(data,'UTF-8')
+    except TypeError:
+       bdata = data
+    t.write(bdata)
     t.seek(0)
     sr = pynmea2.NMEAStreamReader(t)
     assert len(sr.next()) == 1

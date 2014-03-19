@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from . import nmea
 
 class NMEAStreamReader(object):
@@ -25,7 +26,7 @@ class NMEAStreamReader(object):
         '''
         if data is None:
             if self.stream:
-                data = self.stream.read()
+                data = self.stream.read().decode()
             else:
                 return []
 
