@@ -7,11 +7,10 @@ class NMEASentenceType(type):
     sentence_types = {}
     def __init__(cls, name, bases, dict):
         type.__init__(cls, name, bases, dict)
-        if not hasattr(cls, 'fields'):
+        base = bases[0]
+        if base is object:
             return
-        # print cls, id(cls.sentence_types)
-        cls.sentence_types[name] = cls
-        cls.sentence_type = name
+        base.sentence_types[name] = cls
         cls.name_to_idx = {f[1]:i for i,f in enumerate(cls.fields)}
 
 
@@ -45,14 +44,11 @@ class NMEASentence(NMEASentenceBase):
 
                 # query sentence, ie: 'CCGPQ,GGA'
                 # NOTE: this should have no data
-                (\w{2}\w{2}Q,{\w{3}})|
+                (\w{2}\w{2}Q,{\w{3}},)|
 
                 # taker sentence, ie: 'GPGGA'
-                (\w{2}\w{3})
+                (\w{2}\w{3},)
             )
-
-            # optional comma between sentence identifier (data may be empty)
-            ,?
 
             # rest of message
             (?P<data>[^*]*)
@@ -115,13 +111,15 @@ class NMEASentence(NMEASentenceBase):
             if not cls:
                 # TODO instantiate base type instead of fail
                 raise ValueError('Unknown sentence type %s' % sentence_type)
-            return cls(talker, sentence, *data)
+            return cls(talker, sentence, data)
+
+        # TODO query match
 
         proprietary_match = NMEASentence.proprietary_re.match(sentence_type)
         if proprietary_match:
             manufacturer = proprietary_match.group('manufacturer')
             cls = ProprietarySentence.sentence_types.get(manufacturer, ProprietarySentence)
-            return cls(manufacturer, *data)
+            return cls(manufacturer, data)
 
         raise ValueError('could not parse sentence type: %r' % sentence_type)
 
@@ -167,9 +165,11 @@ class NMEASentence(NMEASentenceBase):
             d and ' data=%r' % d or ''
         )
 
+    def identifier(self):
+        raise NotImplemented
+
     def render(self, checksum=True, dollar=True, newline=False):
-        res = self.talker + self.sentence_type + ','
-        res += ','.join(self.data)
+        res = self.identifier() + ','.join(self.data)
         if checksum:
             res += '*%02X' % NMEASentence.checksum(res)
         if dollar:
@@ -185,23 +185,31 @@ class NMEASentence(NMEASentenceBase):
 
 class TalkerSentence(NMEASentence):
     sentence_types = {}
-    def __init__(self, talker, sentence_type, *data):
+    def __init__(self, talker, sentence_type, data):
         self.talker = talker
         self.sentence_type = sentence_type
         self.data = list(data)
 
+    def identifier(self):
+        return '%s%s,' % (self.talker, self.sentence_type)
+
 
 class QuerySentence(NMEASentence):
     sentence_types = {}
-    def __init__(self, talker, listener, sentence_type, *data):
+    def __init__(self, talker, listener, sentence_type, data):
         self.talker = talker
         self.listener = listener
         self.sentence_type = sentence_type
         self.data = list(data)
 
+    def identifier(self):
+        return '%s%sQ,%s,' % (self.talker, self.listener, self.sentence_type)
 
 class ProprietarySentence(NMEASentence):
     sentence_types = {}
-    def __init__(self, manufacturer, *data):
+    def __init__(self, manufacturer, data):
         self.manufacturer = manufacturer
         self.data = list(data)
+
+    def identifier(self):
+        return 'P%s' % (self.manufacturer)

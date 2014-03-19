@@ -91,4 +91,5 @@ def test_MWV():
 
     # Device status
     assert msg.status == 'A'
+    assert msg.render() == data
 
