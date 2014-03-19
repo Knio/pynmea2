@@ -26,7 +26,7 @@ class NMEAStreamReader(object):
         '''
         if data is None:
             if self.stream:
-                data = self.stream.read().decode()
+                data = self.stream.readline().decode()
             else:
                 return []
 
