@@ -67,6 +67,10 @@ def test_whitespace():
     msg = pynmea2.parse(data)
     assert msg.render(dollar=False) == data.strip()
 
+def test_nmea_util():
+    assert pynmea2.nmea_utils.dm_to_sd('0') == 0
+    assert pynmea2.nmea_utils.dm_to_sd('12108.1') == 121.135
+
 #
 # ^o^
 #       |\    ship it!

@@ -707,6 +707,7 @@ class VLW(TalkerSentence):
 # PROPRIETRY SENTENCES
 
 # -- GARMIN -- #
+####DEPRECATED!########
 class RME(TalkerSentence):
     """ GARMIN Estimated position error
     """
