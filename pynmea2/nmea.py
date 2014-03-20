@@ -205,6 +205,7 @@ class QuerySentence(NMEASentence):
     def identifier(self):
         return '%s%sQ,%s,' % (self.talker, self.listener, self.sentence_type)
 
+
 class ProprietarySentence(NMEASentence):
     sentence_types = {}
     def __init__(self, manufacturer, data):

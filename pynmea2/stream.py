@@ -12,10 +12,7 @@ class NMEAStreamReader(object):
         `stream`: file-like object to read from, can be omitted to
         pass data to `next` manually
         '''
-        if hasattr(stream,'read'):
-            self.stream = stream
-        else:
-            self.stream = None
+        self.stream = stream
         self.buffer = ''
 
     def next(self, data=None):
@@ -26,7 +23,7 @@ class NMEAStreamReader(object):
         '''
         if data is None:
             if self.stream:
-                data = self.stream.readline().decode()
+                data = self.stream.readline()
             else:
                 return []
 
