@@ -117,11 +117,5 @@ or given a file-like device, automatically:
     while 1:
         for msg in streamreader.next():
             print msg
-```
 
-TODO
-----
 
-* Generate Sphinx docs
-* Make extra NMEASentence properties writable
-* Cleanup types

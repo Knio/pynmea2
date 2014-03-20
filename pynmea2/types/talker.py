@@ -704,39 +704,4 @@ class VLW(TalkerSentence):
     #    fields = (
     # )
 
-# PROPRIETRY SENTENCES
-
-# -- GARMIN -- #
-####DEPRECATED!########
-class RME(TalkerSentence):
-    """ GARMIN Estimated position error
-    """
-    fields = (
-    ("Estimated Horiz. Position Error", "hpe"),
-    ("Estimated Horiz. Position Error Unit (M)", "hpe_unit"),
-    ("Estimated Vert. Position Error", "vpe"),
-    ("Estimated Vert. Position Error Unit (M)", "vpe_unit"),
-    ("Estimated Horiz. Position Error", "osepe"),
-    ("Overall Spherical Equiv. Position Error", "osepe_unit")
-    )
-
-
-class RMM(TalkerSentence):
-    """ GARMIN Map Datum
-    """
-    fields = (
-    ('Currently Active Datum', 'datum'),
-    )
-
-
-class RMZ(TalkerSentence):
-    """ GARMIN Altitude Information
-    """
-    fields = (
-    ("Altitude", "altitude"),
-    ("Altitude Units (Feet)", "altitude_unit"),
-    ("Positional Fix Dimension (2=user, 3=GPS)", "pos_fix_dim")
-    )
-
-
 
