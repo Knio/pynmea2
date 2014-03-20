@@ -1,5 +1,5 @@
-from .nmea import TalkerSentence
-from .nmea_utils import *
+from ..nmea import TalkerSentence
+from ..nmea_utils import *
 from decimal import Decimal
 
 class AAM(TalkerSentence):

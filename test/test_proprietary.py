@@ -108,3 +108,21 @@ def test_proprietary_with_comma():
     assert msg.coord_name == 'NAD83(Conus)'
     assert msg.project_name == 'CaliforniaZone 4 0404'
     assert str(msg) == data
+
+
+def test_srf():
+    # implemented sentence
+    data = '$PSRF100,0,1200,8,1,1'
+    msg = pynmea2.parse(data)
+    assert type(msg) == pynmea2.srf.SRF100
+
+    # unimplemented sentence
+    data = '$PSRF999,0,1200,8,1,1'
+    msg = pynmea2.parse(data)
+    assert type(msg) == pynmea2.srf.SRF
+
+
+def test_grm():
+    data = ' $PGRME,15.0,M,45.0,M,25.0,M*1C'
+    msg = pynmea2.parse(data)
+    assert type(msg) == pynmea2.grm.GRME

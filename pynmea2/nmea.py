@@ -31,8 +31,8 @@ class NMEASentence(NMEASentenceBase):
     '''
 
     sentence_re = re.compile('''
-        # start of string, anything up to optional '$'
-        ^[^$]*\$?
+        # start of string, optional whitespace, optional '$'
+        ^\s*\$?
 
         # message (from '$' or start to checksum or end, non-inclusve)
         (?P<nmea_str>
@@ -94,6 +94,7 @@ class NMEASentence(NMEASentenceBase):
         data            = match.group('data').split(',')
         checksum        = match.group('checksum')
         sentence_type   = match.group('sentence_type').upper()
+
 
         if checksum:
             cs1 = int(checksum, 16)

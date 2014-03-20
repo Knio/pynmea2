@@ -5,7 +5,7 @@ data = "$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,100.00,M,-33.9,M,,0000*
 
 
 def test_version():
-    version = '1.0.0'
+    version = '1.1.0'
     assert pynmea2.version == version
     assert pynmea2.__version__ == version
 
@@ -21,6 +21,20 @@ def test_checksum():
     d = data[:-2] + '00'
     with pytest.raises(ValueError):
         msg = pynmea2.parse(d)
+
+
+def test_attribute():
+    msg = pynmea2.parse(data)
+    with pytest.raises(AttributeError):
+        msg.foobar
+
+
+def test_fail():
+    with pytest.raises(ValueError):
+        pynmea2.parse('FOOBAR')
+
+    with pytest.raises(ValueError):
+        pynmea2.parse('$GPABC,1,2,3')
 
 
 def test_mixin():
@@ -41,6 +55,17 @@ def test_missing_2():
     msg = pynmea2.parse('$GPGSV,3,3,09,24,03,046,*47')
     assert msg.snr_4 == None
 
+
+def test_dollar():
+    data = 'GPGSV,3,3,09,24,03,046,*47\r\n'
+    msg = pynmea2.parse(data)
+    assert msg.render(dollar=False, newline=True) == data
+
+
+def test_whitespace():
+    data = '  GPGSV,3,3,09,24,03,046,*47  \r\n  '
+    msg = pynmea2.parse(data)
+    assert msg.render(dollar=False) == data.strip()
 
 #
 # ^o^
