@@ -1,5 +1,5 @@
 import pynmea2
-
+import datetime
 
 def test_proprietary_1():
     # A sample proprietary sentence from a LCJ Capteurs
@@ -63,22 +63,8 @@ def test_proprietary_type():
 
 
 def test_proprietary_with_comma():
-    class TNL(pynmea2.ProprietarySentence):
-        sentence_types = {}
-        def __new__(_cls, manufacturer, data):
-            '''
-            Return the correct sentence type based on the first field
-            '''
-            sentence_type = data[0] or data[1]
-            cls = _cls.sentence_types[sentence_type]
-            return super(TNL, cls).__new__(cls)
-
-        def __init__(self, manufacturer, data):
-            self.sentence_type = data[0] or data[1]
-            super(TNL, self).__init__(manufacturer, data)
-
     # class with no extra comma
-    class DG(TNL):
+    class TNLDG(pynmea2.tnl.TNL):
         fields = ()
 
     # raise Exception(TNL.sentence_types)
@@ -86,23 +72,16 @@ def test_proprietary_with_comma():
 
     data = "$PTNLDG,44.0,33.0,287.0,100,0,4,1,0,,,*3E"
     msg = pynmea2.parse(data)
-    assert isinstance(msg, DG)
+    assert isinstance(msg, TNLDG)
     assert msg.data == ['DG', '44.0', '33.0', '287.0', '100', '0', '4', '1', '0', '', '', '']
     assert str(msg) == data
 
 
     # type with extra comma
-    class PJT(TNL):
-        fields = (
-            ('Empty', '_'),
-            ('Sentence Type', 'type'),
-            ('Coordinate System', 'coord_name'),
-            ('Project Name', 'project_name'),
-        )
 
     data = '$PTNL,PJT,NAD83(Conus),CaliforniaZone 4 0404*51'
     msg = pynmea2.parse(data)
-    assert isinstance(msg, PJT)
+    assert type(msg) == pynmea2.tnl.TNLPJT
     assert msg.manufacturer == 'TNL'
     assert msg.sentence_type == 'PJT'
     assert msg.coord_name == 'NAD83(Conus)'
@@ -126,3 +105,13 @@ def test_grm():
     data = ' $PGRME,15.0,M,45.0,M,25.0,M*1C'
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.grm.GRME
+
+def test_tnl():
+    data = '$PTNL,BPQ,224445.06,021207,3723.09383914,N,12200.32620132,W,EHT-5.923,M,5*60'
+    msg = pynmea2.parse(data)
+    assert type(msg) == pynmea2.tnl.TNLBPQ
+    assert msg.datestamp == datetime.datetime(2007,12,2,0,0)
+    assert msg.latitude == 37.384897319
+    assert msg.longitude == -122.00543668866666
+
+
