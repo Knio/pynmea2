@@ -12,7 +12,7 @@ setup(
     url='https://github.com/Knio/pynmea2',
     
     description='Python library for the NMEA 0183 protcol',
-    packages=['pynmea2'],
+    packages=['pynmea2','pynmea2.types','pynmea2.types.proprietary'],
     keywords='python nmea gps parse parsing nmea0183 0183',
 
     classifiers=[
