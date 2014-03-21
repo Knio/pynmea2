@@ -5,15 +5,18 @@ class NMEAStreamReader(object):
     '''
     Reads NMEA sentences from a stream.
     '''
-    def __init__(self, stream=None):
+    def __init__(self, stream=None, stream_size=None):
         '''
         Create NMEAStreamReader object.
 
         `stream`: file-like object to read from, can be omitted to
         pass data to `next` manually
+        `stream_size`: determines # of bytes to read from stream for each
+        `next` user configurable to help responsiveness of stream reader
         '''
         self.stream = stream
         self.buffer = ''
+        self.stream_size = stream_size
 
     def next(self, data=None):
         '''
@@ -23,7 +26,7 @@ class NMEAStreamReader(object):
         '''
         if data is None:
             if self.stream:
-                data = self.stream.readline()
+                data = self.stream.read(self.stream_size)
             else:
                 return []
 
