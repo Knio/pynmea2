@@ -32,3 +32,10 @@ def test_stream():
     assert len(sr.next()) == 1
     assert len(sr.next()) == 1
     assert len(sr.next()) == 0
+    #Test stream_size too small
+    f.seek(0)
+    sr = pynmea2.NMEAStreamReader(f,len(data)-1)
+    assert len(sr.next()) == 0
+    assert len(sr.next()) == 1
+    assert len(sr.next()) == 1
+    assert len(sr.next()) == 0
