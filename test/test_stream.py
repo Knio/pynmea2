@@ -22,6 +22,7 @@ def test_stream():
     assert sr.next() == []
 
     f = StringIO(data * 2)
+    #Test line read
     sr = pynmea2.NMEAStreamReader(f)
     assert len(sr.next()) == 1
     assert len(sr.next()) == 1
