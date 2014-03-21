@@ -5,7 +5,7 @@ class NMEAStreamReader(object):
     '''
     Reads NMEA sentences from a stream.
     '''
-    def __init__(self, stream=None, stream_size=None):
+    def __init__(self, stream=None, stream_size=-1):
         '''
         Create NMEAStreamReader object.
 
