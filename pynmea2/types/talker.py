@@ -234,6 +234,19 @@ class GSA(TalkerSentence):
             )
 
 
+class GST(TalkerSentence):
+    fields = (
+        ('UTC time of the GGA or GNS fix associated with this sentence.', 'time', timestamp),
+        ('RMS value of the standard deviation of the range inputs to the navigation process. Range inputs include preudoranges & DGNSS corrections.', 'rms', float),
+        ('Standard deviation of semi-major axis of error ellipse (meters)', 'std_dev_major', float),
+        ('Standard deviation of semi-minor axis of error ellipse (meters)', 'std_dev_minor', float),
+        ('Orientation of semi-major axis of error ellipse (degrees from true north)', 'orientation', float),
+        ('Standard deviation of latitude error (meters)', 'std_dev_latitude', float),
+        ('Standard deviation of longitude error (meters)', 'std_dev_longitude', float),
+        ('Standard deviation of altitude error (meters)', 'std_dev_altitude', float),
+    )
+
+
 class GSV(TalkerSentence):
     fields = (
         ('Number of messages of type in cycle', 'num_messages'),

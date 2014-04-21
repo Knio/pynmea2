@@ -93,3 +93,17 @@ def test_MWV():
     assert msg.status == 'A'
     assert msg.render() == data
 
+
+def test_GST():
+    data = "$GPGST,172814.0,0.006,0.023,0.020,273.6,0.023,0.020,0.031*6A"
+    msg = pynmea2.parse(data)
+    assert isinstance(msg, pynmea2.GST)
+    assert msg.time == datetime.time(hour=17, minute=28, second=14)
+    assert msg.rms == 0.006
+    assert msg.std_dev_major == 0.023
+    assert msg.std_dev_minor == 0.020
+    assert msg.orientation == 273.6
+    assert msg.std_dev_latitude == 0.023
+    assert msg.std_dev_longitude == 0.020
+    assert msg.std_dev_altitude == 0.031
+    assert msg.render() == data
