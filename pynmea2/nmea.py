@@ -2,6 +2,21 @@ import re
 import operator
 from functools import reduce
 
+class ChecksumError(ValueError):
+    '''
+        Inherits from ValueError for distinct Checksum Exception
+    '''
+
+
+class ParseError(ValueError):
+    '''
+         Inherits from ValueError for distinct Parse Exception
+    '''
+
+class SentenceTypeError(ValueError):
+    '''
+        Inherits from ValueError for distinct Sentence Type Exception
+    '''
 
 class NMEASentenceType(type):
     sentence_types = {}
@@ -88,7 +103,7 @@ class NMEASentence(NMEASentenceBase):
         '''
         match = NMEASentence.sentence_re.match(input)
         if not match:
-            raise ValueError('could not parse data: %r' % input)
+            raise ParseError('could not parse data: %r' % input)
 
         nmea_str        = match.group('nmea_str')
         data            = match.group('data').split(',')
@@ -100,7 +115,7 @@ class NMEASentence(NMEASentenceBase):
             cs1 = int(checksum, 16)
             cs2 = NMEASentence.checksum(nmea_str)
             if cs1 != cs2:
-                raise ValueError('checksum does not match: %02X != %02X' %
+                raise ChecksumError('checksum does not match: %02X != %02X' %
                     (cs1, cs2))
 
         talker_match = NMEASentence.talker_re.match(sentence_type)
@@ -111,7 +126,7 @@ class NMEASentence(NMEASentenceBase):
 
             if not cls:
                 # TODO instantiate base type instead of fail
-                raise ValueError('Unknown sentence type %s' % sentence_type)
+                raise SentenceTypeError('Unknown sentence type %s' % sentence_type)
             return cls(talker, sentence, data)
 
         # TODO query match
@@ -122,7 +137,7 @@ class NMEASentence(NMEASentenceBase):
             cls = ProprietarySentence.sentence_types.get(manufacturer, ProprietarySentence)
             return cls(manufacturer, data)
 
-        raise ValueError('could not parse sentence type: %r' % sentence_type)
+        raise ParseError('could not parse sentence type: %r' % sentence_type)
 
     def __getattr__(self, name):
         t = type(self)

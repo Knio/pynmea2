@@ -19,7 +19,7 @@ def test_sentence():
 
 def test_checksum():
     d = data[:-2] + '00'
-    with pytest.raises(ValueError):
+    with pytest.raises(pynmea2.ChecksumError):
         msg = pynmea2.parse(d)
 
 
@@ -30,10 +30,10 @@ def test_attribute():
 
 
 def test_fail():
-    with pytest.raises(ValueError):
+    with pytest.raises(pynmea2.ParseError):
         pynmea2.parse('FOOBAR')
 
-    with pytest.raises(ValueError):
+    with pytest.raises(pynmea2.SentenceTypeError):
         pynmea2.parse('$GPABC,1,2,3')
 
 
