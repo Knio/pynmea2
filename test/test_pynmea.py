@@ -5,7 +5,7 @@ data = "$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,100.00,M,-33.9,M,,0000*
 
 
 def test_version():
-    version = '1.1.4'
+    version = '1.1.5'
     assert pynmea2.version == version
     assert pynmea2.__version__ == version
 
@@ -39,8 +39,12 @@ def test_fail():
 
 def test_mixin():
     msg = pynmea2.parse(data)
-    assert msg.latitude == -19.484083333333334
-    assert msg.longitude == 24.1751
+    assert msg.latitude  == -19.484083333333334
+    assert msg.longitude ==  24.175100000000000
+    assert msg.latitude_minutes  == 29.045000000000073
+    assert msg.longitude_minutes == 10.506000000000085
+    assert msg.latitude_seconds  ==  2.6999999999970896
+    assert msg.longitude_seconds == 30.360000000000582
 
 
 def test_missing():

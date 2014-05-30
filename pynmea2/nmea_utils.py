@@ -1,4 +1,6 @@
 import datetime
+import math
+
 def timestamp(s):
     '''
     Converts a timestamp given in "HHMMSS" ASCII format to a
@@ -21,7 +23,7 @@ def datestamp(s):
 import re
 def dm_to_sd(dm):
     '''
-    Converts a geographic coordiante given in "degres/minutes"
+    Converts a geographic coordiante given in "degres/minutes" dddmm.mmmm
     format (ie, "12319.943281" = 123 degrees, 19.953281 minutes) to a signed
     decimal (python float) format
     '''
@@ -54,3 +56,27 @@ class LatLonFix(object):
             return +sd
         elif self.lon_dir == 'W':
             return -sd
+
+    @staticmethod
+    def _minutes(x):
+        return abs(x * 60.) % 60.
+
+    @staticmethod
+    def _seconds(x):
+        return abs(x * 3600.) % 60.
+
+    @property
+    def latitude_minutes(self):
+        return self._minutes(self.latitude)
+
+    @property
+    def longitude_minutes(self):
+        return self._minutes(self.longitude)
+
+    @property
+    def latitude_seconds(self):
+        return self._seconds(self.latitude)
+
+    @property
+    def longitude_seconds(self):
+        return self._seconds(self.longitude)

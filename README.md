@@ -74,13 +74,16 @@ The `GGA` message has the following properties:
 
 Additional properties besides the ones explicitly in the message data may also exist.
 
-For example, `latitude` and `longitude` properties exist as helpers to access the geographic coordinates as python floats ([DD](http://en.wikipedia.org/wiki/Decimal_degrees), "decimal degrees") instead of the string DMS ("Degrees, minutes, seconds") format used in the NMEA protocol
+For example, `latitude` and `longitude` properties exist as helpers to access the geographic coordinates as python floats ([DD](http://en.wikipedia.org/wiki/Decimal_degrees), "decimal degrees") instead of the DDDMM.MMMM ("Degrees, minutes, seconds") format used in the NMEA protocol. `latitude_minutes`, `latitude_seconds`, `longitude_minutes`, and `longitude_seconds` are also supported and allow easy creation of differently formatted location strings.
 
     >>> msg.latitude
     -19.4840833333
     >>> msg.longitude
     24.1751
-
+    >>> '%02d°%07.4f′' % (msg.latitude, msg.latitude_minutes)
+    '-19°29.0450′'
+    >>> '%02d°%02d′%07.4f″' % (msg.latitude, msg.latitude_minutes, msg.latitude_seconds)
+    "-19°29′02.7000″"
 
 Generating
 ----------
