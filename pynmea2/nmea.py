@@ -149,7 +149,7 @@ class NMEASentence(NMEASentenceBase):
             v = self.data[i]
         else:
             v = None
-        if len(f) >= 3:
+        if len(f) >= 3 and v is not None:
             if v == '':
                 return None
             return f[2](v)

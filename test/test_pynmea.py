@@ -22,12 +22,14 @@ def test_checksum():
     with pytest.raises(pynmea2.ChecksumError):
         msg = pynmea2.parse(d)
 
-
 def test_attribute():
     msg = pynmea2.parse(data)
     with pytest.raises(AttributeError):
         msg.foobar
 
+def test_none_attribute():
+    msg = pynmea2.parse("$GPVTG,,T,,M,0.00,N*1B")
+    assert None == msg.spd_over_grnd_kmph
 
 def test_fail():
     with pytest.raises(pynmea2.ParseError):
