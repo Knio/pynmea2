@@ -57,7 +57,7 @@ def test_missing_2():
     # $GPGSV,3,2,09,31,42,227,19,32,17,313,20,01,09,316,,11,08,292,*73
     # $GPGSV,3,3,09,24,03,046,*47
     msg = pynmea2.parse('$GPGSV,3,3,09,24,03,046,*47')
-    assert msg.snr_4 == None
+    assert msg.snr_4 == ''
 
 def test_missing_3():
     data = '$GPVTG,,T,,M,0.00,N*1B'
