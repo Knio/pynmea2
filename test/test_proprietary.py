@@ -110,7 +110,7 @@ def test_tnl():
     data = '$PTNL,BPQ,224445.06,021207,3723.09383914,N,12200.32620132,W,EHT-5.923,M,5*60'
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.tnl.TNLBPQ
-    assert msg.datestamp == datetime.datetime(2007,12,2,0,0)
+    assert msg.datestamp == datetime.date(2007,12,2)
     assert msg.latitude == 37.384897319
     assert msg.longitude == -122.00543668866666
 

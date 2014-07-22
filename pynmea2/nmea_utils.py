@@ -3,13 +3,17 @@ import math
 
 def timestamp(s):
     '''
-    Converts a timestamp given in "HHMMSS" ASCII format to a
+    Converts a timestamp given in "hhmmss[.ss]" ASCII format to a
     datetime.time object
     '''
-    return datetime.time(
+    ms = (len(s) == 9) and 10000 * int(s[7:9]) or 0
+
+    t = datetime.time(
         hour=int(s[0:2]),
         minute=int(s[2:4]),
-        second=int(s[4:6]))
+        second=int(s[4:6]),
+        microsecond=ms)
+    return t
 
 
 def datestamp(s):
@@ -17,7 +21,7 @@ def datestamp(s):
     Converts a datestamp given in "DDMMYY" ASCII format to a
     datetime.datetime object
     '''
-    return datetime.datetime.strptime(s, '%d%m%y')
+    return datetime.datetime.strptime(s, '%d%m%y').date()
 
 
 import re
@@ -80,3 +84,19 @@ class LatLonFix(object):
     @property
     def longitude_seconds(self):
         return self._seconds(self.longitude)
+
+
+class DatetimeFix(object):
+    @property
+    def datetime(self):
+        return datetime.datetime.combine(self.datestamp, self.timestamp)
+
+
+class TZInfo(datetime.tzinfo):
+    def __init__(self, hh, mm):
+        self.hh = hh
+        self.mm = mm
+        super(TZInfo, self).__init__()
+
+    def utcoffset(self, dt):
+        return datetime.timedelta(hours=self.hh, minutes=self.mm)

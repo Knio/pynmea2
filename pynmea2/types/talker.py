@@ -79,7 +79,7 @@ class BEC(TalkerSentence):
     """ Bearing & Distance to Waypoint, Dead Reckoning
     """
     fields = (
-        ("Timestamp", "timestamp"),
+        ("Timestamp", "timestamp", timestamp),
         ("Waypoint Latitude", "waypoint_lat"),
         ("Waypoint Latitude direction", "waypoint_lat_dir"),
         ("Waypoint Longitude", "waypoint_lon"),
@@ -125,7 +125,7 @@ class BOD(TalkerSentence):
 
 class BWC(TalkerSentence):
     fields = (
-        ('Timestamp', 'timestamp'),
+        ('Timestamp', 'timestamp', timestamp),
         ('Latitude of next Waypoint', 'lat_next'),
         ('Latitude of next Waypoint Direction', 'lat_next_direction'),
         ('Longitude of next Waypoint', 'lon_next'),
@@ -141,7 +141,7 @@ class BWC(TalkerSentence):
 
 class BWR(TalkerSentence):
     fields = (
-        ('Timestamp', 'timestamp'),
+        ('Timestamp', 'timestamp', timestamp),
         ('Latitude of next Waypoint', 'lat_next'),
         ('Latitude of next Waypoint Direction', 'lat_next_direction'),
         ('Longitude of next Waypoint', 'lon_next'),
@@ -236,7 +236,7 @@ class GSA(TalkerSentence):
 
 class GST(TalkerSentence):
     fields = (
-        ('UTC time of the GGA or GNS fix associated with this sentence.', 'time', timestamp),
+        ('UTC time of the GGA or GNS fix associated with this sentence.', 'timestamp', timestamp),
         ('RMS value of the standard deviation of the range inputs to the navigation process. Range inputs include preudoranges & DGNSS corrections.', 'rms', float),
         ('Standard deviation of semi-major axis of error ellipse (meters)', 'std_dev_major', float),
         ('Standard deviation of semi-minor axis of error ellipse (meters)', 'std_dev_minor', float),
@@ -325,7 +325,7 @@ class RMB(TalkerSentence):
         ("Arrival Alarm", "arrival_alarm")
     ) # A = Arrived, V = Not arrived
 
-class RMC(TalkerSentence, LatLonFix):
+class RMC(TalkerSentence, LatLonFix, DatetimeFix):
     """ Recommended Minimum Specific GPS/TRANSIT Data
     """
     fields = (
@@ -385,7 +385,7 @@ class TRF(TalkerSentence):
     """ Transit Fix Data
     """
     fields = (
-        ("Timestamp (UTC)", "timestamp"),
+        ("Timestamp (UTC)", "timestamp", timestamp),
         ("Date (DD/MM/YY", "date"),
         ("Latitude", "lat"),
         ("Latitude Direction", "lat_dir"),
@@ -477,13 +477,29 @@ class XTE(TalkerSentence):
 
 class ZDA(TalkerSentence):
     fields = (
-        ("Timestamp", "timestamp"), # hhmmss.ss = UTC
-        ("Day", "day", Decimal), # 01 to 31
-        ("Month", "month",  Decimal), # 01 to 12
-        ("Year", "year",  Decimal), # Year = YYYY
-        ("Local Zone Description", "local_zone",  Decimal), # 00 to +/- 13 hours
-        ("Local Zone Minutes Description", "local_zone_minutes",  Decimal)
-    ) # same sign as hours
+        ("Timestamp", "timestamp", timestamp), # hhmmss.ss = UTC
+        ("Day", "day", int), # 01 to 31
+        ("Month", "month",  int), # 01 to 12
+        ("Year", "year",  int), # Year = YYYY
+        ("Local Zone Description", "local_zone",  int), # 00 to +/- 13 hours
+        ("Local Zone Minutes Description", "local_zone_minutes",  int) # same sign as hours
+    )
+
+    @property
+    def datestamp(self):
+        return datetime.date(year=self.year, month=self.month, day=self.day)
+
+    @property
+    def tzinfo(self):
+        return TZInfo(self.local_zone, self.local_zone_minutes)
+
+    @property
+    def datetime(self):
+        d = datetime.datetime.combine(self.datestamp, self.timestamp)
+        return d.replace(tzinfo=self.tzinfo)
+
+
+
 
 # Implemented by Janez Stupar for Visionect
 class RSA(TalkerSentence):
