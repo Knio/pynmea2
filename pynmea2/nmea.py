@@ -2,6 +2,21 @@ import re
 import operator
 from functools import reduce
 
+class ChecksumError(ValueError):
+    '''
+        Inherits from ValueError for distinct Checksum Exception
+    '''
+
+
+class ParseError(ValueError):
+    '''
+         Inherits from ValueError for distinct Parse Exception
+    '''
+
+class SentenceTypeError(ValueError):
+    '''
+        Inherits from ValueError for distinct Sentence Type Exception
+    '''
 
 class NMEASentenceType(type):
     sentence_types = {}
@@ -11,7 +26,7 @@ class NMEASentenceType(type):
         if base is object:
             return
         base.sentence_types[name] = cls
-        cls.name_to_idx = {f[1]:i for i,f in enumerate(cls.fields)}
+        cls.name_to_idx = {f[1]:i for i, f in enumerate(cls.fields)}
 
 
 # http://mikewatkins.ca/2008/11/29/python-2-and-3-metaclasses/
@@ -44,7 +59,7 @@ class NMEASentence(NMEASentenceBase):
 
                 # query sentence, ie: 'CCGPQ,GGA'
                 # NOTE: this should have no data
-                (\w{2}\w{2}Q,{\w{3}},)|
+                (\w{2}\w{2}Q,\w{3})|
 
                 # taker sentence, ie: 'GPGGA'
                 (\w{2}\w{3},)
@@ -62,11 +77,11 @@ class NMEASentence(NMEASentenceBase):
         ''', re.X | re.IGNORECASE)
 
     talker_re = \
-        re.compile('(?P<talker>\w{2})(?P<sentence>\w{3})')
+        re.compile('^(?P<talker>\w{2})(?P<sentence>\w{3}),$')
     query_re = \
-        re.compile('(?P<talker>\w{2})(?P<listener>\w{2})Q,(?P<sentence>\w{3})')
+        re.compile('^(?P<talker>\w{2})(?P<listener>\w{2})Q,(?P<sentence>\w{3})$')
     proprietary_re = \
-        re.compile('P(?P<manufacturer>\w{3})')
+        re.compile('^P(?P<manufacturer>\w{3})$')
 
     name_to_idx = {}
     fields = ()
@@ -88,19 +103,19 @@ class NMEASentence(NMEASentenceBase):
         '''
         match = NMEASentence.sentence_re.match(input)
         if not match:
-            raise ValueError('could not parse data: %r' % input)
+            raise ParseError('could not parse data: %r' % input)
 
         nmea_str        = match.group('nmea_str')
-        data            = match.group('data').split(',')
+        data_str        = match.group('data')
         checksum        = match.group('checksum')
         sentence_type   = match.group('sentence_type').upper()
-
+        data            = data_str.split(',')
 
         if checksum:
             cs1 = int(checksum, 16)
             cs2 = NMEASentence.checksum(nmea_str)
             if cs1 != cs2:
-                raise ValueError('checksum does not match: %02X != %02X' %
+                raise ChecksumError('checksum does not match: %02X != %02X' %
                     (cs1, cs2))
 
         talker_match = NMEASentence.talker_re.match(sentence_type)
@@ -111,10 +126,15 @@ class NMEASentence(NMEASentenceBase):
 
             if not cls:
                 # TODO instantiate base type instead of fail
-                raise ValueError('Unknown sentence type %s' % sentence_type)
+                raise SentenceTypeError('Unknown sentence type %s' % sentence_type)
             return cls(talker, sentence, data)
 
-        # TODO query match
+        query_match = NMEASentence.query_re.match(sentence_type)
+        if query_match and not data_str:
+            talker = query_match.group('talker')
+            listener = query_match.group('listener')
+            sentence = query_match.group('sentence')
+            return QuerySentence(talker, listener, sentence)
 
         proprietary_match = NMEASentence.proprietary_re.match(sentence_type)
         if proprietary_match:
@@ -122,7 +142,7 @@ class NMEASentence(NMEASentenceBase):
             cls = ProprietarySentence.sentence_types.get(manufacturer, ProprietarySentence)
             return cls(manufacturer, data)
 
-        raise ValueError('could not parse sentence type: %r' % sentence_type)
+        raise ParseError('could not parse sentence type: %r' % sentence_type)
 
     def __getattr__(self, name):
         t = type(self)
@@ -133,7 +153,7 @@ class NMEASentence(NMEASentenceBase):
         if i < len(self.data):
             v = self.data[i]
         else:
-            v = None
+            v = ''
         if len(f) >= 3:
             if v == '':
                 return None
@@ -197,11 +217,11 @@ class TalkerSentence(NMEASentence):
 
 class QuerySentence(NMEASentence):
     sentence_types = {}
-    def __init__(self, talker, listener, sentence_type, data):
+    def __init__(self, talker, listener, sentence_type):
         self.talker = talker
         self.listener = listener
         self.sentence_type = sentence_type
-        self.data = list(data)
+        self.data = []
 
     def identifier(self):
         return '%s%sQ,%s,' % (self.talker, self.listener, self.sentence_type)

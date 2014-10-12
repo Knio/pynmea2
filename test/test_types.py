@@ -13,7 +13,7 @@ def test_GGA():
     assert isinstance(msg, pynmea2.GGA)
 
     # Timestamp
-    assert msg.timestamp        == datetime.time(18, 43, 53)
+    assert msg.timestamp        == datetime.time(18, 43, 53, 70000)
     # Latitude
     assert msg.lat              == '1929.045'
     # Latitude Direction
@@ -44,7 +44,7 @@ def test_GGA():
     msg.altitude = 200.0
     assert str(msg) == "$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,200.0,M,-33.9,M,,0000*5E"
 
-def test_rte():
+def test_RTE():
     data = "$GPRTE,2,1,c,0,PBRCPK,PBRTO,PTELGR,PPLAND,PYAMBU,PPFAIR,PWARRN,PMORTL,PLISMR*73"
     msg = pynmea2.parse(data)
     assert msg.talker == 'GP'
@@ -60,7 +60,7 @@ def test_rte():
     msg.waypoint_list = ['ABC','DEF']
     assert str(msg) == "$GPRTE,2,1,c,0,ABC,DEF*03"
 
-def test_r00():
+def test_R00():
     data = "$GPR00,A,B,C*29"
     msg = pynmea2.parse(data)
     assert msg.talker == 'GP'
@@ -93,3 +93,43 @@ def test_MWV():
     assert msg.status == 'A'
     assert msg.render() == data
 
+
+def test_GST():
+    data = "$GPGST,172814.0,0.006,0.023,0.020,273.6,0.023,0.020,0.031*6A"
+    msg = pynmea2.parse(data)
+    assert isinstance(msg, pynmea2.GST)
+    assert msg.timestamp == datetime.time(hour=17, minute=28, second=14)
+    assert msg.rms == 0.006
+    assert msg.std_dev_major == 0.023
+    assert msg.std_dev_minor == 0.020
+    assert msg.orientation == 273.6
+    assert msg.std_dev_latitude == 0.023
+    assert msg.std_dev_longitude == 0.020
+    assert msg.std_dev_altitude == 0.031
+    assert msg.render() == data
+
+
+def test_RMC():
+    data = '''$GPRMC,225446,A,4916.45,N,12311.12,W,000.5,054.7,191194,020.3,E*68'''
+    msg = pynmea2.parse(data)
+    assert isinstance(msg, pynmea2.RMC)
+    assert msg.timestamp == datetime.time(hour=22, minute=54, second=46)
+    assert msg.datestamp == datetime.date(1994, 11, 19)
+    assert msg.latitude == 49.274166666666666
+    assert msg.longitude == -123.18533333333333
+    assert msg.datetime == datetime.datetime(1994, 11, 19, 22, 54, 46)
+    assert msg.render() == data
+
+
+def test_ZDA():
+    data = '''$GPZDA,010203.05,06,07,2008,-08,30'''
+    msg = pynmea2.parse(data)
+    assert isinstance(msg, pynmea2.ZDA)
+    assert msg.timestamp == datetime.time(hour=1, minute=2, second=3, microsecond=50000)
+    assert msg.day == 6
+    assert msg.month == 7
+    assert msg.year == 2008
+    assert msg.local_zone == -8
+    assert msg.local_zone_minutes == 30
+    assert msg.datestamp == datetime.date(2008, 7, 6)
+    assert msg.datetime == datetime.datetime(2008, 7, 6, 1, 2, 3, 50000, msg.tzinfo)
