@@ -114,4 +114,13 @@ def test_tnl():
     assert msg.latitude == 37.384897319
     assert msg.longitude == -122.00543668866666
 
+def test_create():
+    sentence = pynmea2.srf.SRF100('SRF', [
+        '100', '%d' % 1,
+        '%d' % 9600,
+        '%d' % 7,
+        '%d' % 1,
+        '%d' % 0])
+    data = sentence.render(checksum=True, dollar=True, newline=False)
+    assert data == '$PSRF100,1,9600,7,1,0*02'
 

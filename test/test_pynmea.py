@@ -68,8 +68,14 @@ def test_whitespace():
     assert msg.render(dollar=False) == data.strip()
 
 def test_nmea_util():
-    assert pynmea2.nmea_utils.dm_to_sd('0') == 0
+    assert pynmea2.nmea_utils.dm_to_sd('0') == 0.
     assert pynmea2.nmea_utils.dm_to_sd('12108.1') == 121.135
+
+def test_missing_latlon():
+    data = '$GPGGA,201716.684,,,,,0,00,,,M,0.0,M,,0000*5F'
+    msg = pynmea2.parse(data)
+    print(msg)
+    assert msg.latitude == 0.
 
 #
 # ^o^
