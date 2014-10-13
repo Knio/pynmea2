@@ -32,8 +32,8 @@ def dm_to_sd(dm):
     decimal (python float) format
     '''
     # '12319.943281'
-    if dm == '0':
-        return 0
+    if not dm or dm == '0':
+        return 0.
     d, m = re.match('^(\d+)(\d\d\.\d+)$', dm).groups()
     return float(d) + float(m) / 60
 
@@ -51,6 +51,8 @@ class LatLonFix(object):
             return +sd
         elif self.lat_dir == 'S':
             return -sd
+        else:
+            return 0.
 
     @property
     def longitude(self):
@@ -60,6 +62,8 @@ class LatLonFix(object):
             return +sd
         elif self.lon_dir == 'W':
             return -sd
+        else:
+            return 0.
 
     @staticmethod
     def _minutes(x):

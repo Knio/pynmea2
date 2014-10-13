@@ -5,7 +5,7 @@ data = "$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,100.00,M,-33.9,M,,0000*
 
 
 def test_version():
-    version = '1.3.0'
+    version = '1.3.2'
     assert pynmea2.version == version
     assert pynmea2.__version__ == version
 
@@ -84,9 +84,14 @@ def test_whitespace():
 
 
 def test_nmea_util():
-    assert pynmea2.nmea_utils.dm_to_sd('0') == 0
+    assert pynmea2.nmea_utils.dm_to_sd('0') == 0.
     assert pynmea2.nmea_utils.dm_to_sd('12108.1') == 121.135
 
+def test_missing_latlon():
+    data = '$GPGGA,201716.684,,,,,0,00,,,M,0.0,M,,0000*5F'
+    msg = pynmea2.parse(data)
+    print(msg)
+    assert msg.latitude == 0.
 
 def test_query():
     data = 'CCGPQ,GGA'
