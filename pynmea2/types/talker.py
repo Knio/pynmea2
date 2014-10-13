@@ -399,6 +399,17 @@ class TRF(TalkerSentence):
     )
 
 
+class TXT(TalkerSentence):
+    """ Text Transmission
+    """
+    fields = (
+        ("Number of Messages", "num_msg"),
+        ("Message Number", "msg_num"),
+        ("Type of Message", "msg_type"),
+        ("Text", "text")
+    )
+
+
 class VBW(TalkerSentence):
     """ Dual Ground/Water Speed
     """
