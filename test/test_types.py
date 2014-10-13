@@ -121,6 +121,13 @@ def test_RMC():
     assert msg.render() == data
 
 
+def test_TXT():
+    data = '$GNTXT,01,01,02,ROM BASE 2.01 (75331) Oct 29 2013 13:28:17*44'
+    msg = pynmea2.parse(data)
+    assert type(msg) == pynmea2.talker.TXT
+    assert msg.text == 'ROM BASE 2.01 (75331) Oct 29 2013 13:28:17'
+
+
 def test_ZDA():
     data = '''$GPZDA,010203.05,06,07,2008,-08,30'''
     msg = pynmea2.parse(data)
