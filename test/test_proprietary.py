@@ -114,6 +114,32 @@ def test_tnl():
     assert msg.latitude == 37.384897319
     assert msg.longitude == -122.00543668866666
 
+
+def test_ubx00():
+    data = '$PUBX,00,074440.00,4703.74203,N,00736.82976,E,576.991,D3,2.0,2.0,0.091,0.00,-0.032,,0.76,1.05,0.65,14,0,0*70'
+    msg = pynmea2.parse(data)
+    assert type(msg) == pynmea2.ubx.UBX00
+    assert msg.timestamp == datetime.time(7, 44, 40)
+    assert msg.latitude == 47.06236716666667
+    assert msg.lat_dir == 'N'
+
+
+def test_ubx03():
+    data = '$PUBX,03,20,3,e,281,72,36,062,5,e,034,10,23,000,8,U,328,11,44,064,9,-,323,-2,,000,13,-,341,01,,000,16,U,307,45,49,064,18,e,144,18,,000,21,U,150,74,35,037,25,e,134,06,,000,27,U,271,20,52,064,29,U,074,36,36,063,31,U,209,26,37,040,120,e,210,31,,000,126,-,157,33,,000,66,U,036,19,34,015,67,e,090,20,22,000,68,-,136,00,,000,73,e,273,60,47,064,74,U,330,24,44,064,80,U,193,36,36,023*33'
+    msg = pynmea2.parse(data)
+    assert type(msg) == pynmea2.ubx.UBX03
+    assert msg.num_sv == 20
+
+
+def test_ubx04():
+    data = '$PUBX,04,073824.00,131014,113903.99,1814,16,495176,342.504,21*18'
+    msg = pynmea2.parse(data)
+    assert type(msg) == pynmea2.ubx.UBX04
+    assert msg.date == datetime.date(2014, 10, 13)
+    assert msg.time == datetime.time(7, 38, 24)
+    assert msg.clk_bias == 495176
+
+
 def test_create():
     sentence = pynmea2.srf.SRF100('SRF', [
         '100', '%d' % 1,
