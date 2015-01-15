@@ -634,7 +634,7 @@ class ROT(TalkerSentence):
     fields = (
         ("Rate of turn", "rate_of_turn"), #- indicates bow turn to port
         ("valid data","valid_data"), #A=valid data, B= invalid data
-        )
+    )
         
 class RPM(TalkerSentence):
     """ Revolutions
@@ -645,7 +645,7 @@ class RPM(TalkerSentence):
         ("Speed", "speed"),#RPM
         ("Propeller pitch", "pitch"),#- means astern
         ("Status", "status"),#A means valid
-        )
+    )
     
 #        1 2 3   4   5 6 
 #        | | |   |   | | 
@@ -667,7 +667,7 @@ class VPW(TalkerSentence):
         ("Unit knots", "unit_knots"),#N means knots
         ("Speed m/s", "speed_ms"),
         ("Unit m/s", "unit_ms"),#M means m/s
-        )
+    )
         
    #VPW - Speed - Measured Parallel to Wind
 
@@ -681,6 +681,7 @@ class VPW(TalkerSentence):
  # 3) Speed, "-" means downwind 
  # 4) M = Meters per second 
  # 5) Checksum
+ 
 # ---------------------------------- Not Yet Implemented --------------------- #
 # ---------------------------------------------------------------------------- #
 
