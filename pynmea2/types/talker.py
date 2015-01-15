@@ -625,27 +625,27 @@ class VLW(TalkerSentence):
         ('Trip distance nautical miles since reset','trip_distance_reset_miles'),
 
     )
-# ---------------------------------- To Be Implemented ------------------------ #
+# --------------------- Implemented by Joachim Bakke (joabakk)---------------- #
 # ---------------------------------------------------------------------------- #
 
-#class ROT(TalkerSentence):
-#    """ Rate of Turn
-#    """
-    #    fields = (
-    #("Rate of turn", "rate_of_turn"), #- indicates bow turn to port
-    #("valid data","valid_data"), #A=valid data, B= invalid data
-    # )
-    
-#class RPM(TalkerSentence):
-#    """ Revolutions
-#    """
-    #    fields = (
-    #("Source", "source"),#S = Shaft, E = Engine 
-    #("Engine or shaft number", "engine_no"),
-    #("Speed", "speed"),#RPM
-    #("Propeller pitch", "pitch"),#- means astern
-    #("Status", "status"),#A means valid
-    # )
+class ROT(TalkerSentence):
+    """ Rate of Turn
+    """
+    fields = (
+        ("Rate of turn", "rate_of_turn"), #- indicates bow turn to port
+        ("valid data","valid_data"), #A=valid data, B= invalid data
+        )
+        
+class RPM(TalkerSentence):
+    """ Revolutions
+    """
+    fields = (
+        ("Source", "source"),#S = Shaft, E = Engine 
+        ("Engine or shaft number", "engine_no"),
+        ("Speed", "speed"),#RPM
+        ("Propeller pitch", "pitch"),#- means astern
+        ("Status", "status"),#A means valid
+        )
     
 #        1 2 3   4   5 6 
 #        | | |   |   | | 
@@ -659,15 +659,16 @@ class VLW(TalkerSentence):
 #  5) Status, A means data is valid 
 #  6) Checksum
 
-#class VPW(TalkerSentence):
-#    """ Speed, Measured Parallel to Wind
-#    """
-    #    fields = (
-    #("Speed knots", "speed_kn"),#- means downwind
-    #("Unit knots", "unit_knots"),#N means knots
-    #("Speed m/s", "speed_ms"),
-    #("Unit m/s", "unit_ms"),#M means m/s
-    # )
+class VPW(TalkerSentence):
+    """ Speed, Measured Parallel to Wind
+    """
+    fields = (
+        ("Speed knots", "speed_kn"),#- means downwind
+        ("Unit knots", "unit_knots"),#N means knots
+        ("Speed m/s", "speed_ms"),
+        ("Unit m/s", "unit_ms"),#M means m/s
+        )
+        
    #VPW - Speed - Measured Parallel to Wind
 
     #    1   2 3   4 5 
