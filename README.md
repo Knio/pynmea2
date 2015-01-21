@@ -20,7 +20,7 @@ The `pynmea2` homepage is located at http://github.com/Knio/pynmea2
 The recommended way to install `pynmea2` is with
 [pip](http://pypi.python.org/pypi/pip/):
 
-    pip install pynmea2 -e git+https://github.com/joabakk/pynmea2.git
+    pip install pynmea2
 
 [![PyPI version](https://badge.fury.io/py/pynmea2.png)](http://badge.fury.io/py/pynmea2)
 
