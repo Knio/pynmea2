@@ -57,7 +57,7 @@ def test_RTE():
         "PBRCPK", "PBRTO", "PTELGR", "PPLAND", "PYAMBU",
         "PPFAIR", "PWARRN", "PMORTL", "PLISMR"]
 
-    msg.waypoint_list = ['ABC','DEF']
+    msg.waypoint_list = ['ABC', 'DEF']
     assert str(msg) == "$GPRTE,2,1,c,0,ABC,DEF*03"
 
 def test_R00():
@@ -65,9 +65,9 @@ def test_R00():
     msg = pynmea2.parse(data)
     assert msg.talker == 'GP'
     assert msg.sentence_type == 'R00'
-    assert msg.waypoint_list == ['A','B','C']
+    assert msg.waypoint_list == ['A', 'B', 'C']
 
-    msg.waypoint_list = ['ABC','DEF']
+    msg.waypoint_list = ['ABC', 'DEF']
     assert str(msg) == "$GPR00,ABC,DEF*42"
 
 def test_MWV():
@@ -140,3 +140,13 @@ def test_ZDA():
     assert msg.local_zone_minutes == 30
     assert msg.datestamp == datetime.date(2008, 7, 6)
     assert msg.datetime == datetime.datetime(2008, 7, 6, 1, 2, 3, 50000, msg.tzinfo)
+
+def test_VPW():
+    data = "$XXVPW,1.2,N,3.4,M"
+    msg = pynmea2.parse(data)
+    assert isinstance(msg, pynmea2.VPW)
+    assert msg.talker == 'XX'
+    assert msg.speed_kn == 1.2
+    assert msg.unit_knots == 'N'
+    assert msg.speed_ms == 3.4
+    assert msg.unit_ms == 'M'
