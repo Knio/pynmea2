@@ -772,12 +772,6 @@ class VDR(TalkerSentence):
     #    fields = (
     # )
 
-#class VDR(TalkerSentence):
-#    """ Set and Drift
-#    """
-    #    fields = (
-    # )
-
 #class XDR(TalkerSentence):
 #    """ Transducer Measurements
 #    """
