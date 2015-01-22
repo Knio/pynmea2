@@ -635,56 +635,56 @@ class ROT(TalkerSentence):
         ("Rate of turn", "rate_of_turn"), #- indicates bow turn to port
         ("valid data","valid_data"), #A=valid data, B= invalid data
     )
-        
+
 class RPM(TalkerSentence):
     """ Revolutions
     """
-    fields = (
-        ("Source", "source"),#S = Shaft, E = Engine 
-        ("Engine or shaft number", "engine_no"),
-        ("Speed", "speed"),#RPM
-        ("Propeller pitch", "pitch"),#- means astern
-        ("Status", "status"),#A means valid
-    )
-    
-#        1 2 3   4   5 6 
-#        | | |   |   | | 
+#        1 2 3   4   5 6
+#        | | |   |   | |
 # $--RPM,a,x,x.x,x.x,A*hh<CR><LF>
 
-# Field Number:  
-#  1) Sourse, S = Shaft, E = Engine 
-#  2) Engine or shaft number 
-#  3) Speed, Revolutions per minute 
-#  4) Propeller pitch, % of maximum, "-" means astern 
-#  5) Status, A means data is valid 
+# Field Number:
+#  1) Sourse, S = Shaft, E = Engine
+#  2) Engine or shaft number
+#  3) Speed, Revolutions per minute
+#  4) Propeller pitch, % of maximum, "-" means astern
+#  5) Status, A means data is valid
 #  6) Checksum
+
+    fields = (
+        ("Source", "source"), #S = Shaft, E = Engine
+        ("Engine or shaft number", "engine_no", int),
+        ("Speed", "speed", float), #RPM
+        ("Propeller pitch", "pitch"), #- means astern
+        ("Status", "status"), #A means valid
+    )
+
 
 class VPW(TalkerSentence):
     """ Speed, Measured Parallel to Wind
     """
     fields = (
-        ("Speed knots", "speed_kn"),#- means downwind
+        ("Speed knots", "speed_kn", float),#- means downwind
         ("Unit knots", "unit_knots"),#N means knots
-        ("Speed m/s", "speed_ms"),
+        ("Speed m/s", "speed_ms", float),
         ("Unit m/s", "unit_ms"),#M means m/s
     )
-        
-   #VPW - Speed - Measured Parallel to Wind
 
-    #    1   2 3   4 5 
-    #    |   | |   | | 
- #$--VPW,x.x,N,x.x,M*hh<CR><LF>
+# VPW - Speed - Measured Parallel to Wind
 
- #Field Number:  
- # 1) Speed, "-" means downwind 
- # 2) N = Knots 
- # 3) Speed, "-" means downwind 
- # 4) M = Meters per second 
- # 5) Checksum
- 
+#       1   2 3   4 5
+#       |   | |   | |
+#$--VPW,x.x,N,x.x,M*hh<CR><LF>
+
+# Field Number:
+#  1) Speed, "-" means downwind
+#  2) N = Knots
+#  3) Speed, "-" means downwind
+#  4) M = Meters per second
+#  5) Checksum
+
 # ---------------------------------- Not Yet Implemented --------------------- #
 # ---------------------------------------------------------------------------- #
-
 
 
 #class FSI(TalkerSentence):
@@ -692,45 +692,39 @@ class VPW(TalkerSentence):
 #    """
     #    fields = (
     # )
+
 #class GLC(TalkerSentence):
 #    """ Geographic Position, Loran-C
 #    """
     #    fields = (
     # )
+
 #class GXA(TalkerSentence):
 #    """ TRANSIT Position
 #    """
     #    fields = (
     # )
+
 #class LCD(TalkerSentence):
 #    """ Loran-C Signal Data
 #    """
     #    fields = (
     # )
+
 #class MTA(TalkerSentence):
 #    """ Air Temperature (to be phased out)
 #    """
     #    fields = (
     # )
 
-
 #class OLN(TalkerSentence):
 #    """ Omega Lane Numbers
 #    """
     #    fields = (
     # )
+
 #class OSD(TalkerSentence):
 #    """ Own Ship Data
-#    """
-    #    fields = (
-    # )
-#class ROT(TalkerSentence):
-#    """ Rate of Turn
-#    """
-    #    fields = (
-    # )
-#class RPM(TalkerSentence):
-#    """ Revolutions
 #    """
     #    fields = (
     # )
@@ -740,42 +734,43 @@ class VPW(TalkerSentence):
 #    """
     #    fields = (
     # )
+
 #class SFI(TalkerSentence):
 #    """ Scanning Frequency Information
 #    """
     #    fields = (
     # )
+
 #class TTM(TalkerSentence):
 #    """ Tracked Target Message
 #    """
     #    fields = (
     # )
+
 #class VDR(TalkerSentence):
 #    """ Set and Drift
 #    """
     #    fields = (
     # )
 
-#class VPW(TalkerSentence):
-#    """ Speed, Measured Parallel to Wind
-#    """
-    #    fields = (
-    # )
 #class XDR(TalkerSentence):
 #    """ Transducer Measurements
 #    """
     #    fields = (
     # )
+
 #class XTR(TalkerSentence):
 #    """ Cross-Track Error, Dead Reckoning
 #    """
     #    fields = (
     # )
+
 #class ZFO(TalkerSentence):
 #    """ UTC & Time from Origin Waypoint
 #    """
     #    fields = (
     # )
+
 #class ZTG(TalkerSentence):
 #    """ UTC & Time to Destination Waypoint
 #    """
@@ -791,6 +786,7 @@ class VPW(TalkerSentence):
 #    """
     #    fields = (
     # )
+
 # ---------------------------------------------------------------------------- #
 # -------------------------- Obsolete Formats -------------------------------- #
 # ---------------------------------------------------------------------------- #
