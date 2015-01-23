@@ -1,0 +1,24 @@
+language: python
+
+python:
+  - "2.7"
+  - "3.3"
+  - "3.4"
+  - "pypy"
+
+# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
+install:
+    - pip install pytest
+
+# command to run tests, e.g. python setup.py test
+script:
+    - python setup.py sdist --format=zip
+    - pip install dist/pynmea2*.zip
+    - py.test
+
+after_success:
+    - pip install coveralls coverage
+    - PYTHONPATH=. coverage run --source=pynmea2 -m pytest
+    - coverage report
+    - coveralls
+
