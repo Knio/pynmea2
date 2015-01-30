@@ -683,6 +683,31 @@ class VPW(TalkerSentence):
 #  4) M = Meters per second
 #  5) Checksum
 
+class VDR(TalkerSentence):
+    """ Set and Drift
+    """
+    fields = (
+        ("Degrees True", "deg_t", float),
+        (("Degrees Magnetic", "deg_m", float),
+        ("Speed of Current", "current", float),
+        ("Unit", "unit"),#N means knots
+    )
+
+# VDR - Set and Drift
+
+#        1   2 3   4 5   6 7 
+#        |   | |   | |   | | 
+# $--VDR,x.x,T,x.x,M,x.x,N*hh<CR><LF>
+
+# Field Number:  
+#  1) Degress True 
+#  2) T = True 
+#  3) Degrees Magnetic 
+#  4) M = Magnetic 
+#  5) Knots (speed of current) 
+#  6) N = Knots 
+#  7) Checksum
+
 # ---------------------------------- Not Yet Implemented --------------------- #
 # ---------------------------------------------------------------------------- #
 
