@@ -684,8 +684,6 @@ class VPW(TalkerSentence):
 #  5) Checksum
 
 class VDR(TalkerSentence):
-    """ Set and Drift
-    """
     fields = (
         ("Degrees True", "deg_t", float),
         (("Degrees Magnetic", "deg_m", float),
