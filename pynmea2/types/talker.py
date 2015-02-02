@@ -686,7 +686,9 @@ class VPW(TalkerSentence):
 class VDR(TalkerSentence):
     fields = (
         ("Degrees True", "deg_t", float),
-        (("Degrees Magnetic", "deg_m", float),
+        ("TRUE", "true"),#T means true
+        ("Degrees Magnetic", "deg_m", float),
+        ("Magnetic", "magnetic"),#M means magnetic
         ("Speed of Current", "current", float),
         ("Unit", "unit"),#N means knots
     )
@@ -766,12 +768,6 @@ class VDR(TalkerSentence):
 
 #class TTM(TalkerSentence):
 #    """ Tracked Target Message
-#    """
-    #    fields = (
-    # )
-
-#class VDR(TalkerSentence):
-#    """ Set and Drift
 #    """
     #    fields = (
     # )
