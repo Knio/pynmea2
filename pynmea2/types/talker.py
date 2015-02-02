@@ -708,6 +708,34 @@ class VDR(TalkerSentence):
 #  6) N = Knots 
 #  7) Checksum
 
+class VWR(TalkerSentence):
+    fields = (
+        ("Degrees Rel", "deg_r", float),
+        ("Left/Right", "l_r"),#R means right
+        ("Wind speed kn", "wind_speed_kn", float),
+        ("Knots", "knots"),#N means knots
+        ("Wind Speed m/s", "wind_speed_ms", float),
+        ("m/s", "ms"),#M means m/s
+        ("Wind Speed knots", "wind_speed_kn", float),
+        ("Knots", "knots"),#K means knots
+    )
+#VWR - Relative Wind Speed and Angle
+
+#         1  2  3  4  5  6  7  8 9 
+#         |  |  |  |  |  |  |  | | 
+# $--VWR,x.x,a,x.x,N,x.x,M,x.x,K*hh<CR><LF>
+
+# Field Number:  
+#  1) Wind direction magnitude in degrees 
+#  2) Wind direction Left/Right of bow 
+#  3) Speed 
+#  4) N = Knots 
+#  5) Speed 
+#  6) M = Meters Per Second 
+#  7) Speed 
+#  8) K = Kilometers Per Hour 
+#  9) Checksum
+
 # ---------------------------------- Not Yet Implemented --------------------- #
 # ---------------------------------------------------------------------------- #
 
