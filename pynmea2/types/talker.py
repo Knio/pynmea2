@@ -690,22 +690,22 @@ class VDR(TalkerSentence):
         ("Degrees Magnetic", "deg_m", float),
         ("Magnetic", "magnetic"),#M means magnetic
         ("Speed of Current", "current", float),
-        ("Unit", "unit"),#N means knots
+        ("Unit", "unit_kn"), #N means knots
     )
 
 # VDR - Set and Drift
 
-#        1   2 3   4 5   6 7 
-#        |   | |   | |   | | 
+#        1   2 3   4 5   6 7
+#        |   | |   | |   | |
 # $--VDR,x.x,T,x.x,M,x.x,N*hh<CR><LF>
 
-# Field Number:  
-#  1) Degress True 
-#  2) T = True 
-#  3) Degrees Magnetic 
-#  4) M = Magnetic 
-#  5) Knots (speed of current) 
-#  6) N = Knots 
+# Field Number:
+#  1) Degress True
+#  2) T = True
+#  3) Degrees Magnetic
+#  4) M = Magnetic
+#  5) Knots (speed of current)
+#  6) N = Knots
 #  7) Checksum
 
 class VWR(TalkerSentence):
@@ -713,27 +713,33 @@ class VWR(TalkerSentence):
         ("Degrees Rel", "deg_r", float),
         ("Left/Right", "l_r"),#R means right
         ("Wind speed kn", "wind_speed_kn", float),
-        ("Knots", "knots"),#N means knots
+        ("Knots", "unit_knots"),#N means knots
         ("Wind Speed m/s", "wind_speed_ms", float),
-        ("m/s", "ms"),#M means m/s
-        ("Wind Speed knots", "wind_speed_kn", float),
-        ("Knots", "knots"),#K means knots
+        ("m/s", "unit_ms"),#M means m/s
+        ("Wind Speed Km/h", "wind_speed_km", float),
+        ("Knots", "unit_km"), #K means Km
     )
+
+    # TODO
+    # getters/setters that normalize units,
+    # apply L/R sign, and sync all fields
+    # when setting the speed
+
 #VWR - Relative Wind Speed and Angle
 
-#         1  2  3  4  5  6  7  8 9 
-#         |  |  |  |  |  |  |  | | 
+#         1  2  3  4  5  6  7  8 9
+#         |  |  |  |  |  |  |  | |
 # $--VWR,x.x,a,x.x,N,x.x,M,x.x,K*hh<CR><LF>
 
-# Field Number:  
-#  1) Wind direction magnitude in degrees 
-#  2) Wind direction Left/Right of bow 
-#  3) Speed 
-#  4) N = Knots 
-#  5) Speed 
-#  6) M = Meters Per Second 
-#  7) Speed 
-#  8) K = Kilometers Per Hour 
+# Field Number:
+#  1) Wind direction magnitude in degrees
+#  2) Wind direction Left/Right of bow
+#  3) Speed
+#  4) N = Knots
+#  5) Speed
+#  6) M = Meters Per Second
+#  7) Speed
+#  8) K = Kilometers Per Hour
 #  9) Checksum
 
 # ---------------------------------- Not Yet Implemented --------------------- #
