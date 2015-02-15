@@ -272,8 +272,15 @@ class GSV(TalkerSentence):
 
 
 class HDG(TalkerSentence):
-    """ NOTE! This is a GUESS as I cannot find an actual spec
-        telling me the fields. Updates are welcome!
+    """ NMEA 0183 standard Heading, Deviation and Variation
+        Format: $HCHDG,<1>,<2>,<3>,<4>,<5>*hh<CR><LF>
+	<1> Magnetic sensor heading, degrees, to the nearest 0.1 degree.
+	<2> Magnetic deviation, degrees east or west, to the nearest 0.1 degree.
+	<3> E if field <2> is degrees East
+	    W if field <2> is degrees West
+	<4> Magnetic variation, degrees east or west, to the nearest 0.1 degree.
+	<5> E if field <4> is degrees East
+	    W if field <4> is degrees West
     """
     fields = (
         ("Heading", "heading", Decimal),
@@ -851,3 +858,21 @@ class VWR(TalkerSentence):
     # )
 
 
+# ------------- Implemented by Rocco De Marco (CNR/ISMAR ITALY) -------------- #
+# ---------------------------------------------------------------------------- #
+
+
+# DTM - NMEA 0183 standard Datum Reference
+class DTM(TalkerSentence):
+    fields = (
+        ('Local datum','datum'),	
+	('Subdivision datum','subd_datum'),
+        ('Latitude', 'lat'),
+        ('Latitude Direction', 'lat_dir'),
+        ('Longitude', 'lon'),
+        ('Longitude Direction', 'lon_dir'),
+	('Signed altitude','altitude'),
+	('Datum code','datum_code'),	
+    )
+# Examples: 	$GPDTM,W84,,0.0,N,0.0,E,0.0,W84*6F
+#		$GPDTM,999,CH95,0.08,N,0.07,E,-47.7,W84*1C
