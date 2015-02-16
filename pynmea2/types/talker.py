@@ -937,7 +937,6 @@ class DBS(TalkerSentence):
 
 # DBT - Depth below trasducer, depth referenced to the transducer
 # Used by simrad devices (f.e. EK500)
-# Deprecated and replaced by DPT
 class DBT(TalkerSentence):
     fields = (
 	('Depth below surface, feet','depth_feet',Decimal),
@@ -948,4 +947,12 @@ class DBT(TalkerSentence):
 	('Fathoms','fathoms'),
     )
 
-
+# DPT - water depth relative to the transducer and offset of the measuring
+# transducer
+# Used by simrad devices (f.e. EK500)
+class DPT(TalkerSentence):
+    fields = (
+	('Water depth, in meters','depth',Decimal),
+	('Offset from the trasducer, in meters','offset',Decimal),
+	('Maximum range scale in use','range',Decimal),
+    )
