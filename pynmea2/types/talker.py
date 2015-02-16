@@ -919,3 +919,19 @@ class VWT(TalkerSentence):
         ('Wind speed km/h','wind_speed_km', Decimal),
         ('Km','km'), # K = km/h
     )
+
+
+# DBS - Depth below surface
+# Used by simrad devices (f.e. EK500)
+# Deprecated and replaced by DPT
+class DBS(TalkerSentence):
+    fields = (
+	('Depth below surface, feet','depth_feet',Decimal),
+	('Feets','feets'), 
+	('Depth below surface, meters','depth_meter',Decimal),
+	('Meters','meters'),
+	('Depth below surface, fathoms','depth_ fathoms',Decimal),
+	('Fathoms','fathoms'),
+    )
+
+
