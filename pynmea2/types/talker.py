@@ -935,3 +935,17 @@ class DBS(TalkerSentence):
     )
 
 
+# DBT - Depth below trasducer, depth referenced to the transducer
+# Used by simrad devices (f.e. EK500)
+# Deprecated and replaced by DPT
+class DBT(TalkerSentence):
+    fields = (
+	('Depth below surface, feet','depth_feet',Decimal),
+	('Feets','feets'), 
+	('Depth below surface, meters','depth_meter',Decimal),
+	('Meters','meters'),
+	('Depth below surface, fathoms','depth_ fathoms',Decimal),
+	('Fathoms','fathoms'),
+    )
+
+
