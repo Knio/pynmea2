@@ -392,7 +392,7 @@ class TRF(TalkerSentence):
     """ Transit Fix Data
     """
     fields = (
-        ("Timestamp (UTC)", "timestamp", timestamp),
+	("Timestamp (UTC)", "timestamp", timestamp),
         ("Date (DD/MM/YY", "date"),
         ("Latitude", "lat"),
         ("Latitude Direction", "lat_dir"),
@@ -429,7 +429,7 @@ class VBW(TalkerSentence):
         ("Ground Speed Data Validity", "data_validity_grnd_spd")
     )
 
-class VTG(TalkerSentence):
+class 	VTG(TalkerSentence):
     """
     Track Made Good and Ground Speed
     """
@@ -866,13 +866,13 @@ class VWR(TalkerSentence):
 class DTM(TalkerSentence):
     fields = (
         ('Local datum','datum'),	
-	('Subdivision datum','subd_datum'),
+        ('Subdivision datum','subd_datum'),
         ('Latitude', 'lat'),
         ('Latitude Direction', 'lat_dir'),
         ('Longitude', 'lon'),
         ('Longitude Direction', 'lon_dir'),
-	('Signed altitude','altitude'),
-	('Datum code','datum_code'),	
+        ('Signed altitude','altitude'),
+        ('Datum code','datum_code'),	
     )
 # Examples: 	$GPDTM,W84,,0.0,N,0.0,E,0.0,W84*6F
 #		$GPDTM,999,CH95,0.08,N,0.07,E,-47.7,W84*1C
@@ -883,17 +883,17 @@ class DTM(TalkerSentence):
 class MDA(TalkerSentence):
     fields = (
         ('Barometric pressure, inches of mercury','b_pressure_inch',Decimal),
-	('Inches','inches'), # I = Inches
-	('Barometric pressure, bars','b_presure_bar',Decimal),
-	('Bars','bars'), # B = bars
-	('Air temperature, degrees C','air_temp',Decimal),
-	('Celsius','a_celsius'),	# C = Celsius
-	('Water temperature, degrees C','water_temp',Decimal),
-	('Celsius','w_celsius'),	# C = Celsius
-	('Relative humidity, percent','rel_humidity',Decimal),
-	('Absolute humidity, percent','abs_humidity',Decimal),
-	('Dew point, degrees C','dew_point',Decimal),
-	('Celsius','d_celsius'),	# C = Celsius
+        ('Inches','inches'), # I = Inches
+        ('Barometric pressure, bars','b_presure_bar',Decimal),
+        ('Bars','bars'), # B = bars
+        ('Air temperature, degrees C','air_temp',Decimal),
+        ('Celsius','a_celsius'),	# C = Celsius
+        ('Water temperature, degrees C','water_temp',Decimal),
+        ('Celsius','w_celsius'),	# C = Celsius
+        ('Relative humidity, percent','rel_humidity',Decimal),
+        ('Absolute humidity, percent','abs_humidity',Decimal),
+        ('Dew point, degrees C','dew_point',Decimal),
+        ('Celsius','d_celsius'),	# C = Celsius
         ('Wind direction true','direction_true', Decimal),
         ('True','true'), # T = True
         ('Wind direction magnetic','direction_magnetic', Decimal),
@@ -910,8 +910,8 @@ class MDA(TalkerSentence):
 # speed referenced to the water.
 class VWT(TalkerSentence):
     fields = (
-	('Wind angle relative to the vessel','wind_angle_vessel',Decimal),
-	('Direction, L=Left, R=Right, relative to the vessel head','direction'),
+        ('Wind angle relative to the vessel','wind_angle_vessel',Decimal),
+        ('Direction, L=Left, R=Right, relative to the vessel head','direction'),
         ('Wind speed knots','wind_speed_knots', Decimal),
         ('Knots','knots'), # N = Knots
         ('Wind speed meters/second','wind_speed_meters', Decimal),
@@ -926,12 +926,12 @@ class VWT(TalkerSentence):
 # Deprecated and replaced by DPT
 class DBS(TalkerSentence):
     fields = (
-	('Depth below surface, feet','depth_feet',Decimal),
-	('Feets','feets'), 
-	('Depth below surface, meters','depth_meter',Decimal),
-	('Meters','meters'),
-	('Depth below surface, fathoms','depth_ fathoms',Decimal),
-	('Fathoms','fathoms'),
+        ('Depth below surface, feet','depth_feet',Decimal),
+        ('Feets','feets'), 
+        ('Depth below surface, meters','depth_meter',Decimal),
+        ('Meters','meters'),
+        ('Depth below surface, fathoms','depth_ fathoms',Decimal),
+        ('Fathoms','fathoms'),
     )
 
 
@@ -939,12 +939,12 @@ class DBS(TalkerSentence):
 # Used by simrad devices (f.e. EK500)
 class DBT(TalkerSentence):
     fields = (
-	('Depth below surface, feet','depth_feet',Decimal),
-	('Feets','feets'), 
-	('Depth below surface, meters','depth_meter',Decimal),
-	('Meters','meters'),
-	('Depth below surface, fathoms','depth_ fathoms',Decimal),
-	('Fathoms','fathoms'),
+        ('Depth below surface, feet','depth_feet',Decimal),
+        ('Feets','feets'), 
+        ('Depth below surface, meters','depth_meter',Decimal),
+        ('Meters','meters'),
+        ('Depth below surface, fathoms','depth_ fathoms',Decimal),
+        ('Fathoms','fathoms'),
     )
 
 # DPT - water depth relative to the transducer and offset of the measuring
@@ -952,7 +952,7 @@ class DBT(TalkerSentence):
 # Used by simrad devices (f.e. EK500)
 class DPT(TalkerSentence):
     fields = (
-	('Water depth, in meters','depth',Decimal),
-	('Offset from the trasducer, in meters','offset',Decimal),
-	('Maximum range scale in use','range',Decimal),
+        ('Water depth, in meters','depth',Decimal),
+        ('Offset from the trasducer, in meters','offset',Decimal),
+        ('Maximum range scale in use','range',Decimal),
     )
