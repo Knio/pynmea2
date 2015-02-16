@@ -894,12 +894,28 @@ class MDA(TalkerSentence):
 	('Absolute humidity, percent','abs_humidity',Decimal),
 	('Dew point, degrees C','dew_point',Decimal),
 	('Celsius','d_celsius'),	# C = Celsius
-        ("Wind direction true","direction_true", Decimal),
-        ("True","true"), # T = True
-        ("Wind direction magnetic","direction_magnetic", Decimal),
-        ("Magnetic","magnetic"), # M = Magnetic
-        ("Wind speed knots","wind_speed_knots", Decimal),
-        ("Knots","knots"), # N = Knots
-        ("Wind speed meters/second","wind_speed_meters", Decimal),
-        ("Wind speed","meters"), # M = Meters
+        ('Wind direction true','direction_true', Decimal),
+        ('True','true'), # T = True
+        ('Wind direction magnetic','direction_magnetic', Decimal),
+        ('Magnetic','magnetic'), # M = Magnetic
+        ('Wind speed knots','wind_speed_knots', Decimal),
+        ('Knots','knots'), # N = Knots
+        ('Wind speed meters/second','wind_speed_meters', Decimal),
+        ('Meters','meters'), # M = Meters/second
+    )
+# Example: $WIMDA,30.2269,I,1.0236,B,17.7,C,,,43.3,,5.0,C,131.5,T,128.6,M,0.8,N,0.4,M*54
+
+
+# VWT - NMEA 0183 True wind angle in relation to the vessel’s heading, and true wind
+# speed referenced to the water.
+class VWT(TalkerSentence):
+    fields = (
+	('Wind angle relative to the vessel','wind_angle_vessel',Decimal),
+	('Direction, L=Left, R=Right, relative to the vessel head','direction'),
+        ('Wind speed knots','wind_speed_knots', Decimal),
+        ('Knots','knots'), # N = Knots
+        ('Wind speed meters/second','wind_speed_meters', Decimal),
+        ('Meters','meters'), # M = Meters/second
+        ('Wind speed km/h','wind_speed_km', Decimal),
+        ('Km','km'), # K = km/h
     )
