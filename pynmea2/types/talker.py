@@ -876,3 +876,30 @@ class DTM(TalkerSentence):
     )
 # Examples: 	$GPDTM,W84,,0.0,N,0.0,E,0.0,W84*6F
 #		$GPDTM,999,CH95,0.08,N,0.07,E,-47.7,W84*1C
+
+
+# MDA - NMEA 0183 standard Meteorological Composite
+# Used by Airmar PB 150 weather station
+class MDA(TalkerSentence):
+    fields = (
+        ('Barometric pressure, inches of mercury','b_pressure_inch',Decimal),
+	('Inches','inches'), # I = Inches
+	('Barometric pressure, bars','b_presure_bar',Decimal),
+	('Bars','bars'), # B = bars
+	('Air temperature, degrees C','air_temp',Decimal),
+	('Celsius','a_celsius'),	# C = Celsius
+	('Water temperature, degrees C','water_temp',Decimal),
+	('Celsius','w_celsius'),	# C = Celsius
+	('Relative humidity, percent','rel_humidity',Decimal),
+	('Absolute humidity, percent','abs_humidity',Decimal),
+	('Dew point, degrees C','dew_point',Decimal),
+	('Celsius','d_celsius'),	# C = Celsius
+        ("Wind direction true","direction_true", Decimal),
+        ("True","true"), # T = True
+        ("Wind direction magnetic","direction_magnetic", Decimal),
+        ("Magnetic","magnetic"), # M = Magnetic
+        ("Wind speed knots","wind_speed_knots", Decimal),
+        ("Knots","knots"), # N = Knots
+        ("Wind speed meters/second","wind_speed_meters", Decimal),
+        ("Wind speed","meters"), # M = Meters
+    )
