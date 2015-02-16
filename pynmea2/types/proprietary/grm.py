@@ -27,7 +27,7 @@ class GRMM(GRM):
     """ GARMIN Map Datum
     """
     fields = (
-    ('Currently Active Datum', 'datum'),
+        ('Currently Active Datum', 'datum'),
     )
 
 

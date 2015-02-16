@@ -585,15 +585,6 @@ class DBT(TalkerSentence):
         ("fathoms", "unit_fathoms"),
     )
 
-class DPT(TalkerSentence):
-    """ Depth of Water
-    """
-    fields = (
-        ("Depth meters", "depth", Decimal),
-        ("Offset from transducer", "offset", Decimal),
-        ("Maximum range on scale", "max_range", Decimal)
-    )
-
 class HDM(TalkerSentence):
     """
     Heading, Magnetic

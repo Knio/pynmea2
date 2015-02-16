@@ -45,7 +45,7 @@ class NMEASentence(NMEASentenceBase):
     >>> print(s)
     '''
 
-    sentence_re = re.compile('''
+    sentence_re = re.compile(r'''
         # start of string, optional whitespace, optional '$'
         ^\s*\$?
 
@@ -77,11 +77,11 @@ class NMEASentence(NMEASentenceBase):
         ''', re.X | re.IGNORECASE)
 
     talker_re = \
-        re.compile('^(?P<talker>\w{2})(?P<sentence>\w{3}),$')
+        re.compile(r'^(?P<talker>\w{2})(?P<sentence>\w{3}),$')
     query_re = \
-        re.compile('^(?P<talker>\w{2})(?P<listener>\w{2})Q,(?P<sentence>\w{3})$')
+        re.compile(r'^(?P<talker>\w{2})(?P<listener>\w{2})Q,(?P<sentence>\w{3})$')
     proprietary_re = \
-        re.compile('^P(?P<manufacturer>\w{3})$')
+        re.compile(r'^P(?P<manufacturer>\w{3})$')
 
     name_to_idx = {}
     fields = ()
@@ -105,6 +105,7 @@ class NMEASentence(NMEASentenceBase):
         if not match:
             raise ParseError('could not parse data: %r' % input)
 
+        # pylint: disable=bad-whitespace
         nmea_str        = match.group('nmea_str')
         data_str        = match.group('data')
         checksum        = match.group('checksum')
