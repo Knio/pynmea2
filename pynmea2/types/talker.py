@@ -392,7 +392,7 @@ class TRF(TalkerSentence):
     """ Transit Fix Data
     """
     fields = (
-	("Timestamp (UTC)", "timestamp", timestamp),
+        ("Timestamp (UTC)", "timestamp", timestamp),
         ("Date (DD/MM/YY", "date"),
         ("Latitude", "lat"),
         ("Latitude Direction", "lat_dir"),
