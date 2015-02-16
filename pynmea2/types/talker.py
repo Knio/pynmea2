@@ -272,8 +272,15 @@ class GSV(TalkerSentence):
 
 
 class HDG(TalkerSentence):
-    """ NOTE! This is a GUESS as I cannot find an actual spec
-        telling me the fields. Updates are welcome!
+    """ NMEA 0183 standard Heading, Deviation and Variation
+        Format: $HCHDG,<1>,<2>,<3>,<4>,<5>*hh<CR><LF>
+	<1> Magnetic sensor heading, degrees, to the nearest 0.1 degree.
+	<2> Magnetic deviation, degrees east or west, to the nearest 0.1 degree.
+	<3> E if field <2> is degrees East
+	    W if field <2> is degrees West
+	<4> Magnetic variation, degrees east or west, to the nearest 0.1 degree.
+	<5> E if field <4> is degrees East
+	    W if field <4> is degrees West
     """
     fields = (
         ("Heading", "heading", Decimal),
@@ -422,7 +429,7 @@ class VBW(TalkerSentence):
         ("Ground Speed Data Validity", "data_validity_grnd_spd")
     )
 
-class VTG(TalkerSentence):
+class 	VTG(TalkerSentence):
     """
     Track Made Good and Ground Speed
     """
@@ -851,3 +858,101 @@ class VWR(TalkerSentence):
     # )
 
 
+# ------------- Implemented by Rocco De Marco (CNR/ISMAR ITALY) -------------- #
+# ---------------------------------------------------------------------------- #
+
+
+# DTM - NMEA 0183 standard Datum Reference
+class DTM(TalkerSentence):
+    fields = (
+        ('Local datum','datum'),	
+        ('Subdivision datum','subd_datum'),
+        ('Latitude', 'lat'),
+        ('Latitude Direction', 'lat_dir'),
+        ('Longitude', 'lon'),
+        ('Longitude Direction', 'lon_dir'),
+        ('Signed altitude','altitude'),
+        ('Datum code','datum_code'),	
+    )
+# Examples: 	$GPDTM,W84,,0.0,N,0.0,E,0.0,W84*6F
+#		$GPDTM,999,CH95,0.08,N,0.07,E,-47.7,W84*1C
+
+
+# MDA - NMEA 0183 standard Meteorological Composite
+# Used by Airmar PB 150 weather station
+class MDA(TalkerSentence):
+    fields = (
+        ('Barometric pressure, inches of mercury','b_pressure_inch',Decimal),
+        ('Inches','inches'), # I = Inches
+        ('Barometric pressure, bars','b_presure_bar',Decimal),
+        ('Bars','bars'), # B = bars
+        ('Air temperature, degrees C','air_temp',Decimal),
+        ('Celsius','a_celsius'),	# C = Celsius
+        ('Water temperature, degrees C','water_temp',Decimal),
+        ('Celsius','w_celsius'),	# C = Celsius
+        ('Relative humidity, percent','rel_humidity',Decimal),
+        ('Absolute humidity, percent','abs_humidity',Decimal),
+        ('Dew point, degrees C','dew_point',Decimal),
+        ('Celsius','d_celsius'),	# C = Celsius
+        ('Wind direction true','direction_true', Decimal),
+        ('True','true'), # T = True
+        ('Wind direction magnetic','direction_magnetic', Decimal),
+        ('Magnetic','magnetic'), # M = Magnetic
+        ('Wind speed knots','wind_speed_knots', Decimal),
+        ('Knots','knots'), # N = Knots
+        ('Wind speed meters/second','wind_speed_meters', Decimal),
+        ('Meters','meters'), # M = Meters/second
+    )
+# Example: $WIMDA,30.2269,I,1.0236,B,17.7,C,,,43.3,,5.0,C,131.5,T,128.6,M,0.8,N,0.4,M*54
+
+
+# VWT - NMEA 0183 True wind angle in relation to the vessel's heading, and true wind
+# speed referenced to the water.
+class VWT(TalkerSentence):
+    fields = (
+        ('Wind angle relative to the vessel','wind_angle_vessel',Decimal),
+        ('Direction, L=Left, R=Right, relative to the vessel head','direction'),
+        ('Wind speed knots','wind_speed_knots', Decimal),
+        ('Knots','knots'), # N = Knots
+        ('Wind speed meters/second','wind_speed_meters', Decimal),
+        ('Meters','meters'), # M = Meters/second
+        ('Wind speed km/h','wind_speed_km', Decimal),
+        ('Km','km'), # K = km/h
+    )
+
+
+# DBS - Depth below surface
+# Used by simrad devices (f.e. EK500)
+# Deprecated and replaced by DPT
+class DBS(TalkerSentence):
+    fields = (
+        ('Depth below surface, feet','depth_feet',Decimal),
+        ('Feets','feets'), 
+        ('Depth below surface, meters','depth_meter',Decimal),
+        ('Meters','meters'),
+        ('Depth below surface, fathoms','depth_ fathoms',Decimal),
+        ('Fathoms','fathoms'),
+    )
+
+
+# DBT - Depth below trasducer, depth referenced to the transducer
+# Used by simrad devices (f.e. EK500)
+class DBT(TalkerSentence):
+    fields = (
+        ('Depth below surface, feet','depth_feet',Decimal),
+        ('Feets','feets'), 
+        ('Depth below surface, meters','depth_meter',Decimal),
+        ('Meters','meters'),
+        ('Depth below surface, fathoms','depth_ fathoms',Decimal),
+        ('Fathoms','fathoms'),
+    )
+
+# DPT - water depth relative to the transducer and offset of the measuring
+# transducer
+# Used by simrad devices (f.e. EK500)
+class DPT(TalkerSentence):
+    fields = (
+        ('Water depth, in meters','depth',Decimal),
+        ('Offset from the trasducer, in meters','offset',Decimal),
+        ('Maximum range scale in use','range',Decimal),
+    )
