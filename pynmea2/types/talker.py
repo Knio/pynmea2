@@ -906,7 +906,7 @@ class MDA(TalkerSentence):
 # Example: $WIMDA,30.2269,I,1.0236,B,17.7,C,,,43.3,,5.0,C,131.5,T,128.6,M,0.8,N,0.4,M*54
 
 
-# VWT - NMEA 0183 True wind angle in relation to the vessel’s heading, and true wind
+# VWT - NMEA 0183 True wind angle in relation to the vessel's heading, and true wind
 # speed referenced to the water.
 class VWT(TalkerSentence):
     fields = (
