@@ -100,8 +100,7 @@ class BEC(TalkerSentence):
 
 
 class BOD(TalkerSentence):
-    # 045.
-    # ,T,023.,M,DEST,START
+    # 045.,T,023.,M,DEST,START
     fields = (
         ('Bearing True', 'bearing_t', Decimal),
         ('Bearing True Type', 'bearing_t_type'),
@@ -111,21 +110,6 @@ class BOD(TalkerSentence):
         ('Start', 'start'),
     )
 
-    @property
-    def bearing_true(self):
-        return ','.join([self.bearing_t, self.bearing_t_type])
-
-    @property
-    def bearing_magnetic(self):
-        return ','.join([self.bearing_mag, self.bearing_mag_type])
-
-    @property
-    def destination(self):
-        return self.dest
-
-    @property
-    def origin(self):
-        return self.start
 
 class BWC(TalkerSentence):
     fields = (

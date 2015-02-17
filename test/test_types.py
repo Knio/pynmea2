@@ -150,3 +150,9 @@ def test_VPW():
     assert msg.unit_knots == 'N'
     assert msg.speed_ms == 3.4
     assert msg.unit_ms == 'M'
+
+def test_BOD():
+    data = "XXBOD,045.,T,023.,M,DEST,START"
+    msg = pynmea2.parse(data)
+    assert isinstance(msg, pynmea2.BOD)
+    assert msg.talker == 'XX'
