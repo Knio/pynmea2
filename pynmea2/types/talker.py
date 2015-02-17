@@ -1,3 +1,4 @@
+# pylint: disable=wildcard-import,unused-wildcard-import
 from ..nmea import TalkerSentence
 from ..nmea_utils import *
 from decimal import Decimal
@@ -13,7 +14,7 @@ class AAM(TalkerSentence):
         ("Perpendicular Passed", "perp_passed"),
         ("Circle Radius", "circle_rad"),
         ("Nautical Miles", "circle_rad_unit"),
-        ("Waypoint ID", "waypoint_id")
+        ("Waypoint ID", "waypoint_id"),
     )
 
 class ALM(TalkerSentence):
@@ -34,7 +35,7 @@ class ALM(TalkerSentence):
         ("Longitude of ascension node", "lat_asc_node"),
         ("Mean anomaly", "mean_anom"),
         ("F0 Clock parameter", "f0_clock_param"),
-        ("F1 Clock parameter", "f1_clock_param")
+        ("F1 Clock parameter", "f1_clock_param"),
     )
 
 
@@ -52,7 +53,7 @@ class APA(TalkerSentence):
         ("Perpendicular passed at waypoint", "perp_passed"), # A = True
         ("Bearing origin to destination", "bearing_to_dest"),
         ("Bearing type", "bearing_type"), # M = Magnetic, T = True
-        ("Destination waypoint ID", "dest_waypoint_id")
+        ("Destination waypoint ID", "dest_waypoint_id"),
     )
 
 
@@ -74,7 +75,7 @@ class APB(TalkerSentence):
         ("Bearing, present position to dest", "bearing_pres_dest"),
         ("Bearing to destination, type", "bearing_pres_dest_type"), # M = Magnetic, T = True
         ("Heading to steer to destination", "heading_to_dest"),
-        ("Heading to steer to destination type", "heading_to_dest_type")
+        ("Heading to steer to destination type", "heading_to_dest_type"),
     ) # M = Magnetic, T = True
 
 
@@ -94,7 +95,7 @@ class BEC(TalkerSentence):
         ("Nautical Miles", "nautical_miles"),
         ("Nautical Miles symbol", "nautical_miles_sym"),
         ("Waypoint ID", "waypoint_id"),
-        ("FAA mode indicator", "faa_mode")
+        ("FAA mode indicator", "faa_mode"),
     )
 
 
@@ -107,7 +108,7 @@ class BOD(TalkerSentence):
         ('Bearing Magnetic', 'bearing_mag', Decimal),
         ('Bearing Magnetic Type', 'bearing_mag_type'),
         ('Destination', 'dest'),
-        ('Start', 'start')
+        ('Start', 'start'),
     )
 
     @property
@@ -139,7 +140,7 @@ class BWC(TalkerSentence):
         ('Magnetic Symbol', 'mag_sym'),
         ('Range to waypoint', 'range_next'),
         ('Unit of range', 'range_unit'),
-        ('Waypoint Name', 'waypoint_name')
+        ('Waypoint Name', 'waypoint_name'),
     )
 
 class BWR(TalkerSentence):
@@ -155,7 +156,7 @@ class BWR(TalkerSentence):
         ('Magnetic Symbol', 'mag_sym'),
         ('Range to waypoint', 'range_next'),
         ('Unit of range', 'range_unit'),
-        ('Waypoint Name', 'waypoint_name')
+        ('Waypoint Name', 'waypoint_name'),
     )
 
 class GGA(TalkerSentence, LatLonFix):
@@ -173,7 +174,7 @@ class GGA(TalkerSentence, LatLonFix):
         ('Geoidal Separation', 'geo_sep'),
         ('Units of Geoidal Separation (meters)', 'geo_sep_units'),
         ('Age of Differential GPS Data (secs)', 'age_gps_data'),
-        ('Differential Reference Station ID', 'ref_station_id')
+        ('Differential Reference Station ID', 'ref_station_id'),
     )
 
 class GNS(TalkerSentence, LatLonFix):
@@ -189,7 +190,7 @@ class GNS(TalkerSentence, LatLonFix):
         ('Antenna altitude, meters', 'altitude'),
         ('Goeidal separation meters', 'geo_sep'),
         ('Age of diferential data', 'age_gps_data'),
-        ('Differential reference station ID', 'diferential')
+        ('Differential reference station ID', 'diferential'),
     )
 
 class BWW(TalkerSentence):
@@ -201,7 +202,7 @@ class BWW(TalkerSentence):
         ("Bearing degrees Magnitude", "bearing_deg_mag"),
         ("Bearing degrees Magnitude Symbol", "bearing_deg_mag_sym"),
         ("Destination Waypoint ID", "waypoint_id_dest"),
-        ("Origin Waypoint ID", "waypoint_id_orig")
+        ("Origin Waypoint ID", "waypoint_id_orig"),
     )
 
 class GLL(TalkerSentence, LatLonFix):
@@ -212,7 +213,7 @@ class GLL(TalkerSentence, LatLonFix):
         ('Longitude Direction', 'lon_dir'),
         ('Timestamp', 'timestamp', timestamp),
         ('Data Validity', "data_valid"),
-        ("FAA mode indicator", "faa_mode")
+        ("FAA mode indicator", "faa_mode"),
     )
 
 class GSA(TalkerSentence):
@@ -233,8 +234,8 @@ class GSA(TalkerSentence):
         ('SV ID12', 'sv_id12'),
         ('PDOP (Dilution of precision)', 'pdop'),
         ('HDOP (Horizontal DOP)', 'hdop'),
-        ('VDOP (Vertical DOP)', 'vdop')
-            )
+        ('VDOP (Vertical DOP)', 'vdop'),
+    )
 
 
 class GST(TalkerSentence):
@@ -270,7 +271,7 @@ class GSV(TalkerSentence):
         ('SV PRN number 4', 'sv_prn_num_4'),
         ('Elevation in degrees 4', 'elevation_deg_4'), # 90 max
         ('Azimuth, deg from true north 4', 'azimuth_4'), # 000 to 159
-        ('SNR 4', 'snr_4')
+        ('SNR 4', 'snr_4'),
     )  # 00-99 dB
 
 
@@ -290,14 +291,14 @@ class HDG(TalkerSentence):
         ("Deviation", "deviation", Decimal),
         ("Deviation Direction", "dev_dir"),
         ("Variation", "variation", Decimal),
-        ("Variation Direction", "var_dir")
+        ("Variation Direction", "var_dir"),
     )
 
 
 class HDT(TalkerSentence):
     fields = (
         ("Heading", "heading", Decimal),
-        ("True", "hdg_true")
+        ("True", "hdg_true"),
     )
 
 
@@ -313,7 +314,7 @@ class RMA(TalkerSentence):
         ("Speed over ground", "spd_over_grnd"), # Knots
         ("Course over ground", "crse_over_grnd"),
         ("Variation", "variation"),
-        ("Variation Direction", "var_dir")
+        ("Variation Direction", "var_dir"),
     )
 
 class RMB(TalkerSentence):
@@ -332,7 +333,7 @@ class RMB(TalkerSentence):
         ("Range to Destination", "dest_range"), # Nautical Miles
         ("True Bearing to Destination", "dest_true_bearing"),
         ("Velocity Towards Destination", "dest_velocity"), # Knots
-        ("Arrival Alarm", "arrival_alarm")
+        ("Arrival Alarm", "arrival_alarm"),
     ) # A = Arrived, V = Not arrived
 
 class RMC(TalkerSentence, LatLonFix, DatetimeFix):
@@ -349,7 +350,7 @@ class RMC(TalkerSentence, LatLonFix, DatetimeFix):
         ("True Course", "true_course", float),
         ("Datestamp", "datestamp", datestamp),
         ("Magnetic Variation", "mag_variation"),
-        ("Magnetic Variation Direction", "mag_var_dir")
+        ("Magnetic Variation Direction", "mag_var_dir"),
     )
 
 class RTE(TalkerSentence):
@@ -405,7 +406,7 @@ class TRF(TalkerSentence):
         ("Number of Iterations", "num_iterations"),
         ("Number of Doppler Intervals", "num_doppler_intervals"),
         ("Update Distance", "update_dist"), # Nautical Miles
-        ("Satellite ID", "sat_id")
+        ("Satellite ID", "sat_id"),
     )
 
 
@@ -416,7 +417,7 @@ class TXT(TalkerSentence):
         ("Number of Messages", "num_msg"),
         ("Message Number", "msg_num"),
         ("Type of Message", "msg_type"),
-        ("Text", "text")
+        ("Text", "text"),
     )
 
 
@@ -429,7 +430,7 @@ class VBW(TalkerSentence):
         ("Water Speed Data Validity", "data_validity_water_spd"),
         ("Longitudinal Ground Speed", "lon_grnd_spd", Decimal), # Knots
         ("Transverse Ground Speed", "trans_grnd_spd", Decimal), # Knots
-        ("Ground Speed Data Validity", "data_validity_grnd_spd")
+        ("Ground Speed Data Validity", "data_validity_grnd_spd"),
     )
 
 class VTG(TalkerSentence):
@@ -445,7 +446,7 @@ class VTG(TalkerSentence):
         ("Speed over ground symbol", "spd_over_grnd_kts_sym"),
         ("Speed over ground kmph", "spd_over_grnd_kmph", float),
         ("Speed over ground kmph symbol", "spd_over_grnd_kmph_sym"),
-        ("FAA mode indicator", "faa_mode")
+        ("FAA mode indicator", "faa_mode"),
     )
 
 
@@ -455,7 +456,7 @@ class WCV(TalkerSentence):
     fields = (
         ("Velocity", "velocity"),
         ("Velocity Units", "vel_units"), # Knots
-        ("Waypoint ID", "waypoint_id")
+        ("Waypoint ID", "waypoint_id"),
     )
 
 
@@ -468,7 +469,7 @@ class WNC(TalkerSentence):
         ("Distance, Kilometers", "dist_km"),
         ("Distance, Kilometers Unit", "dist_km_unit"),
         ("Origin Waypoint ID", "waypoint_origin_id"),
-        ("Destination Waypoint ID", "waypoint_dest_id")
+        ("Destination Waypoint ID", "waypoint_dest_id"),
     )
 
 
@@ -480,7 +481,7 @@ class WPL(TalkerSentence):
         ("Latitude Direction", "lat_dir"),
         ("Longitude", "lon"),
         ("Longitude Direction", "lon_dir"),
-        ("Waypoint ID", "waypoint_id")
+        ("Waypoint ID", "waypoint_id"),
     )
 
 
@@ -492,7 +493,7 @@ class XTE(TalkerSentence):
         ("Lock flag (Not Used)", "lock_flag"),
         ("Cross Track Error Distance", "cross_track_err_dist"),
         ("Correction Direction (L or R)", "correction_dir"),
-        ("Distance Units", "dist_units")
+        ("Distance Units", "dist_units"),
     )
 
 
@@ -503,7 +504,7 @@ class ZDA(TalkerSentence):
         ("Month", "month", int), # 01 to 12
         ("Year", "year", int), # Year = YYYY
         ("Local Zone Description", "local_zone", int), # 00 to +/- 13 hours
-        ("Local Zone Minutes Description", "local_zone_minutes", int) # same sign as hours
+        ("Local Zone Minutes Description", "local_zone_minutes", int), # same sign as hours
     )
 
     @property
@@ -599,7 +600,7 @@ class MTW(TalkerSentence):
     """
     fields = (
         ('Water temperature', 'temperature', Decimal),
-        ('Unit of measurement', 'units')
+        ('Unit of measurement', 'units'),
     )
 
 class VHW(TalkerSentence):

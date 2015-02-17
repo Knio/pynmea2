@@ -14,18 +14,18 @@ class SRF(nmea.ProprietarySentence):
 class SRF103(SRF):
     fields = (
         ('Sentence type', 'sentence'),
-            # 00=GGA
-            # 01=GLL
-            # 02=GSA
-            # 03=GSV
-            # 04=RMC
-            # 05=VTG
+        # 00=GGA
+        # 01=GLL
+        # 02=GSA
+        # 03=GSV
+        # 04=RMC
+        # 05=VTG
         ('Command', 'command'),
-            # 0=Set
-            # 1=Query
+        # 0=Set
+        # 1=Query
         ('Rate', 'rate'),
         ('Checksum', 'checksum'),
-            # 0=No, 1=Yes
+        # 0=No, 1=Yes
     )
 
 

@@ -1,5 +1,6 @@
-
 # -- TRIMBLE -- #
+
+# pylint: disable=wildcard-import,unused-wildcard-import
 from ... import nmea
 from ...nmea_utils import *
 """ Support for proprietary messages from BD9xx recievers.
@@ -17,7 +18,7 @@ class TNL(nmea.ProprietarySentence):
         '''
         sentence_type = data[0] or data[1]
         name = manufacturer + sentence_type
-        cls = _cls.sentence_types.get(name,_cls)
+        cls = _cls.sentence_types.get(name, _cls)
         return super(TNL, cls).__new__(cls)
 
     def __init__(self, manufacturer, data):
@@ -106,7 +107,7 @@ class TNLVHD(TNL, DatetimeFix):
         ('GPS Quality', 'gps_quality'),
         ('Total number of satelites in use', 'num_sats'),
         ('PDOP', 'pdop'),
-      )
+    )
 
 
 class TNLPJT(TNL):
@@ -118,4 +119,4 @@ class TNLPJT(TNL):
         ('Sentence Type', 'type'),
         ('Coordinate System', 'coord_name'),
         ('Project Name', 'project_name'),
-      )
+    )

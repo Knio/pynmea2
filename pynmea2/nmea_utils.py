@@ -1,5 +1,5 @@
+#pylint: disable=invalid-name
 import datetime
-import math
 
 def timestamp(s):
     '''
@@ -42,6 +42,7 @@ class LatLonFix(object):
     '''Mixin to add `lattitude` and `longitude` properties as signed decimals
     to NMEA sentences which have coordiantes given as degrees/minutes (lat, lon)
     and cardinal directions (lat_dir, lon_dir)'''
+    #pylint: disable=no-member
 
     @property
     def latitude(self):
@@ -91,6 +92,8 @@ class LatLonFix(object):
 
 
 class DatetimeFix(object):
+    #pylint: disable=no-member
+
     @property
     def datetime(self):
         return datetime.datetime.combine(self.datestamp, self.timestamp)
@@ -101,6 +104,12 @@ class TZInfo(datetime.tzinfo):
         self.hh = hh
         self.mm = mm
         super(TZInfo, self).__init__()
+
+    def tzname(self, dt):
+        return ''
+
+    def dst(self, dt):
+        return datetime.timedelta(0)
 
     def utcoffset(self, dt):
         return datetime.timedelta(hours=self.hh, minutes=self.mm)
