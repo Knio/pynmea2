@@ -156,3 +156,34 @@ def test_BOD():
     msg = pynmea2.parse(data)
     assert isinstance(msg, pynmea2.BOD)
     assert msg.talker == 'XX'
+
+
+def test_XDR():
+    data = "$YXXDR,A,-64.437,M,N,A,054.454,D,E,C,17.09,C,T-N1052*46"
+    msg = pynmea2.parse(data)
+    assert isinstance(msg, pynmea2.XDR)
+    assert msg.talker == 'YX'
+    assert msg.type == 'A'
+    assert msg.value == '-64.437'
+    assert msg.units == 'M'
+    assert msg.id == 'N'
+
+    assert msg.num_transducers == 3
+
+    t0 = msg.get_transducer(0)
+    assert t0.type == 'A'
+    assert t0.value == '-64.437'
+    assert t0.units == 'M'
+    assert t0.id == 'N'
+
+    t1 = msg.get_transducer(1)
+    assert t1.type == 'A'
+    assert t1.value == '054.454'
+    assert t1.units == 'D'
+    assert t1.id == 'E'
+
+    t2 = msg.get_transducer(2)
+    assert t2.type == 'C'
+    assert t2.value == '17.09'
+    assert t2.units == 'C'
+    assert t2.id == 'T-N1052'

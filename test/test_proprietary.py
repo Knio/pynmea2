@@ -149,4 +149,3 @@ def test_create():
         '%d' % 0])
     data = sentence.render(checksum=True, dollar=True, newline=False)
     assert data == '$PSRF100,1,9600,7,1,0*02'
-

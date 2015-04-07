@@ -1,7 +1,10 @@
 # pylint: disable=wildcard-import,unused-wildcard-import
 from ..nmea import TalkerSentence
 from ..nmea_utils import *
+
+from collections import namedtuple
 from decimal import Decimal
+
 
 #pylint: disable=missing-docstring
 #pylint: disable=no-init
@@ -727,6 +730,29 @@ class VWR(TalkerSentence):
 #  8) K = Kilometers Per Hour
 #  9) Checksum
 
+
+Transducer = namedtuple("Transducer", [
+    "type",
+    "value",
+    "units",
+    "id",
+])
+
+class XDR(TalkerSentence):
+    fields = (
+        ("Transducer type", "type"),
+        ("Transducer data value", "value"),
+        ("Transducer data units", "units"),
+        ("Transducer ID", "id"),
+    )
+
+    @property
+    def num_transducers(self):
+        return len(self.data) // 4
+
+    def get_transducer(self, i):
+        return Transducer(*self.data[i*4:i*4+4])
+
 # ---------------------------------- Not Yet Implemented --------------------- #
 # ---------------------------------------------------------------------------- #
 
@@ -787,12 +813,6 @@ class VWR(TalkerSentence):
 
 #class TTM(TalkerSentence):
 #    """ Tracked Target Message
-#    """
-    #    fields = (
-    # )
-
-#class XDR(TalkerSentence):
-#    """ Transducer Measurements
 #    """
     #    fields = (
     # )
