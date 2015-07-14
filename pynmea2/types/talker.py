@@ -199,7 +199,7 @@ class GLL(TalkerSentence, LatLonFix):
         ('Longitude', 'lon'),
         ('Longitude Direction', 'lon_dir'),
         ('Timestamp', 'timestamp', timestamp),
-        ('Data Validity', "data_valid"),
+        ('Data Validity', "data_validity"),
         ("FAA mode indicator", "faa_mode"),
     )
 
@@ -308,7 +308,7 @@ class RMB(TalkerSentence):
     """ Recommended Minimum Navigation Information
     """
     fields = (
-        ("Data Validity", "validity"),
+        ("Data Validity", "data_validity"),
         ("Cross Track Error", "cross_track_error"), # nautical miles, 9.9 max
         ("Cross Track Error, direction to corrent", "cte_correction_dir"),
         ("Origin Waypoint ID", "origin_waypoint_id"),
