@@ -219,6 +219,13 @@ class TalkerSentence(NMEASentence):
     def identifier(self):
         return '%s%s,' % (self.talker, self.sentence_type)
 
+    def is_valid(self):
+        try:
+            if self.status == 'A':
+                return True
+        except AttributeError:
+            pass # not all sentences have a 'status' field
+        return False
 
 class QuerySentence(NMEASentence):
     sentence_types = {}

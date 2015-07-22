@@ -199,7 +199,7 @@ class GLL(TalkerSentence, LatLonFix):
         ('Longitude', 'lon'),
         ('Longitude Direction', 'lon_dir'),
         ('Timestamp', 'timestamp', timestamp),
-        ('Data Validity', "data_validity"),
+        ('Status', 'status'), # contains the 'A' or 'V' flag
         ("FAA mode indicator", "faa_mode"),
     )
 
@@ -308,7 +308,7 @@ class RMB(TalkerSentence):
     """ Recommended Minimum Navigation Information
     """
     fields = (
-        ("Data Validity", "data_validity"),
+        ('Status', 'status'), # contains the 'A' or 'V' flag
         ("Cross Track Error", "cross_track_error"), # nautical miles, 9.9 max
         ("Cross Track Error, direction to corrent", "cte_correction_dir"),
         ("Origin Waypoint ID", "origin_waypoint_id"),
@@ -328,7 +328,7 @@ class RMC(TalkerSentence, LatLonFix, DatetimeFix):
     """
     fields = (
         ("Timestamp", "timestamp", timestamp),
-        ("Data Validity", "data_validity"),
+        ('Status', 'status'), # contains the 'A' or 'V' flag
         ("Latitude", "lat"),
         ("Latitude Direction", "lat_dir"),
         ("Longitude", "lon"),
@@ -621,7 +621,7 @@ class ROT(TalkerSentence):
     """
     fields = (
         ("Rate of turn", "rate_of_turn"), #- indicates bow turn to port
-        ("valid data", "valid_data"), #A=valid data, B= invalid data
+        ('Status', 'status'), # contains the 'A' or 'B' flag
     )
 
 class RPM(TalkerSentence):
