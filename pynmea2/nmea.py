@@ -224,6 +224,7 @@ class TalkerSentence(NMEASentence):
             if self.status == 'A':
                 return True
         except AttributeError:
+            return None
             pass # not all sentences have a 'status' field
         return False
 
