@@ -99,6 +99,34 @@ class DatetimeFix(object):
         return datetime.datetime.combine(self.datestamp, self.timestamp)
 
 
+class ValidStatusFix(object):
+    #pylint: disable=no-member
+
+    @property
+    def is_valid(self):
+        return True if self.status == 'A' else False
+
+class ValidGsaFix(object):
+    #pylint: disable=no-member
+
+    @property
+    def is_valid(self):
+        return True if int(self.mode_fix_type) in [2, 3] else False
+
+class ValidGgaFix(object):
+    #pylint: disable=no-member
+
+    @property
+    def is_valid(self):
+        return True if int(self.gps_qual) in range(1,6) else False
+
+class ValidVbwFix(object):
+    #pylint: disable=no-member
+
+    @property
+    def is_valid(self):
+        return True if (self.data_validity_water_spd == self.data_validity_grnd_spd == 'A') else False
+
 class TZInfo(datetime.tzinfo):
     def __init__(self, hh, mm):
         self.hh = hh
