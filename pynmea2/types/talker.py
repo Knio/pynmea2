@@ -146,14 +146,14 @@ class BWR(TalkerSentence):
         ('Waypoint Name', 'waypoint_name'),
     )
 
-class GGA(TalkerSentence, ValidGgaFix, LatLonFix):
+class GGA(TalkerSentence, ValidGGAFix, LatLonFix):
     fields = (
         ('Timestamp', 'timestamp', timestamp),
         ('Latitude', 'lat'),
         ('Latitude Direction', 'lat_dir'),
         ('Longitude', 'lon'),
         ('Longitude Direction', 'lon_dir'),
-        ('GPS Quality Indicator', 'gps_qual'),
+        ('GPS Quality Indicator', 'gps_qual', int),
         ('Number of Satellites in use', 'num_sats'),
         ('Horizontal Dilution of Precision', 'horizontal_dil'),
         ('Antenna Alt above sea level (mean)', 'altitude', float),
@@ -203,7 +203,7 @@ class GLL(TalkerSentence, ValidStatusFix, LatLonFix):
         ("FAA mode indicator", "faa_mode"),
     )
 
-class GSA(TalkerSentence, ValidGsaFix):
+class GSA(TalkerSentence, ValidGSAFix):
     fields = (
         ('Mode', 'mode'),
         ('Mode fix type', 'mode_fix_type'),
@@ -408,7 +408,7 @@ class TXT(TalkerSentence):
     )
 
 
-class VBW(TalkerSentence, ValidVbwFix):
+class VBW(TalkerSentence, ValidVBWFix):
     """ Dual Ground/Water Speed
     """
     fields = (
