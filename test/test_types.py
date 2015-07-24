@@ -23,7 +23,7 @@ def test_GGA():
     # Longitude Direction
     assert msg.lon_dir          == 'E'
     # GPS Quality Indicator
-    assert msg.gps_qual         == '1'
+    assert msg.gps_qual         == 1
     # Number of Satellites in use
     assert msg.num_sats         == '04'
     # Horizontal Dilution of Precision
@@ -40,6 +40,7 @@ def test_GGA():
     assert msg.age_gps_data     == ''
     # Differential Reference Station ID
     assert msg.ref_station_id   == '0000'
+    assert msg.is_valid == True
 
     msg.altitude = 200.0
     assert str(msg) == "$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,200.0,M,-33.9,M,,0000*5E"
@@ -118,6 +119,7 @@ def test_RMC():
     assert msg.latitude == 49.274166666666666
     assert msg.longitude == -123.18533333333333
     assert msg.datetime == datetime.datetime(1994, 11, 19, 22, 54, 46)
+    assert msg.is_valid == True
     assert msg.render() == data
 
 
@@ -187,3 +189,22 @@ def test_XDR():
     assert t2.value == '17.09'
     assert t2.units == 'C'
     assert t2.id == 'T-N1052'
+
+def test_GLL():
+    data = "$GPGLL,4916.45,N,12311.12,W,225444,A,*1D"
+    msg = pynmea2.parse(data)
+    assert msg.is_valid == True
+    assert msg.render() == data
+
+def test_GSA():
+    data = "$GPGSA,A,3,02,,,07,,09,24,26,,,,,1.6,1.6,1.0*3D"
+    msg = pynmea2.parse(data)
+    assert msg.is_valid == True
+    assert msg.render() == data
+
+def test_VBW():
+    data = "XXVBW,1.2,3.4,A,5.6,7.8,A"
+    msg = pynmea2.parse(data)
+    assert msg.is_valid == True
+    assert msg.render(checksum=False, dollar=False) == data
+

@@ -146,14 +146,14 @@ class BWR(TalkerSentence):
         ('Waypoint Name', 'waypoint_name'),
     )
 
-class GGA(TalkerSentence, LatLonFix):
+class GGA(TalkerSentence, ValidGGAFix, LatLonFix):
     fields = (
         ('Timestamp', 'timestamp', timestamp),
         ('Latitude', 'lat'),
         ('Latitude Direction', 'lat_dir'),
         ('Longitude', 'lon'),
         ('Longitude Direction', 'lon_dir'),
-        ('GPS Quality Indicator', 'gps_qual'),
+        ('GPS Quality Indicator', 'gps_qual', int),
         ('Number of Satellites in use', 'num_sats'),
         ('Horizontal Dilution of Precision', 'horizontal_dil'),
         ('Antenna Alt above sea level (mean)', 'altitude', float),
@@ -192,18 +192,18 @@ class BWW(TalkerSentence):
         ("Origin Waypoint ID", "waypoint_id_orig"),
     )
 
-class GLL(TalkerSentence, LatLonFix):
+class GLL(TalkerSentence, ValidStatusFix, LatLonFix):
     fields = (
         ('Latitude', 'lat'),
         ('Latitude Direction', 'lat_dir'),
         ('Longitude', 'lon'),
         ('Longitude Direction', 'lon_dir'),
         ('Timestamp', 'timestamp', timestamp),
-        ('Data Validity', "data_validity"),
+        ('Status', 'status'), # contains the 'A' or 'V' flag
         ("FAA mode indicator", "faa_mode"),
     )
 
-class GSA(TalkerSentence):
+class GSA(TalkerSentence, ValidGSAFix):
     fields = (
         ('Mode', 'mode'),
         ('Mode fix type', 'mode_fix_type'),
@@ -304,11 +304,11 @@ class RMA(TalkerSentence):
         ("Variation Direction", "var_dir"),
     )
 
-class RMB(TalkerSentence):
+class RMB(TalkerSentence, ValidStatusFix):
     """ Recommended Minimum Navigation Information
     """
     fields = (
-        ("Data Validity", "data_validity"),
+        ('Status', 'status'), # contains the 'A' or 'V' flag
         ("Cross Track Error", "cross_track_error"), # nautical miles, 9.9 max
         ("Cross Track Error, direction to corrent", "cte_correction_dir"),
         ("Origin Waypoint ID", "origin_waypoint_id"),
@@ -323,12 +323,12 @@ class RMB(TalkerSentence):
         ("Arrival Alarm", "arrival_alarm"),
     ) # A = Arrived, V = Not arrived
 
-class RMC(TalkerSentence, LatLonFix, DatetimeFix):
+class RMC(TalkerSentence, ValidStatusFix, LatLonFix, DatetimeFix):
     """ Recommended Minimum Specific GPS/TRANSIT Data
     """
     fields = (
         ("Timestamp", "timestamp", timestamp),
-        ("Data Validity", "data_validity"),
+        ('Status', 'status'), # contains the 'A' or 'V' flag
         ("Latitude", "lat"),
         ("Latitude Direction", "lat_dir"),
         ("Longitude", "lon"),
@@ -408,7 +408,7 @@ class TXT(TalkerSentence):
     )
 
 
-class VBW(TalkerSentence):
+class VBW(TalkerSentence, ValidVBWFix):
     """ Dual Ground/Water Speed
     """
     fields = (
@@ -546,7 +546,7 @@ class MWD(TalkerSentence):
         ("Wind speed", "meters"),
     )
 
-class MWV(TalkerSentence):
+class MWV(TalkerSentence, ValidStatusFix):
     """ Wind Speed and Angle
     NMEA 0183 standard Wind Speed and Angle, in relation to the vessel's
     bow/centerline.
@@ -616,15 +616,15 @@ class VLW(TalkerSentence):
 # --------------------- Implemented by Joachim Bakke (joabakk)---------------- #
 # ---------------------------------------------------------------------------- #
 
-class ROT(TalkerSentence):
+class ROT(TalkerSentence, ValidStatusFix):
     """ Rate of Turn
     """
     fields = (
         ("Rate of turn", "rate_of_turn"), #- indicates bow turn to port
-        ("valid data", "valid_data"), #A=valid data, B= invalid data
+        ('Status', 'status'), # contains the 'A' or 'B' flag
     )
 
-class RPM(TalkerSentence):
+class RPM(TalkerSentence, ValidStatusFix):
     """ Revolutions
     """
 #        1 2 3   4   5 6
