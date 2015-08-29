@@ -101,6 +101,9 @@ def test_query():
     assert msg.listener == 'GP'
     assert msg.sentence_type == 'GGA'
 
+def test_slash():
+    with pytest.raises(pynmea2.nmea.ParseError):
+        msg = pynmea2.parse('$GPGSV,3,3,09,24,03,046,*47\\')
 
 #
 # ^o^
