@@ -171,7 +171,7 @@ class GNS(TalkerSentence, LatLonFix):
         ('Latitude Direction', 'lat_dir'),
         ('Longitude', 'lon'),
         ('Longitude Direction', 'lon_dir'),
-        ('Mode indicator', 'mode_inticator'),
+        ('Mode indicator', 'mode_indicator'),
         ('Total number of satelites in use', 'num_sats'),
         ('HDROP', 'hdop'),
         ('Antenna altitude, meters', 'altitude'),
