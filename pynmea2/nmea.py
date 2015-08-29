@@ -73,7 +73,7 @@ class NMEASentence(NMEASentenceBase):
         (?:[*](?P<checksum>[A-F0-9]{2}))?
 
         # optional trailing whitespace
-        \s*[\\\r\\\n]*$
+        \s*[\r\n]*$
         ''', re.X | re.IGNORECASE)
 
     talker_re = \
