@@ -6,7 +6,7 @@ except ImportError:
 import pynmea2
 
 def test_file():
-    filepath = "../examples/nmea_file"
+    filepath = "nmea_file"
 
     nmeafile = pynmea2.NMEAFile(filepath)
 
@@ -25,6 +25,5 @@ def test_file():
     assert len(nmea_strings) == 10
     assert all([isinstance(s, pynmea2.NMEASentence) for s in nmea_strings])
 
-    print 'done'
 
 test_file()
