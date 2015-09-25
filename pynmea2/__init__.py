@@ -10,5 +10,6 @@ from .nmea import ChecksumError, ParseError, SentenceTypeError
 
 from .types import *
 from .stream import NMEAStreamReader
+from .nmea_file import NMEAFile
 
 parse = NMEASentence.parse
