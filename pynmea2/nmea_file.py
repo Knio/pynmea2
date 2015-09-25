@@ -13,7 +13,10 @@ class NMEAFile(file):
         :return: NMEASentence
         """
         data = super(NMEAFile, self).next()
-        return NMEASentence.parse(data)
+        return self.parse(data)
+
+    def parse(self, s):
+        return NMEASentence.parse(s)
 
     def readline(self):
         """
@@ -21,7 +24,7 @@ class NMEAFile(file):
         :return: NMEASentence
         """
         data = super(NMEAFile, self).readline()
-        s = NMEASentence.parse(data)
+        s = self.parse(data)
         return s
 
     def read(self):
