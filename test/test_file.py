@@ -16,7 +16,7 @@ def test_file():
     del nmeafile
 
     with pynmea2.NMEAFile(filepath) as _f:
-        nmea_strings = [_f.readline() for i in xrange(10)]
+        nmea_strings = [_f.readline() for i in range(10)]
     assert len(nmea_strings) == 10
     assert all([isinstance(s, pynmea2.NMEASentence) for s in nmea_strings])
 
