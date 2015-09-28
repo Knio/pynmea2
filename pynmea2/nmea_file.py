@@ -44,7 +44,7 @@ class NMEAFile(object):
         Iterate through the file object returning NMEASentence objects
         :return: NMEASentence
         """
-        data = self._file.next()
+        data = self._file.readline()
         return self.parse(data)
 
     def parse(self, s):

@@ -43,6 +43,11 @@ def test_file():
     assert len(nmea_strings) == 10
     assert all([isinstance(s, pynmea2.NMEASentence) for s in nmea_strings])
 
+    with pynmea2.NMEAFile(filepath) as _f:
+        nmea_strings = [_f.next() for i in range(10)]
+    assert len(nmea_strings) == 10
+    assert all([isinstance(s, pynmea2.NMEASentence) for s in nmea_strings])
+
     if os.path.isfile(filepath):
         os.remove(filepath)
 
