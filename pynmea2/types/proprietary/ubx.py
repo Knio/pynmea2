@@ -1,11 +1,11 @@
-# u-blox
-
 # pylint: disable=wildcard-import,unused-wildcard-import
-from ... import nmea
-from ...nmea_utils import *
 from decimal import Decimal
 
+from ... import nmea
+from ...nmea_utils import *
 
+
+# u-blox
 class UBX(nmea.ProprietarySentence):
     sentence_types = {}
 

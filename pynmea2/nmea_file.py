@@ -1,5 +1,10 @@
-from __future__ import unicode_literals
-from pynmea2.nmea import NMEASentence
+try:
+    # pylint: disable=used-before-assignment
+    basestring = basestring
+except NameError: # py3
+    basestring = str
+
+from .nmea import NMEASentence
 
 
 class NMEAFile(object):
@@ -7,9 +12,13 @@ class NMEAFile(object):
     Reads NMEA sentences from a file similar to a standard python file object.
     """
 
-    def __init__(self, path, mode='r'):
+    def __init__(self, f, *args, **kwargs):
         super(NMEAFile, self).__init__()
-        self._file = self.open(path, mode=mode)
+        if isinstance(f, basestring) or args or kwargs:
+            self._file = self.open(f, *args, **kwargs)
+        else:
+            self._file = f
+        self._context = None
 
     def open(self, fp, mode='r'):
         """
@@ -33,11 +42,15 @@ class NMEAFile(object):
             yield self.parse(line)
 
     def __enter__(self):
-        self._file.__enter__()
+        if hasattr(self._file, '__enter__'):
+            self._context = self._file.__enter__()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
+        if self._context:
+            ctx = self._context
+            self._context = None
+            ctx.__exit__(exc_type, exc_val, exc_tb)
 
     def next(self):
         """
