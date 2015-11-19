@@ -9,6 +9,9 @@ class GRM(nmea.ProprietarySentence):
         cls = _cls.sentence_types.get(name, _cls)
         return super(GRM, cls).__new__(cls)
 
+    def __init__(self, manufacturer, data):
+        self.sentence_type = manufacturer + data[1]
+        super(GRM, self).__init__(manufacturer, data[2:])
 
 class GRME(GRM):
     """ GARMIN Estimated position error
