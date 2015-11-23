@@ -14,13 +14,14 @@ class GRM(nmea.ProprietarySentence):
 
     def __init__(self, manufacturer, data):
         self.sentence_type = manufacturer + data[0]
-        super(GRM, self).__init__(manufacturer, data[1:])
+        super(GRM, self).__init__(manufacturer, data)
 
 
 class GRME(GRM):
     """ GARMIN Estimated position error
     """
     fields = (
+        ("Subtype", "subtype"),
         ("Estimated Horiz. Position Error", "hpe", Decimal),
         ("Estimated Horiz. Position Error Unit (M)", "hpe_unit"),
         ("Estimated Vert. Position Error", "vpe", Decimal),
@@ -34,6 +35,7 @@ class GRMM(GRM):
     """ GARMIN Map Datum
     """
     fields = (
+        ("Subtype", "subtype"),
         ('Currently Active Datum', 'datum'),
     )
 
@@ -42,6 +44,7 @@ class GRMZ(GRM):
     """ GARMIN Altitude Information
     """
     fields = (
+        ("Subtype", "subtype"),
         ("Altitude", "altitude"),
         ("Altitude Units (Feet)", "altitude_unit"),
         ("Positional Fix Dimension (2=user, 3=GPS)", "pos_fix_dim")

@@ -13,11 +13,12 @@ class SRF(nmea.ProprietarySentence):
 
     def __init__(self, manufacturer, data):
         self.sentence_type = manufacturer + data[0]
-        super(SRF, self).__init__(manufacturer, data[1:])
+        super(SRF, self).__init__(manufacturer, data)
 
 
 class SRF103(SRF):
     fields = (
+        ("Subtype", "subtype"),
         ('Sentence type', 'sentence'),
         # 00=GGA
         # 01=GLL
@@ -36,6 +37,7 @@ class SRF103(SRF):
 
 class SRF100(SRF):
     fields = (
+        ("Subtype", "subtype"),
         ('Protocol', 'protocol'),
         # 0 = SiRF Binary
         # 1 = NMEA
