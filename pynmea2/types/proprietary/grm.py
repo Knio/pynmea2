@@ -45,7 +45,7 @@ class GRMZ(GRM):
     """
     fields = (
         ("Subtype", "subtype"),
-        ("Altitude", "altitude"),
+        ("Altitude", "altitude", Decimal),
         ("Altitude Units (Feet)", "altitude_unit"),
         ("Positional Fix Dimension (2=user, 3=GPS)", "pos_fix_dim")
     )
