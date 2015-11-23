@@ -5,10 +5,15 @@ from ... import nmea
 
 class SRF(nmea.ProprietarySentence):
     sentence_types = {}
+
     def __new__(_cls, manufacturer, data):
         name = manufacturer + data[0]
         cls = _cls.sentence_types.get(name, _cls)
         return super(SRF, cls).__new__(cls)
+
+    def __init__(self, manufacturer, data):
+        self.sentence_type = manufacturer + data[0]
+        super(SRF, self).__init__(manufacturer, data[1:])
 
 
 class SRF103(SRF):

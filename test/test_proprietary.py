@@ -94,6 +94,12 @@ def test_srf():
     data = '$PSRF100,0,1200,8,1,1'
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.srf.SRF100
+    assert msg.sentence_type == 'SRF100'
+    assert msg.protocol == '0'
+    assert msg.baud == '1200'
+    assert msg.databits == '8'
+    assert msg.stopbits == '1'
+    assert msg.parity == '1'
 
     # unimplemented sentence
     data = '$PSRF999,0,1200,8,1,1'
@@ -105,6 +111,13 @@ def test_grm():
     data = ' $PGRME,15.0,M,45.0,M,25.0,M*1C'
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.grm.GRME
+    assert msg.sentence_type == 'GRME'
+    assert msg.hpe == 15.0
+    assert msg.hpe_unit == 'M'
+    assert msg.vpe == 45.0
+    assert msg.vpe_unit == 'M'
+    assert msg.osepe == 25.0
+    assert msg.osepe_unit == 'M'
 
 def test_tnl():
     data = '$PTNL,BPQ,224445.06,021207,3723.09383914,N,12200.32620132,W,EHT-5.923,M,5*60'
