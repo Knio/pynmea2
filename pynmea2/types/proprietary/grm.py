@@ -1,5 +1,7 @@
 # Garmin
 
+from decimal import Decimal
+
 from ... import nmea
 
 class GRM(nmea.ProprietarySentence):
@@ -19,11 +21,11 @@ class GRME(GRM):
     """ GARMIN Estimated position error
     """
     fields = (
-        ("Estimated Horiz. Position Error", "hpe"),
+        ("Estimated Horiz. Position Error", "hpe", Decimal),
         ("Estimated Horiz. Position Error Unit (M)", "hpe_unit"),
-        ("Estimated Vert. Position Error", "vpe"),
+        ("Estimated Vert. Position Error", "vpe", Decimal),
         ("Estimated Vert. Position Error Unit (M)", "vpe_unit"),
-        ("Estimated Horiz. Position Error", "osepe"),
+        ("Estimated Horiz. Position Error", "osepe", Decimal),
         ("Overall Spherical Equiv. Position Error", "osepe_unit")
     )
 
