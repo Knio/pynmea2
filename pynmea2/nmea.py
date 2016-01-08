@@ -26,7 +26,7 @@ class NMEASentenceType(type):
         if base is object:
             return
         base.sentence_types[name] = cls
-        cls.name_to_idx = {f[1]:i for i, f in enumerate(cls.fields)}
+        cls.name_to_idx = dict((f[1], i) for i, f in enumerate(cls.fields))
 
 
 # http://mikewatkins.ca/2008/11/29/python-2-and-3-metaclasses/
