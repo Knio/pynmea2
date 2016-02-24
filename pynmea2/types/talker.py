@@ -884,7 +884,7 @@ class MDA(TalkerSentence):
     fields = (
         ('Barometric pressure, inches of mercury', 'b_pressure_inch', Decimal),
         ('Inches', 'inches'), # I = Inches
-        ('Barometric pressure, bars', 'b_presure_bar', Decimal),
+        ('Barometric pressure, bars', 'b_pressure_bar', Decimal),
         ('Bars', 'bars'), # B = bars
         ('Air temperature, degrees C', 'air_temp', Decimal),
         ('Celsius', 'a_celsius'),    # C = Celsius
