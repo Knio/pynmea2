@@ -6,7 +6,8 @@ def timestamp(s):
     Converts a timestamp given in "hhmmss[.ss]" ASCII format to a
     datetime.time object
     '''
-    ms = (len(s) == 9) and 10000 * int(s[7:9]) or 0
+    ms_s = s[6:]
+    ms = ms_s and int(float(ms_s) * 1000000) or 0
 
     t = datetime.time(
         hour=int(s[0:2]),

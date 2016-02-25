@@ -5,7 +5,7 @@ data = "$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,100.00,M,-33.9,M,,0000*
 
 
 def test_version():
-    version = '1.5.2'
+    version = '1.5.3'
     assert pynmea2.version == version
     assert pynmea2.__version__ == version
 
@@ -104,6 +104,23 @@ def test_query():
 def test_slash():
     with pytest.raises(pynmea2.nmea.ParseError):
         msg = pynmea2.parse('$GPGSV,3,3,09,24,03,046,*47\\')
+
+
+def test_timestamp():
+    t = pynmea2.nmea_utils.timestamp("115919")
+    assert t.hour == 11
+    assert t.minute == 59
+    assert t.second == 19
+    assert t.microsecond == 0
+
+    assert pynmea2.nmea_utils.timestamp('115919.1'      ).microsecond == 100000
+    assert pynmea2.nmea_utils.timestamp('115919.12'     ).microsecond == 120000
+    assert pynmea2.nmea_utils.timestamp('115919.123'    ).microsecond == 123000
+    assert pynmea2.nmea_utils.timestamp('115919.1234'   ).microsecond == 123400
+    assert pynmea2.nmea_utils.timestamp('115919.12345'  ).microsecond == 123450
+    assert pynmea2.nmea_utils.timestamp('115919.123456' ).microsecond == 123456
+    assert pynmea2.nmea_utils.timestamp('115919.1234567').microsecond == 123456
+
 
 #
 # ^o^
