@@ -91,7 +91,7 @@ class NMEASentence(NMEASentenceBase):
         return reduce(operator.xor, map(ord, nmea_str), 0)
 
     @staticmethod
-    def parse(line):
+    def parse(line, check=False):
         '''
         parse(line)
 
@@ -118,6 +118,9 @@ class NMEASentence(NMEASentenceBase):
             if cs1 != cs2:
                 raise ChecksumError(
                     'checksum does not match: %02X != %02X' % (cs1, cs2))
+        elif check:
+            raise ChecksumError('strict checking requested but checksum missing')
+
 
         talker_match = NMEASentence.talker_re.match(sentence_type)
         if talker_match:
@@ -160,7 +163,10 @@ class NMEASentence(NMEASentenceBase):
         if len(f) >= 3:
             if v == '':
                 return None
-            return f[2](v)
+            try:
+                return f[2](v)
+            except:
+                return v
         else:
             return v
 

@@ -5,7 +5,7 @@ data = "$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,100.00,M,-33.9,M,,0000*
 
 
 def test_version():
-    version = '1.5.3'
+    version = '1.6.0'
     assert pynmea2.version == version
     assert pynmea2.__version__ == version
 
@@ -120,6 +120,26 @@ def test_timestamp():
     assert pynmea2.nmea_utils.timestamp('115919.12345'  ).microsecond == 123450
     assert pynmea2.nmea_utils.timestamp('115919.123456' ).microsecond == 123456
     assert pynmea2.nmea_utils.timestamp('115919.1234567').microsecond == 123456
+
+
+def test_corrupt_message():
+    # data is corrupt starting here ------------------------------v
+    data = '$GPRMC,172142.00,A,4805.30256324,N,11629.09084774,W,0.D'
+
+    # fails with strict parsing
+    with pytest.raises(pynmea2.ChecksumError):
+        msg = pynmea2.parse(data, check=True)
+
+    # lazy parsing succeeds
+    msg = pynmea2.parse(data, check=False)
+    assert isinstance(msg, pynmea2.types.RMC)
+    # corrupt data
+    assert msg.spd_over_grnd == '0.D'
+    # missing data
+    assert msg.true_course == None
+
+    # renders unchanged
+    assert msg.render(checksum=False) == data
 
 
 #

@@ -28,8 +28,10 @@ The recommended way to install `pynmea2` is with
 Parsing
 -------
 
-You can parse individual NMEA sentences using the `parse()` function, which takes a string containing a
+You can parse individual NMEA sentences using the `parse(data, check=False)` function, which takes a string containing a
 NMEA 0183 sentence and returns a `NMEASentence` object. Note that the leading '$' is optional and trailing whitespace is ignored when parsing a sentence.
+
+With `check=False`, `parse` will accept NMEA messages that do not have checksums, however it will still raise `pynmea2.ChecksumError` if they are present. `check=True` will also raise `ChecksumError` if the checksum is missing.
 
 Example:
 
