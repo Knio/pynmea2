@@ -2,21 +2,17 @@ import re
 import operator
 from functools import reduce
 
-class ChecksumError(ValueError):
-    '''
-        Inherits from ValueError for distinct Checksum Exception
-    '''
-
 
 class ParseError(ValueError):
-    '''
-         Inherits from ValueError for distinct Parse Exception
-    '''
+    def __init__(self, message, data):
+        super(ParseError, self).__init__((message, data))
 
-class SentenceTypeError(ValueError):
-    '''
-        Inherits from ValueError for distinct Sentence Type Exception
-    '''
+class SentenceTypeError(ParseError):
+    pass
+
+class ChecksumError(ParseError):
+    pass
+
 
 class NMEASentenceType(type):
     sentence_types = {}
@@ -103,7 +99,7 @@ class NMEASentence(NMEASentenceBase):
         '''
         match = NMEASentence.sentence_re.match(line)
         if not match:
-            raise ParseError('could not parse data: %r' % line)
+            raise ParseError('could not parse data', line)
 
         # pylint: disable=bad-whitespace
         nmea_str        = match.group('nmea_str')
@@ -117,9 +113,10 @@ class NMEASentence(NMEASentenceBase):
             cs2 = NMEASentence.checksum(nmea_str)
             if cs1 != cs2:
                 raise ChecksumError(
-                    'checksum does not match: %02X != %02X' % (cs1, cs2))
+                    'checksum does not match: %02X != %02X' % (cs1, cs2), data)
         elif check:
-            raise ChecksumError('strict checking requested but checksum missing')
+            raise ChecksumError(
+                'strict checking requested but checksum missing', data)
 
 
         talker_match = NMEASentence.talker_re.match(sentence_type)
@@ -130,7 +127,8 @@ class NMEASentence(NMEASentenceBase):
 
             if not cls:
                 # TODO instantiate base type instead of fail
-                raise SentenceTypeError('Unknown sentence type %s' % sentence_type)
+                raise SentenceTypeError(
+                    'Unknown sentence type %s' % sentence_type, line)
             return cls(talker, sentence, data)
 
         query_match = NMEASentence.query_re.match(sentence_type)
@@ -146,7 +144,8 @@ class NMEASentence(NMEASentenceBase):
             cls = ProprietarySentence.sentence_types.get(manufacturer, ProprietarySentence)
             return cls(manufacturer, data)
 
-        raise ParseError('could not parse sentence type: %r' % sentence_type)
+        raise ParseError(
+            'could not parse sentence type: %r' % sentence_type, line)
 
     def __getattr__(self, name):
         #pylint: disable=invalid-name

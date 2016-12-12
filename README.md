@@ -131,3 +131,5 @@ or given a file-like device, automatically:
             print msg
 ```
 
+
+If your stream is noisy and contains errors, you can set some basic error handling with the [`errors` parameter of the `NMEAStreamReader` constructor.](nmea/stream.py#L12)
