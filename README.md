@@ -132,4 +132,4 @@ or given a file-like device, automatically:
 ```
 
 
-If your stream is noisy and contains errors, you can set some basic error handling with the [`errors` parameter of the `NMEAStreamReader` constructor.](nmea/stream.py#L12)
+If your stream is noisy and contains errors, you can set some basic error handling with the [`errors` parameter of the `NMEAStreamReader` constructor.](pynmea2/stream.py#L12)
