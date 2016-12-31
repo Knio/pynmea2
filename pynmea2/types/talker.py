@@ -942,3 +942,19 @@ class DPT(TalkerSentence):
         ('Offset from the trasducer, in meters', 'offset', Decimal),
         ('Maximum range scale in use', 'range', Decimal),
     )
+
+#GBS - GPS Satellite Fault Detection
+#used by devices such as [MX521] [NV08C-CSM]
+#description retreived from: "https://www.xj3.nl/download/99/NMEA.txt"
+class GBS(TalkerSentence):
+    fields = (
+        ('Timestamp','timestamp', timestamp),
+        ('Expected error in latitude', 'lat_err'),
+        ('Expected error in longitude', 'lon_err'),
+        ('Expected error in altitude', 'alt_err'),
+        ('PRN of most likely failed satellite','sat_prn_num_f'),
+        ('Probability of missed detection for most likely failed satellite','pro_miss', Decimal),
+        ('Estimate of bias in meters on most likely failed satellite','est_bias'),
+        ('Standard deviation of bias estimate','est_bias_dev'),
+    )
+
