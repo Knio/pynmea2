@@ -765,7 +765,7 @@ class OSD(TalkerSentence, ValidStatusFix):
         ("Vessel Course true degrees", "course", Decimal),
         ("Course True", "course_true"), # T / R (True / Relative)
         ("Vessel Speed", "speed", Decimal),
-        ("Speed True", "speed_true"), # T / R (True / Relative)
+        ("Speed Reference", "speed_ref"),
         ("Vessel Set true degrees", "set", Decimal),
         ("Vessel Drift(speed)", "drift", Decimal),
         ("Speed Units", "speed_unit"),
