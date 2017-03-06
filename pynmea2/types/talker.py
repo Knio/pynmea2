@@ -753,9 +753,62 @@ class XDR(TalkerSentence):
     def get_transducer(self, i):
         return Transducer(*self.data[i*4:i*4+4])
 
-# ---------------------------------- Not Yet Implemented --------------------- #
+# ------------------------- Implemented by Casper Vertregt ------------------- #
 # ---------------------------------------------------------------------------- #
 
+class OSD(TalkerSentence, ValidStatusFix):
+    """ Own Ship Data
+    """
+    fields = (
+        ("True Heading", "heading", Decimal),
+        ("Status", "status"), # A / V
+        ("Vessel Course true degrees", "course", Decimal),
+        ("Course True", "course_true"), # T / R (True / Relative)
+        ("Vessel Speed", "speed", Decimal),
+        ("Speed True", "speed_true"), # T / R (True / Relative)
+        ("Vessel Set true degrees", "set", Decimal),
+        ("Vessel Drift(speed)", "drift", Decimal),
+        ("Speed Units", "speed_unit"),
+    )
+
+class TLL(TalkerSentence, LatLonFix):
+    """ Target Latitude & Longitude
+    """
+    fields = (
+        ("Target Number", "target_number", int),
+        ("Target Latitude", "lat"),
+        ("Latitude Direction", "lat_dir"),
+        ("Target Longitude", "lon"),
+        ("Longitude Direction", "lon_dir"),
+        ("Target Name", "target_name"),
+        ("Timestamp (UTC)", "timestamp", timestamp),
+        ("Target Status", "target_status"),
+        ("Reference Target", "reference"),
+    )
+
+class TTM(TalkerSentence):
+    """ Tracked Target Message
+    """
+    fields = (
+        ("Target Number", "target_number", int),
+        ("Target Distance", "distance", Decimal),
+        ("Bearing from Own Ship", "bearing", Decimal),
+        ("Bearing Reference", "brg_ref"), # T / R (True / Relative)
+        ("Target Speed", "speed", Decimal),
+        ("Target Course over Ground", "cog", Decimal),
+        ("Course Units", "cog_unit"), # T / R (True / Relative)
+        ("Distance of CPA", "dist_cpa", Decimal),
+        ("Time until CPA", "time_cpa", Decimal),
+        ("Distance Units", "dist_unit"),  # K / N / S (Kilometers / Knots / Statute miles)
+        ("Target Name", "name"),
+        ("Target Status", "status"),  # L / Q / T (Lost from tracking process / Query - in process of acquisition / Tracking at the present time)
+        ("Target Reference", "reference"), # R, null otherwise
+        ("Timestamp (UTC)", "timestamp", timestamp),
+        ("Acquisition Type", "acquisition"),  # A / M (Automatic / Manual)
+    )
+
+# ---------------------------------- Not Yet Implemented --------------------- #
+# ---------------------------------------------------------------------------- #
 
 #class FSI(TalkerSentence):
 #    """ Frequency Set Information
@@ -793,12 +846,6 @@ class XDR(TalkerSentence):
     #    fields = (
     # )
 
-#class OSD(TalkerSentence):
-#    """ Own Ship Data
-#    """
-    #    fields = (
-    # )
-
 #class RSD(TalkerSentence):
 #    """ RADAR System Data
 #    """
@@ -807,12 +854,6 @@ class XDR(TalkerSentence):
 
 #class SFI(TalkerSentence):
 #    """ Scanning Frequency Information
-#    """
-    #    fields = (
-    # )
-
-#class TTM(TalkerSentence):
-#    """ Tracked Target Message
 #    """
     #    fields = (
     # )
