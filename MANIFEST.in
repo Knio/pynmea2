@@ -1,0 +1,6 @@
+include README.md
+include LICENSE.txt
+recursive-include test *
+recursive-include examples *
+global-exclude __pycache__
+global-exclude *.pyc
