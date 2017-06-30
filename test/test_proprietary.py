@@ -119,6 +119,13 @@ def test_grm():
     assert msg.osepe == 25.0
     assert msg.osepe_unit == 'M'
 
+def test_ash():
+    data = '$PASHR,LTN,3*3D'
+    msg = pynmea2.parse(data)
+    assert type(msg) == pynmea2.ash.ASHRLTN
+    assert msg.sentence_type == 'LTN'
+    assert msg.latency == 3
+
 def test_tnl():
     data = '$PTNL,BPQ,224445.06,021207,3723.09383914,N,12200.32620132,W,EHT-5.923,M,5*60'
     msg = pynmea2.parse(data)
