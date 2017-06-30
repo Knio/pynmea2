@@ -23,15 +23,13 @@ class ASH(nmea.ProprietarySentence):
 
     def __init__(self, manufacturer, data):
         self.sentence_type = data[1]
-        super(ASH, self).__init__(manufacturer, data)
+        super(ASH, self).__init__(manufacturer, data[2:])
 
 class ASHRHPR(ASH):
     """
         Ashtech HPR Message
     """
     fields = (
-        ('Empty', '_'),
-        ('Sentence Type', 'type'),
         ('Timestamp', 'timestamp', timestamp),
         ('Heading Angle', 'heading', Decimal),
         ('Pitch Angle', 'pitch', Decimal),
@@ -49,8 +47,6 @@ class ASHRLTN(ASH):
         Ashtech LTN Message
     """
     fields = (
-        ('Empty', '_'),
-        ('Sentence Type', 'type'),
         ('Latency (ms)', 'latency', int),
     )
 
@@ -59,8 +55,6 @@ class ASHRPOS(ASH,LatLonFix):
         Ashtech POS Message
     """
     fields = (
-        ('Empty', '_'),
-        ('Sentence Type', 'type'),
         ('Solution Type', 'mode', int),
         ('Satellites used in Solution', 'sat_count', int),
         ('Timestamp', 'timestamp', timestamp),
@@ -85,8 +79,6 @@ class ASHRVEL(ASH):
         Ashtech VEL Message
     """
     fields = (
-        ('Empty', '_'),
-        ('Sentence Type', 'type'),
         ('ENU', 'enu', int),
         ('Timestamp', 'timestamp', timestamp),
         ('Easting', 'easting', Decimal),
