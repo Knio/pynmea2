@@ -214,3 +214,9 @@ def test_STALK():
     assert msg.render() == data
     assert msg.command_name == 'Compass heading and Rudder position'
 
+def test_STALK_unidentified_command():
+    data = "$STALK,AA,C1,2A,E5*30"
+    msg = pynmea2.parse(data)
+    assert msg.render() == data
+    assert msg.command_name == 'Unknown Command'
+
