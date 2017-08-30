@@ -1,3 +1,4 @@
+# pylint: disable=invalid-name
 class SeaTalk(object):
     '''Mixin to add Seatalk functionality. Based on Thomas knauf's work
     http://www.thomasknauf.de/seatalk.htm'''
