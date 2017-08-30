@@ -1,6 +1,7 @@
 # pylint: disable=wildcard-import,unused-wildcard-import
 from ..nmea import TalkerSentence
 from ..nmea_utils import *
+from ..seatalk_utils import *
 
 from collections import namedtuple
 from decimal import Decimal
@@ -999,3 +1000,19 @@ class GBS(TalkerSentence):
         ('Standard deviation of bias estimate','est_bias_dev'),
     )
 
+
+# STALK Message -
+# Used by gadgetpool Seatalk to nmea devices
+class ALK(TalkerSentence,SeaTalk):
+    fields = (
+        ("Command", "cmd"),
+        ("Data Byte 1", "data_byte1"),
+        ("Data Byte 2", "data_byte2"),
+        ("Data Byte 3", "data_byte3"),
+        ("Data Byte 4", "data_byte4"),
+        ("Data Byte 5", "data_byte5"),
+        ("Data Byte 6", "data_byte6"),
+        ("Data Byte 7", "data_byte7"),
+        ("Data Byte 8", "data_byte8"),
+        ("Data Byte 9", "data_byte9")
+    )
