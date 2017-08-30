@@ -1,7 +1,9 @@
+# pylint: disable=invalid-name
 class SeaTalk(object):
     '''Mixin to add Seatalk functionality. Based on Thomas knauf's work
     http://www.thomasknauf.de/seatalk.htm'''
 
+    # pylint: disable=no-member
     @property
     def command_name(self):
         '''Get seatalk command's meaning'''
