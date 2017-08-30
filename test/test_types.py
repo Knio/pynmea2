@@ -208,3 +208,9 @@ def test_VBW():
     assert msg.is_valid == True
     assert msg.render(checksum=False, dollar=False) == data
 
+def test_STALK():
+    data = "$STALK,9C,C1,2A,E5*4A"
+    msg = pynmea2.parse(data)
+    assert msg.render() == data
+    assert msg.command_name == 'Compass heading and Rudder position'
+
