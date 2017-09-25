@@ -59,3 +59,39 @@ class SXN20(SXN):
         ('Heading quality', 'head_qual', int),
         ('Roll and pitch quality', 'rp_qual', int),
     )
+
+
+class SXN21(SXN):
+    fields = (
+        ('Message Type', 'message_type', int),
+        ('Event code: 1 = system restart.', 'event', int),
+    )
+
+
+class SXN22(SXN):
+    fields = (
+        ('Message Type', 'message_type', int),
+        ('Gyro calibration value since system start-up in degrees', 'gyro_calib', float),
+        ('Short-term gyro offset in degrees', 'gyro_ffs', float),
+    )
+
+
+class SXN23(SXN):
+    fields = (
+        ('Message Type', 'message_type', int),
+        ('Roll in degrees. Positive with port side up.', 'roll', float),
+        ('Pitch in degrees. Positive with bow up.', 'pitch', float),
+        ('Heading, degrees true (0.00 - 359.99).', 'head', float),
+        ('Heave in metres. Positive down.', 'heave', float)
+    )
+
+
+class SXN24(SXN):
+    fields = (
+        ('Message Type', 'message_type', int),
+        ('Roll rate in degrees/second. Positive when port side is moving upwards.', 'roll_rate', float),
+        ('Pitch rate in degrees/second. Positive when bow is moving upwards.', 'pitch_rate', float),
+        ('Yaw rate in degrees/second. Positive when bow is moving towards starboard.', 'yaw_rate', float),
+        ('Vertical velocity in metres/second. Positive when moving downwards.', 'vertical_vel', float)
+    )
+
