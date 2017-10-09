@@ -130,7 +130,7 @@ def test_pashr():
     data = '$PASHR,130533.620,0.311,T,-80.467,-1.395,,0.066,0.067,0.215,2,3*0B'
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.ash.ASHRATT
-    assert msg.timestamp == datetime.time(13, 05, 33, 620000)
+    assert msg.timestamp == datetime.time(13, 5, 33, 620000)
     assert msg.sentence_type == 'ATT'
     assert msg.true_heading == 0.311
     assert msg.is_true_heading == 'T'
