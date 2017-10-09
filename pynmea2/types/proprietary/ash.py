@@ -16,14 +16,40 @@ class ASH(nmea.ProprietarySentence):
         '''
             Return the correct sentence type based on the first field
         '''
-        sentence_type = data[1]
+        if len(data[1]) == 10:
+            sentence_type = 'ATT'
+        else:
+            sentence_type = data[1]
+
         name = manufacturer + 'R' + sentence_type
         cls = _cls.sentence_types.get(name, _cls)
         return super(ASH, cls).__new__(cls)
 
     def __init__(self, manufacturer, data):
-        self.sentence_type = data[1]
-        super(ASH, self).__init__(manufacturer, data[2:])
+        if len(data[1]) == 10:
+            self.sentence_type = 'ATT'
+            super(ASH, self).__init__(manufacturer, data[1:])
+        else:
+            self.sentence_type = data[1]
+            super(ASH, self).__init__(manufacturer, data[2:])
+
+class ASHRATT(ASH):
+    """
+        RT300 proprietary attitude sentence
+    """
+    fields = (
+        ('Timestamp', 'timestamp', timestamp),
+        ('Heading Angle', 'true_heading', float),
+        ('Is True Heading', 'is_true_heading'),
+        ('Roll Angle', 'roll', float),
+        ('Pitch Angle', 'pitch', float),
+        ('Heave', 'heading', float),
+        ('Roll Accuracy Estimate', 'roll_accuracy', float),
+        ('Pitch Accuracy Estimate', 'pitch_accuracy', float),
+        ('Heading Accuracy Estimate', 'heading_accuracy', float),
+        ('Aiding Status', 'aiding_status', Decimal),
+        ('IMU Status', 'imu_status', Decimal),
+    )
 
 class ASHRHPR(ASH):
     """
