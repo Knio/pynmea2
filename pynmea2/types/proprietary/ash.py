@@ -1,42 +1,50 @@
-# -- ASHTECH -- #
-from decimal import Decimal
+'''
+Support for proprietary messages from Ashtech receivers.
+'''
+
 # pylint: disable=wildcard-import,unused-wildcard-import
+from decimal import Decimal
+import re
+
 from ... import nmea
 from ...nmea_utils import *
-""" Support for proprietary messages from Ashtech receivers.
-    Documentation: www.trimble.com/OEM_ReceiverHelp/v4.85/en/
-"""
+
 
 class ASH(nmea.ProprietarySentence):
+    '''
+    Generic Ashtech Response Message
+    '''
     sentence_types = {}
-    """
-        Generic Ashtech Response Message
-    """
     def __new__(_cls, manufacturer, data):
         '''
-            Return the correct sentence type based on the first field
+        Return the correct sentence type based on the first field
         '''
-        if len(data[1]) == 10:
-            sentence_type = 'ATT'
-        else:
-            sentence_type = data[1]
-
+        sentence_type = data[1]
         name = manufacturer + 'R' + sentence_type
-        cls = _cls.sentence_types.get(name, _cls)
+        if name not in _cls.sentence_types:
+            # ASHRATT does not have a sentence type
+            if ASHRATT.match(data):
+                return(super(ASH, ASHRATT).__new__(ASHRATT))
+        cls = _cls.sentence_types.get(name, ASH)
         return super(ASH, cls).__new__(cls)
 
     def __init__(self, manufacturer, data):
-        if len(data[1]) == 10:
-            self.sentence_type = 'ATT'
-            super(ASH, self).__init__(manufacturer, data[1:])
-        else:
-            self.sentence_type = data[1]
-            super(ASH, self).__init__(manufacturer, data[2:])
+        self.sentence_type = data[1]
+        super(ASH, self).__init__(manufacturer, data[2:])
+
 
 class ASHRATT(ASH):
-    """
-        RT300 proprietary attitude sentence
-    """
+    '''
+    RT300 proprietary attitude sentence
+    '''
+    @staticmethod
+    def match(data):
+        return re.match('^\d{6}\.\d{3}$', data[1])
+
+    def __init__(self, manufacturer, data):
+        self.sentence_type = 'ATT'
+        super(ASH, self).__init__(manufacturer, data[1:])
+
     fields = (
         ('Timestamp', 'timestamp', timestamp),
         ('Heading Angle', 'true_heading', float),
@@ -52,9 +60,9 @@ class ASHRATT(ASH):
     )
 
 class ASHRHPR(ASH):
-    """
-        Ashtech HPR Message
-    """
+    '''
+    Ashtech HPR Message
+    '''
     fields = (
         ('Timestamp', 'timestamp', timestamp),
         ('Heading Angle', 'heading', Decimal),
@@ -65,21 +73,22 @@ class ASHRHPR(ASH):
         ('Integer Ambiguity', 'integer_ambiguity'),
         ('Mode', 'mode'),
         ('Status', 'status'),
-        ('PDOP', 'pdop',float),
+        ('PDOP', 'pdop', float),
     )
 
 class ASHRLTN(ASH):
-    """
-        Ashtech LTN Message
-    """
+    '''
+    Ashtech LTN Message
+    '''
     fields = (
         ('Latency (ms)', 'latency', int),
     )
 
-class ASHRPOS(ASH,LatLonFix):
-    """
-        Ashtech POS Message
-    """
+
+class ASHRPOS(ASH, LatLonFix):
+    '''
+    Ashtech POS Message
+    '''
     fields = (
         ('Solution Type', 'mode', int),
         ('Satellites used in Solution', 'sat_count', int),
@@ -101,9 +110,9 @@ class ASHRPOS(ASH,LatLonFix):
     )
 
 class ASHRVEL(ASH):
-    """
-        Ashtech VEL Message
-    """
+    '''
+    Ashtech VEL Message
+    '''
     fields = (
         ('ENU', 'enu', int),
         ('Timestamp', 'timestamp', timestamp),
