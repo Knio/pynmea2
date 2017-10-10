@@ -24,7 +24,7 @@ class ASH(nmea.ProprietarySentence):
         if name not in _cls.sentence_types:
             # ASHRATT does not have a sentence type
             if ASHRATT.match(data):
-                return(super(ASH, ASHRATT).__new__(ASHRATT))
+                return super(ASH, ASHRATT).__new__(ASHRATT)
         cls = _cls.sentence_types.get(name, ASH)
         return super(ASH, cls).__new__(cls)
 
@@ -39,10 +39,11 @@ class ASHRATT(ASH):
     '''
     @staticmethod
     def match(data):
-        return re.match('^\d{6}\.\d{3}$', data[1])
+        return re.match(r'^\d{6}\.\d{3}$', data[1])
 
     def __init__(self, manufacturer, data):
         self.sentence_type = 'ATT'
+        # pylint: disable=bad-super-call
         super(ASH, self).__init__(manufacturer, data[1:])
 
     fields = (
