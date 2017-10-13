@@ -46,13 +46,10 @@ class SXN(nmea.ProprietarySentence):
         cls = _cls.sentence_types.get(name, _cls)
         return super(SXN, cls).__new__(cls)
 
-    def __init__(self, manufacturer, data):
-        self.sentence_type = manufacturer
-        super(SXN, self).__init__(manufacturer, data[1:])
-
 
 class SXN20(SXN):
     fields = (
+        ('Blank', '_blank'),
         ('Message Type', 'message_type', int),
         ('Horizontal position and velocity quality', 'horiz_qual', int),
         ('Height and vertical velocity quality', 'hgt_qual', int),
@@ -63,6 +60,7 @@ class SXN20(SXN):
 
 class SXN21(SXN):
     fields = (
+        ('Blank', '_blank'),
         ('Message Type', 'message_type', int),
         ('Event code: 1 = system restart.', 'event', int),
     )
@@ -70,6 +68,7 @@ class SXN21(SXN):
 
 class SXN22(SXN):
     fields = (
+        ('Blank', '_blank'),
         ('Message Type', 'message_type', int),
         ('Gyro calibration value since system start-up in degrees', 'gyro_calib', float),
         ('Short-term gyro offset in degrees', 'gyro_ffs', float),
@@ -78,6 +77,7 @@ class SXN22(SXN):
 
 class SXN23(SXN):
     fields = (
+        ('Blank', '_blank'),
         ('Message Type', 'message_type', int),
         ('Roll in degrees. Positive with port side up.', 'roll', float),
         ('Pitch in degrees. Positive with bow up.', 'pitch', float),
@@ -88,10 +88,10 @@ class SXN23(SXN):
 
 class SXN24(SXN):
     fields = (
+        ('Blank', '_blank'),
         ('Message Type', 'message_type', int),
         ('Roll rate in degrees/second. Positive when port side is moving upwards.', 'roll_rate', float),
         ('Pitch rate in degrees/second. Positive when bow is moving upwards.', 'pitch_rate', float),
         ('Yaw rate in degrees/second. Positive when bow is moving towards starboard.', 'yaw_rate', float),
         ('Vertical velocity in metres/second. Positive when moving downwards.', 'vertical_vel', float)
     )
-

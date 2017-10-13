@@ -118,7 +118,6 @@ class NMEASentence(NMEASentenceBase):
             raise ChecksumError(
                 'strict checking requested but checksum missing', data)
 
-
         talker_match = NMEASentence.talker_re.match(sentence_type)
         if talker_match:
             talker = talker_match.group('talker')
@@ -209,7 +208,6 @@ class NMEASentence(NMEASentenceBase):
             res += (newline is True) and '\r\n' or newline
         return res
 
-
     def __str__(self):
         return self.render()
 
@@ -223,6 +221,7 @@ class TalkerSentence(NMEASentence):
 
     def identifier(self):
         return '%s%s,' % (self.talker, self.sentence_type)
+
 
 class QuerySentence(NMEASentence):
     sentence_types = {}

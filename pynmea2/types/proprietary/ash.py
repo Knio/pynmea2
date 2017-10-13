@@ -1,7 +1,6 @@
 '''
 Support for proprietary messages from Ashtech receivers.
 '''
-
 # pylint: disable=wildcard-import,unused-wildcard-import
 from decimal import Decimal
 import re
@@ -28,10 +27,6 @@ class ASH(nmea.ProprietarySentence):
         cls = _cls.sentence_types.get(name, ASH)
         return super(ASH, cls).__new__(cls)
 
-    def __init__(self, manufacturer, data):
-        self.sentence_type = data[1]
-        super(ASH, self).__init__(manufacturer, data[2:])
-
 
 class ASHRATT(ASH):
     '''
@@ -41,12 +36,12 @@ class ASHRATT(ASH):
     def match(data):
         return re.match(r'^\d{6}\.\d{3}$', data[1])
 
-    def __init__(self, manufacturer, data):
-        self.sentence_type = 'ATT'
-        # pylint: disable=bad-super-call
-        super(ASH, self).__init__(manufacturer, data[1:])
+    def __init__(self, *args, **kwargs):
+        self.subtype = 'ATT'
+        super(ASHRATT, self).__init__(*args, **kwargs)
 
     fields = (
+        ('R', '_r'),
         ('Timestamp', 'timestamp', timestamp),
         ('Heading Angle', 'true_heading', float),
         ('Is True Heading', 'is_true_heading'),
@@ -60,11 +55,14 @@ class ASHRATT(ASH):
         ('IMU Status', 'imu_status', Decimal),
     )
 
+
 class ASHRHPR(ASH):
     '''
     Ashtech HPR Message
     '''
     fields = (
+        ('R', '_r'),
+        ('Subtype', 'subtype'),
         ('Timestamp', 'timestamp', timestamp),
         ('Heading Angle', 'heading', Decimal),
         ('Pitch Angle', 'pitch', Decimal),
@@ -77,11 +75,14 @@ class ASHRHPR(ASH):
         ('PDOP', 'pdop', float),
     )
 
+
 class ASHRLTN(ASH):
     '''
     Ashtech LTN Message
     '''
     fields = (
+        ('R', '_r'),
+        ('Subtype', 'subtype'),
         ('Latency (ms)', 'latency', int),
     )
 
@@ -91,6 +92,8 @@ class ASHRPOS(ASH, LatLonFix):
     Ashtech POS Message
     '''
     fields = (
+        ('R', '_r'),
+        ('Subtype', 'subtype'),
         ('Solution Type', 'mode', int),
         ('Satellites used in Solution', 'sat_count', int),
         ('Timestamp', 'timestamp', timestamp),
@@ -110,11 +113,14 @@ class ASHRPOS(ASH, LatLonFix):
         ('Base station ID', 'station_id', int)
     )
 
+
 class ASHRVEL(ASH):
     '''
     Ashtech VEL Message
     '''
     fields = (
+        ('R', '_r'),
+        ('Subtype', 'subtype'),
         ('ENU', 'enu', int),
         ('Timestamp', 'timestamp', timestamp),
         ('Easting', 'easting', Decimal),

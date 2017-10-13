@@ -10,6 +10,7 @@ def test_sxn20():
     assert msg.hgt_qual == 0
     assert msg.head_qual == 0
     assert msg.rp_qual == 0
+    assert msg.render() == data
 
 
 def test_sxn23():
@@ -21,4 +22,4 @@ def test_sxn23():
     assert msg.pitch == -0.97
     assert msg.head == 298.57
     assert msg.heave == 0.13
-
+    assert msg.render() == data

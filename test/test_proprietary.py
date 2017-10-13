@@ -162,3 +162,12 @@ def test_create():
         '%d' % 0])
     data = sentence.render(checksum=True, dollar=True, newline=False)
     assert data == '$PSRF100,1,9600,7,1,0*02'
+
+
+def test_unknown_sentence():
+    data = 'PZZZABC,1,2,3'
+    msg = pynmea2.parse(data)
+    assert type(msg) == pynmea2.ProprietarySentence
+    assert msg.manufacturer == 'ZZZ'
+    assert msg.data == ['ABC', '1', '2', '3']
+    assert msg.render(checksum=False, dollar=False) == data
