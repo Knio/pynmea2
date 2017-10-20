@@ -1,6 +1,7 @@
 # -- TRIMBLE -- #
 
 # pylint: disable=wildcard-import,unused-wildcard-import
+from decimal import Decimal
 from ... import nmea
 from ...nmea_utils import *
 """ Support for proprietary messages from BD9xx recievers.
@@ -66,6 +67,22 @@ class TNLBPQ(TNL, LatLonFix, DatetimeFix):
         ('Total number of satelites in use', 'num_sats'),
     )
 
+class TNLDG(TNL):
+    """
+        Trimble DG message (L-band, beacon signal strength, etc)
+    """
+    fields = (
+        ('Empty', '_'),
+        ('Sentence Type', 'type'),
+        ('Signal strength', 'strength', float),
+        ('SNR in db', 'snr', float),
+        ('Signal frequency in kHz', 'frequency', float),
+        ('Bit rate', 'bitrate', Decimal),
+        ('Channel number', 'channel_no', Decimal),
+        ('Tracking status', 'status'),
+        ('Channel used', 'channel_used'),
+        ('Tracking performance indicator', 'performance', Decimal),
+    )
 
 class TNLGGK(TNL, LatLonFix, DatetimeFix):
     """
@@ -89,6 +106,25 @@ class TNLGGK(TNL, LatLonFix, DatetimeFix):
     )
 
 
+
+class TNLVGK(TNL, DatetimeFix):
+    """
+        Trimble VGK (vector information) message
+    """
+    fields = (
+        ('Empty', '_'),
+        ('Sentence Type'),
+        ('Timestamp', 'timestamp', timestamp),
+        ('Datestamp', 'datestamp', datestamp),
+        ('East component', 'east'),
+        ('North component', 'north'),
+        ('Up component', 'up'),
+        ('GPS Quality', 'gps_quality'),
+        ('Number of satelites', 'num_sats'),
+        ('DOP of fix', 'dop'),
+        ('Meters', 'meters'),
+    )
+
 class TNLVHD(TNL, DatetimeFix):
     """
         Trimble VHD Message
@@ -109,6 +145,25 @@ class TNLVHD(TNL, DatetimeFix):
         ('PDOP', 'pdop'),
     )
 
+class TNLPJK(TNL, DatetimeFix):
+    """
+        Trimble PJK message
+    """
+    fields = (
+        ('Empty', '_'),
+        ('Sentence Type', 'type'),
+        ('Timestamp', 'timestamp', timestamp),
+        ('Datestamp', 'datestamp', datestamp),
+        ('Northing', 'northing'),
+        ('North', 'north'),
+        ('Easting', 'easting'),
+        ('East', 'east'),
+        ('GPS Quality', 'gps_quality'),
+        ('Number of satellites', 'num_sats'),
+        ('DOP of fix', 'dop'),
+        ('Height of antenna phase center', 'height'),
+        ('Meters', 'meters'),
+    )
 
 class TNLPJT(TNL):
     """
