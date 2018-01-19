@@ -3,7 +3,7 @@ import datetime
 
 def timestamp(s):
     '''
-    Converts a timestamp given in "hhmmss[.ss]" ASCII format to a
+    Converts a timestamp given in "hhmmss[.ss]" ASCII text format to a
     datetime.time object
     '''
     ms_s = s[6:]
@@ -19,7 +19,7 @@ def timestamp(s):
 
 def datestamp(s):
     '''
-    Converts a datestamp given in "DDMMYY" ASCII format to a
+    Converts a datestamp given in "DDMMYY" ASCII text format to a
     datetime.datetime object
     '''
     return datetime.datetime.strptime(s, '%d%m%y').date()
@@ -28,8 +28,8 @@ def datestamp(s):
 import re
 def dm_to_sd(dm):
     '''
-    Converts a geographic coordiante given in "degres/minutes" dddmm.mmmm
-    format (ie, "12319.943281" = 123 degrees, 19.953281 minutes) to a signed
+    Converts a geographic co-ordinate given in "degrees/minutes" dddmm.mmmm
+    format (eg, "12319.943281" = 123 degrees, 19.943281 minutes) to a signed
     decimal (python float) format
     '''
     # '12319.943281'
@@ -40,13 +40,13 @@ def dm_to_sd(dm):
 
 
 class LatLonFix(object):
-    '''Mixin to add `lattitude` and `longitude` properties as signed decimals
-    to NMEA sentences which have coordiantes given as degrees/minutes (lat, lon)
+    '''Mixin to add `latitude` and `longitude` properties as signed decimals
+    to NMEA sentences which have co-ordinates given as degrees/minutes (lat, lon)
     and cardinal directions (lat_dir, lon_dir)'''
     #pylint: disable=no-member
     @property
     def latitude(self):
-        '''Lattitude in signed degrees (python float)'''
+        '''Latitude in signed degrees (python float)'''
         sd = dm_to_sd(self.lat)
         if self.lat_dir == 'N':
             return +sd
