@@ -14,7 +14,7 @@ setup(
     description='Python library for the NMEA 0183 protcol',
     packages=['pynmea2','pynmea2.types','pynmea2.types.proprietary'],
     keywords='python nmea gps parse parsing nmea0183 0183',
-
+#declaration of classifier
     classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
