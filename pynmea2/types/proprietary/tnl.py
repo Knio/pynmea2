@@ -19,6 +19,10 @@ class TNL(nmea.ProprietarySentence):
         '''
         sentence_type = data[0] or data[1]
         name = manufacturer + sentence_type
+        if name not in _cls.sentence_types:
+            # TNLDG does not have a sentence type
+            if TNLDG.match(data):
+                return super(TNL, TNLDG).__new__(TNLDG)
         cls = _cls.sentence_types.get(name, _cls)
         return super(TNL, cls).__new__(cls)
 
@@ -71,9 +75,16 @@ class TNLDG(TNL):
     """
         Trimble DG message (L-band, beacon signal strength, etc)
     """
+    @staticmethod
+    def match(data):
+        return re.match(r'\d+\.\d{1}', data[1])
+
+    def __init__(self, *args, **kwargs):
+        self.subtype = 'TNL'
+        super(TNLDG, self).__init(*args, **kwargs)
+
     fields = (
         ('Empty', '_'),
-        ('Sentence Type', 'type'),
         ('Signal strength', 'strength', float),
         ('SNR in db', 'snr', float),
         ('Signal frequency in kHz', 'frequency', float),
@@ -113,15 +124,15 @@ class TNLVGK(TNL, DatetimeFix):
     """
     fields = (
         ('Empty', '_'),
-        ('Sentence Type'),
+        ('Sentence Type', 'type'),
         ('Timestamp', 'timestamp', timestamp),
         ('Datestamp', 'datestamp', datestamp),
-        ('East component', 'east'),
-        ('North component', 'north'),
-        ('Up component', 'up'),
+        ('East component', 'east', float),
+        ('North component', 'north', float),
+        ('Up component', 'up', float),
         ('GPS Quality', 'gps_quality'),
-        ('Number of satelites', 'num_sats'),
-        ('DOP of fix', 'dop'),
+        ('Number of satelites', 'num_sats', Decimal),
+        ('DOP of fix', 'dop', float),
         ('Meters', 'meters'),
     )
 
@@ -133,16 +144,16 @@ class TNLVHD(TNL, DatetimeFix):
         ('Empty', '_'),
         ('Sentence Type', 'type'),
         ('Timestamp', 'timestamp', timestamp),
-        ("Datestamp", "datestamp", datestamp),
-        ('Azimuth Angle', 'azimuth'),
-        ('AzimuthTime', 'azdt'),
-        ('Vertical Angle', 'vertical'),
-        ('VerticalTime', 'vertdt'),
-        ('Range', 'range'),
-        ('RangeTime', 'rdt'),
-        ('GPS Quality', 'gps_quality'),
-        ('Total number of satelites in use', 'num_sats'),
-        ('PDOP', 'pdop'),
+        ("Datestamp", 'datestamp', datestamp),
+        ('Azimuth Angle', 'azimuth', float),
+        ('AzimuthTime', 'azdt', float),
+        ('Vertical Angle', 'vertical', float),
+        ('VerticalTime', 'vertdt', float),
+        ('Range', 'range', float),
+        ('RangeTime', 'rdt', float),
+        ('GPS Quality', 'gps_quality', Decimal),
+        ('Total number of satelites in use', 'num_sats', Decimal),
+        ('PDOP', 'pdop', float),
     )
 
 class TNLPJK(TNL, DatetimeFix):
@@ -154,13 +165,13 @@ class TNLPJK(TNL, DatetimeFix):
         ('Sentence Type', 'type'),
         ('Timestamp', 'timestamp', timestamp),
         ('Datestamp', 'datestamp', datestamp),
-        ('Northing', 'northing'),
+        ('Northing', 'northing', float),
         ('North', 'north'),
-        ('Easting', 'easting'),
+        ('Easting', 'easting', float),
         ('East', 'east'),
         ('GPS Quality', 'gps_quality'),
-        ('Number of satellites', 'num_sats'),
-        ('DOP of fix', 'dop'),
+        ('Number of satellites', 'num_sats', Decimal),
+        ('DOP of fix', 'dop', float),
         ('Height of antenna phase center', 'height'),
         ('Meters', 'meters'),
     )
