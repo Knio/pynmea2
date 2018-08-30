@@ -45,7 +45,7 @@ class NMEAStreamReader(object):
             else:
                 return
 
-        lines = (self.buffer + data).split('\n')
+        lines = (self.buffer + data.decode()).split('\n')
         self.buffer = lines.pop()
 
         for line in lines:
