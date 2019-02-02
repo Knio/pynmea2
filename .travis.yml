@@ -2,7 +2,6 @@ language: python
 
 python:
   - "2.7"
-  - "3.3"
   - "3.4"
   - "3.5"
   - "3.6"
@@ -11,8 +10,9 @@ python:
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
-    - pip install pytest>=2.7.3 --upgrade
-    - pip install pylint
+    - pip install pip --upgrade
+    - pip install pytest --upgrade
+    - pip install pylint --upgrade
 
 # command to run tests, e.g. python setup.py test
 script:
@@ -26,5 +26,3 @@ after_success:
     - PYTHONPATH=. coverage run --source=pynmea2 -m pytest
     - coverage report
     - coveralls
-
-sudo: false
