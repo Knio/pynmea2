@@ -5,7 +5,7 @@ data = "$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,100.00,M,-33.9,M,,0000*
 
 
 def test_version():
-    version = '1.14.0'
+    version = '1.15.0'
     assert pynmea2.version == version
     assert pynmea2.__version__ == version
 
