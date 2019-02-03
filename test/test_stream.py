@@ -30,6 +30,7 @@ def test_stream():
     assert len(list(sr.next())) == 1
     assert len(list(sr.next())) == 0
 
+
 def test_iter():
     sr = pynmea2.NMEAStreamReader(StringIO(DATA))
     for batch in sr:
@@ -37,6 +38,7 @@ def test_iter():
             assert isinstance(msg, pynmea2.GGA)
             break
         break
+
 
 def test_raise_errors():
     sr = pynmea2.NMEAStreamReader(errors='raise')
