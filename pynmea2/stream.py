@@ -60,6 +60,8 @@ class NMEAStreamReader(object):
                 if self.errors == 'ignore':
                     pass
 
+    __next__ = next
+
     def __iter__(self):
         '''
         Support the iterator protocol.
