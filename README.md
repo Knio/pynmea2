@@ -7,13 +7,9 @@ pynmea2
 
 The `pynmea2` homepage is located at http://github.com/Knio/pynmea2
 
-
-### Compatibility
-
-`pynmea2` is compatable with Python 2.7 and Python 3.3
-
-[![Build Status](https://travis-ci.org/Knio/pynmea2.png?branch=master)](https://travis-ci.org/Knio/pynmea2)
-[![Coverage Status](https://coveralls.io/repos/Knio/pynmea2/badge.png?branch=master)](https://coveralls.io/r/Knio/pynmea2?branch=master)
+![Python version](https://img.shields.io/pypi/pyversions/pynmea2.svg?style=flat)
+[![Build status](https://img.shields.io/travis/Knio/pynmea2/master.svg?style=flat)](https://travis-ci.org/Knio/pynmea2)
+[![Coverage status](https://img.shields.io/coveralls/github/Knio/pynmea2/master.svg?style=flat)](https://coveralls.io/r/Knio/pynmea2?branch=master)
 [![Code Health](https://landscape.io/github/Knio/pynmea2/master/landscape.svg?style=flat)](https://landscape.io/github/Knio/pynmea2/master)
 
 ### Installation
@@ -23,7 +19,8 @@ The recommended way to install `pynmea2` is with
 
     pip install pynmea2
 
-[![PyPI version](https://badge.fury.io/py/pynmea2.png)](http://badge.fury.io/py/pynmea2)
+[![PyPI version](https://img.shields.io/pypi/v/pynmea2.svg?style=flat)](https://pypi.org/project/pynmea2/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/pynmea2.svg?style=flat)](https://pypi.org/project/pynmea2/)
 
 Parsing
 -------
