@@ -256,3 +256,30 @@ def test_ALR(data, fields):
 )
 def test_ALR_invalid_boolean(data):
     msg = pynmea2.parse(data)
+
+@pytest.mark.parametrize('data, fields',
+    [
+        (
+            '$GPHBT,50,A,0*11',
+            dict(
+                repeat_interval=50,
+                status='A',
+                sequential_sentence_id=0,
+            )
+        ),
+        (
+            '$GPHBT,11,k,1*3F',
+            dict(
+                repeat_interval=11,
+                status='k',
+                sequential_sentence_id=1,
+            ),
+        ),
+    ]
+)
+def test_HBT(data, fields):
+    msg = pynmea2.parse(data)
+    assert msg.render() == data
+    if not fields is None:
+        for name, value in fields.items():
+            assert getattr(msg, name) == value

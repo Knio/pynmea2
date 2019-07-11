@@ -281,6 +281,16 @@ class GSV(TalkerSentence):
     )  # 00-99 dB
 
 
+class HBT(TalkerSentence):
+    '''Heartbeat supervision sentence
+    '''
+    fields = (
+        ('Configured repeat interval', 'repeat_interval', float),
+        ('Equipment status', 'status'),
+        ('Sequential sentence identifier', 'sequential_sentence_id', int),
+    )
+
+
 class HDG(TalkerSentence):
     """ NMEA 0183 standard Heading, Deviation and Variation
         Format: $HCHDG,<1>,<2>,<3>,<4>,<5>*hh<CR><LF>
