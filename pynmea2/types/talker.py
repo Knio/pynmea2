@@ -43,6 +43,24 @@ class ALM(TalkerSentence):
     )
 
 
+class ALR(TalkerSentence):
+    ''' Set alarm state
+    '''
+    fields = (
+        ('Time of alarm condition change', 'timestamp', timestamp),
+        ('Unique alarm number (identifier) at alarm source', 'alarm_id'),
+        (
+            'Alarm condition (A=threshold exceeded, V=not exceeded)',
+            'threshold_exceeded', alr_boolean
+        ),
+        (
+            'Alarm acknowledge state (A=acknowledged, V=unacknowledged)',
+            'acknowledged', alr_boolean
+        ),
+        ('Alarm\'s description text', 'description'),
+    )
+
+
 class APA(TalkerSentence):
     """ Autopilot Sentence "A"
     """

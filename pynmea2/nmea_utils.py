@@ -25,6 +25,17 @@ def datestamp(s):
     return datetime.datetime.strptime(s, '%d%m%y').date()
 
 
+def alr_boolean(s):
+    if s == 'A':
+        return True
+    elif s == 'V':
+        return False
+    else:
+        raise ValueError(
+            'Invalid boolean for ALR sentence: {}. '
+            'Valid values are ("A", "V").'.format(repr(s)))
+
+
 import re
 def dm_to_sd(dm):
     '''

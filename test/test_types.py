@@ -220,3 +220,39 @@ def test_STALK_unidentified_command():
     assert msg.render() == data
     assert msg.command_name == 'Unknown Command'
 
+@pytest.mark.parametrize('data, fields',
+    [
+        ('$GPALR,,,V,V,*64', None),
+        ('$GPALR,193425.01,,A,V,*54', None),
+        ('$GPALR,193425,,V,A,*7B', None),
+        (
+            '$GPALR,193425.01,ALARM 42,V,V,Meaning of life found*28',
+            dict(
+                timestamp=datetime.time(
+                    hour=int(19),
+                    minute=int(34),
+                    second=int(25),
+                    microsecond=10000),
+                alarm_id='ALARM 42',
+                threshold_exceeded=False,
+                acknowledged=False,
+                description='Meaning of life found',
+            ),
+        ),
+    ])
+def test_ALR(data, fields):
+    msg = pynmea2.parse(data)
+    assert msg.render() == data
+    if not fields is None:
+        for name, value in fields.items():
+            assert getattr(msg, name) == value
+
+@pytest.mark.parametrize('data',
+    [
+        '$GPALR,,,k,V,*59',
+        '$GPALR,,,V,x,*4A',
+        '$GPALR,,,A,1,*14',
+    ]
+)
+def test_ALR_invalid_boolean(data):
+    msg = pynmea2.parse(data)
