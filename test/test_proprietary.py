@@ -171,3 +171,27 @@ def test_unknown_sentence():
     assert msg.manufacturer == 'ZZZ'
     assert msg.data == ['ABC', '1', '2', '3']
     assert msg.render(checksum=False, dollar=False) == data
+
+
+def test_proprietary_VTX_0002():
+    # A sample proprietary sentence from a Vectronix device (laser distance)
+    data = "$PVTX,0002,181330,00005.22,M,262.518,T,-01.967,09.358,W*7E"
+    msg = pynmea2.parse(data)
+    assert msg.manufacturer == 'VTX'
+    assert msg.dist == 5.22
+    assert msg.direction == 262.518
+    assert msg.va == -1.967
+    assert msg.render() == data
+
+
+def test_proprietary_VTX_0012():
+    # A sample proprietary sentence from a Vectronix device (target position)
+    data = "$PVTX,0012,177750,3348.5861,N,10048.5861,W,00045.2,M,038.8,M*22"
+    msg = pynmea2.parse(data)
+    assert msg.manufacturer == 'VTX'
+    assert msg.latitude == 33.80976833333333
+    assert msg.longitude == -100.80976833333334
+    assert msg.altitude == 45.2
+    assert msg.gain == 38.8
+    assert msg.render() == data
+
