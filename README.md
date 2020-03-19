@@ -1,3 +1,16 @@
+THIS IS A FORK.  
+Things I'm working on in my fork: 
++ Added support for Garmin, Magellan, and Kenwood proprietary waypoints. 
+
+Things to do: 
+- Run the code against DIREWOLF and a Kenwood TM-D710 to ensure that it works...
+- Collect a valid packet in each format for the test suite
+- Write unit tests for the test suite 
+
+Ideas:
+- Add support for AvMap APRS Messaging sentences
+- Consider adding changes from Klint-K's fork (For, ie, NMEA-to-HamLib integretation?)
+
 pynmea2
 =======
 
