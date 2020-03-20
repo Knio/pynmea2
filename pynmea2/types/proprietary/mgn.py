@@ -35,6 +35,7 @@ class MGNWPL(MGN):
   		*99		is checksum
     """
     fields = (
+        ("Subtype", "subtype"),
         ("Latitude", "lat"),
         ("Latitude Direction", "lat_dir"),
         ("Longitude", "lon"),

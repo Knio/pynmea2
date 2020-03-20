@@ -57,6 +57,7 @@ class GRMW(GRM):
        *99		    is checksum
     """
     fields = (
+        ("Subtype", "subtype"),
         ("Waypoint Name", "wname"),
         ("Altitude", "altitude", Decimal),
         ("Symbol", "symbol"),

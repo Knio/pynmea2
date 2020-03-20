@@ -17,7 +17,7 @@ class KWD(nmea.ProprietarySentence):
         self.sentence_type = manufacturer + data[0]
         super(KWD, self).__init__(manufacturer, data)
 
-class PKWDWPL(KWD):
+class KWDWPL(KWD):
     """ Kenwood Waypoint Location
 
     https://github.com/wb2osz/direwolf/blob/master/waypoint.c
@@ -85,6 +85,7 @@ class PKWDWPL(KWD):
     Oddly, there is no place for comment.
     """
     fields = (
+        ("Subtype", "subtype"),
         ("Time of Receipt", "time", time),
         ("GPS Status (Void)","status"),
         ("Latitude", "lat"),
