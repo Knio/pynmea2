@@ -91,6 +91,8 @@ class PKWDWPL(KWD):
         ("Latitude Direction", "lat_dir"),
         ("Longitude", "lon"),
         ("Longitude Direction", "lon_dir"),
+        ("Speed over ground", "speed"),
+        ("Course over ground", "course"),
         ("Date", "date", date),
         ("Altitude", "altitude", Decimal),
         ("Waypoint Name", "wname"),
