@@ -1,5 +1,5 @@
 include README.md
-include LICENSE
+include LICENSE.txt
 recursive-include test *
 recursive-include examples *
 global-exclude __pycache__
