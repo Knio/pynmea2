@@ -1,5 +1,10 @@
 #pylint: disable=invalid-name
 import datetime
+import re
+
+def valid(s):
+    return s == 'A'
+
 
 def timestamp(s):
     '''
@@ -25,7 +30,6 @@ def datestamp(s):
     return datetime.datetime.strptime(s, '%d%m%y').date()
 
 
-import re
 def dm_to_sd(dm):
     '''
     Converts a geographic co-ordinate given in "degrees/minutes" dddmm.mmmm
