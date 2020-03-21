@@ -181,6 +181,26 @@ class GNS(TalkerSentence, LatLonFix):
         ('Differential reference station ID', 'diferential'),
     )
 
+class GRS(TalkerSentence):
+    """ Order of satellites will match those in the last GSA
+    """
+    fields = (
+        ('Timestamp', 'timestamp', timestamp),
+        ('Residuals mode', 'residuals_mode'),
+        ('SV 01 Residual (m)', 'sv_res_01'),
+        ('SV 02 Residual (m)', 'sv_res_02'),
+        ('SV 03 Residual (m)', 'sv_res_03'),
+        ('SV 04 Residual (m)', 'sv_res_04'),
+        ('SV 05 Residual (m)', 'sv_res_05'),
+        ('SV 06 Residual (m)', 'sv_res_06'),
+        ('SV 07 Residual (m)', 'sv_res_07'),
+        ('SV 08 Residual (m)', 'sv_res_08'),
+        ('SV 09 Residual (m)', 'sv_res_09'),
+        ('SV 10 Residual (m)', 'sv_res_10'),
+        ('SV 11 Residual (m)', 'sv_res_11'),
+        ('SV 12 Residual (m)', 'sv_res_12'),
+    )
+
 class BWW(TalkerSentence):
     """ Bearing, Waypoint to Waypoint
     """
