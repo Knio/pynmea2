@@ -220,3 +220,17 @@ def test_STALK_unidentified_command():
     assert msg.render() == data
     assert msg.command_name == 'Unknown Command'
 
+def test_GRS():
+    data = "$GNGRS,162047.00,1,0.6,0.1,-16.6,-0.8,-0.1,0.5,,,,,,*41"
+    msg = pynmea2.parse(data)
+    assert msg.render() == data
+    assert msg.talker == 'GN'
+    assert msg.sentence_type == 'GRS'
+    assert msg.residuals_mode == 1
+    assert msg.sv_res_01 == 0.6
+    assert msg.sv_res_02 == 0.1
+    assert msg.sv_res_03 == -16.6
+    assert msg.sv_res_04 == -0.8
+    assert msg.sv_res_05 == -0.1
+    assert msg.sv_res_06 == 0.5
+    assert msg.sv_res_07 == None
