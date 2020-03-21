@@ -186,19 +186,19 @@ class GRS(TalkerSentence):
     """
     fields = (
         ('Timestamp', 'timestamp', timestamp),
-        ('Residuals mode', 'residuals_mode'),
-        ('SV 01 Residual (m)', 'sv_res_01'),
-        ('SV 02 Residual (m)', 'sv_res_02'),
-        ('SV 03 Residual (m)', 'sv_res_03'),
-        ('SV 04 Residual (m)', 'sv_res_04'),
-        ('SV 05 Residual (m)', 'sv_res_05'),
-        ('SV 06 Residual (m)', 'sv_res_06'),
-        ('SV 07 Residual (m)', 'sv_res_07'),
-        ('SV 08 Residual (m)', 'sv_res_08'),
-        ('SV 09 Residual (m)', 'sv_res_09'),
-        ('SV 10 Residual (m)', 'sv_res_10'),
-        ('SV 11 Residual (m)', 'sv_res_11'),
-        ('SV 12 Residual (m)', 'sv_res_12'),
+        ('Residuals mode', 'residuals_mode', int),
+        ('SV 01 Residual (m)', 'sv_res_01', float),
+        ('SV 02 Residual (m)', 'sv_res_02', float),
+        ('SV 03 Residual (m)', 'sv_res_03', float),
+        ('SV 04 Residual (m)', 'sv_res_04', float),
+        ('SV 05 Residual (m)', 'sv_res_05', float),
+        ('SV 06 Residual (m)', 'sv_res_06', float),
+        ('SV 07 Residual (m)', 'sv_res_07', float),
+        ('SV 08 Residual (m)', 'sv_res_08', float),
+        ('SV 09 Residual (m)', 'sv_res_09', float),
+        ('SV 10 Residual (m)', 'sv_res_10', float),
+        ('SV 11 Residual (m)', 'sv_res_11', float),
+        ('SV 12 Residual (m)', 'sv_res_12', float),
     )
 
 class BWW(TalkerSentence):
