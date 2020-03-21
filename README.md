@@ -7,6 +7,10 @@ pynmea2
 
 The `pynmea2` homepage is located at http://github.com/Knio/pynmea2
 
+ ### Compatibility
+
+`pynmea2` is compatable with Python 2.7 and Python 3.4+
+
 ![Python version](https://img.shields.io/pypi/pyversions/pynmea2.svg?style=flat)
 [![Build status](https://img.shields.io/travis/Knio/pynmea2/master.svg?style=flat)](https://travis-ci.org/Knio/pynmea2)
 [![Coverage status](https://img.shields.io/coveralls/github/Knio/pynmea2/master.svg?style=flat)](https://coveralls.io/r/Knio/pynmea2?branch=master)
@@ -106,28 +110,51 @@ and generate a NMEA string from a `NMEASentence` object:
 '$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,100.00,M,-33.9,M,,0000*6D'
 ```
 
-Streaming
+
+File reading example
+--------
+
+See [](examples.read_file.py)
+
+```python
+import pynmea2
+
+file = open('examples/data.log', encoding='utf-8')
+
+for line in file.readlines():
+    try:
+        msg = pynmea2.parse(line)
+        print(repr(msg))
+    except pynmea2.ParseError as e:
+        print('Parse error: {}'.format(e))
+        continue
+```
+
+
+pySerial device example
 ---------
 
-`pynmea2` can also process streams of NMEA sentences like so, by feeding chunks of data
-manually:
+See [](examples.read_serial.py)
 
 ```python
-streamreader = pynmea2.NMEAStreamReader()
+import io
+
+import pynmea2
+import serial
+
+
+ser = serial.Serial('/dev/ttyS1', 9600, timeout=5.0)
+sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser))
+
 while 1:
-    data = input.read()
-    for msg in streamreader.next(data):
-        print msg
+    try:
+        line = sio.readline()
+        msg = pynmea2.parse(line)
+        print(repr(msg))
+    except serial.SerialException as e:
+        print('Device error: {}'.format(e))
+        break
+    except pynmea2.ParseError as e:
+        print('Parse error: {}'.format(e))
+        continue
 ```
-
-or given a file-like device, automatically:
-
-```python
-    streamreader = pynmea2.NMEAStreamReader(input)
-    while 1:
-        for msg in streamreader.next():
-            print msg
-```
-
-
-If your stream is noisy and contains errors, you can set some basic error handling with the [`errors` parameter of the `NMEAStreamReader` constructor.](pynmea2/stream.py#L12)
