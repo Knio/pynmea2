@@ -60,8 +60,8 @@ class GRMW(GRM):
         ("Subtype", "subtype"),
         ("Waypoint Name", "wname"),
         ("Altitude", "altitude", Decimal),
-        ("Comment", "comment"),
-        ("Symbol", "symbol")
+        ("Symbol", "symbol"),
+        ("Comment", "comment")
     )
 
 
