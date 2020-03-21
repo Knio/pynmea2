@@ -1,4 +1,4 @@
-from lib.pynmea2 import pynmea2
+import pynmea2
 import datetime
 
 def test_proprietary_1():
