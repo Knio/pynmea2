@@ -14,7 +14,6 @@ The `pynmea2` homepage is located at http://github.com/Knio/pynmea2
 ![Python version](https://img.shields.io/pypi/pyversions/pynmea2.svg?style=flat)
 [![Build status](https://img.shields.io/travis/Knio/pynmea2/master.svg?style=flat)](https://travis-ci.org/Knio/pynmea2)
 [![Coverage status](https://img.shields.io/coveralls/github/Knio/pynmea2/master.svg?style=flat)](https://coveralls.io/r/Knio/pynmea2?branch=master)
-[![Code Health](https://landscape.io/github/Knio/pynmea2/master/landscape.svg?style=flat)](https://landscape.io/github/Knio/pynmea2/master)
 
 ### Installation
 
@@ -114,7 +113,7 @@ and generate a NMEA string from a `NMEASentence` object:
 File reading example
 --------
 
-See [](examples.read_file.py)
+See [examples/read_file.py](/examples/read_file.py)
 
 ```python
 import pynmea2
@@ -134,7 +133,7 @@ for line in file.readlines():
 pySerial device example
 ---------
 
-See [](examples.read_serial.py)
+See [examples/read_serial.py](/examples/read_serial.py)
 
 ```python
 import io
