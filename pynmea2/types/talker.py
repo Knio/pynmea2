@@ -867,11 +867,24 @@ class TTM(TalkerSentence):
     #    fields = (
     # )
 
-#class RSD(TalkerSentence):
-#    """ RADAR System Data
-#    """
-    #    fields = (
-    # )
+class RSD(TalkerSentence):
+    """ RADAR System Data
+    """
+    fields = (
+        ("Origin 1 Range", "orig_1_range", Decimal),
+        ("Origin 1 Bearing", "orig_1_bearing", Decimal),
+        ("Variable Range Marker 1", "var_range_1", Decimal),
+        ("Bearing Line 1", "bearing_line_1", Decimal),
+        ("Origin 2 Range", "orig_2_range", Decimal),
+        ("Origin 2 Bearing", "orig_2_bearing", Decimal),
+        ("Variable Range Marker 2", "var_range_2", Decimal),
+        ("Bearing Line 2", "bearing_line_2", Decimal),
+        ("Cursor Range from Own Ship", "cursor_range", Decimal),
+        ("Cursor Bearing Degrees Clockwise from Zero", "cursor_bearing", Decimal),
+        ("Range Scale", "range_scale", Decimal),
+        ("Range Units", "range_units"),
+        ("Display Rotation", "disp_rotation"),
+    )
 
 #class SFI(TalkerSentence):
 #    """ Scanning Frequency Information
