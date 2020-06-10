@@ -44,10 +44,10 @@ class MTK010(MTK):
     """
     fields = (
         ('Blank', '_'),
-        ('Data', 'data', int),  # 0 = UNKNOWN
-                                # 1 = STARTUP
-                                # 2 = Notification for host aiding EPO
-                                # 3 = Notification for transition to Normal mode success
+        ('Msg', 'msg', int),  # 0 = UNKNOWN
+                              # 1 = STARTUP
+                              # 2 = Notification for host aiding EPO
+                              # 3 = Notification for transition to Normal mode success
     )
 
 

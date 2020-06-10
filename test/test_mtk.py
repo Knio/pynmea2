@@ -10,6 +10,13 @@ def test_mtk001():
     assert msg.flag == 3
 
 
+def test_mtk010():
+    data = '$PMTK010,002*2D'
+    msg = pynmea2.parse(data)
+    assert isinstance(msg, pynmea2.types.mtk.MTK010)
+    assert msg.msg == 2
+
+
 def test_mtk220():
     sentence = pynmea2.ProprietarySentence('MTK', ('220', '200', ))
     assert str(sentence) == '$PMTK220,200*2C'
