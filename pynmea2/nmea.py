@@ -179,21 +179,19 @@ class NMEASentence(NMEASentenceBase):
 
     def __repr__(self):
         #pylint: disable=invalid-name
-        r = []
-        d = []
-        t = type(self)
-        for i, v in enumerate(self.data):
-            if i >= len(t.fields):
-                d.append(v)
-                continue
-            name = t.fields[i][1]
-            r.append('%s=%r' % (name, getattr(self, name)))
-
+        d = self.unnamed_values()
         return '<%s(%s)%s>' % (
             type(self).__name__,
-            ', '.join(r),
+            ', '.join('%s=%r' % (n, v) for n, v in self.field_values().items()),
             d and ' data=%r' % d or ''
         )
+
+    def field_values(self):
+        field_names = tuple(map(lambda t: t[1], type(self).fields))
+        return {n: getattr(self, n) for n in field_names[:len(self.data)]}
+
+    def unnamed_values(self):
+        return self.data[len(type(self).fields):]
 
     def identifier(self):
         raise NotImplementedError
