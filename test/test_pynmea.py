@@ -20,7 +20,7 @@ def test_sentence():
 def test_checksum():
     d = data[:-2] + '00'
     with pytest.raises(pynmea2.ChecksumError):
-        msg = pynmea2.parse(d)
+        msg = pynmea2.parse(d, check=True)
 
 
 def test_attribute():
