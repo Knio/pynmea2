@@ -94,8 +94,19 @@ class NMEASentence(NMEASentenceBase):
         Parses a string representing a NMEA 0183 sentence, and returns a
         NMEASentence object
 
-        Raises ValueError if the string could not be parsed, or if the checksum
-        did not match.
+        Parameters
+        ---------
+        line: str
+            The NMEA string to be parsed
+        check: bool
+            If True, checks the checksum.
+
+        Raises
+        ------
+        * ParseError if the string could not be parsed
+        * ChecksumError if the checksum is missing or if 
+          the checksum did not match.
+        * SentenceTypeError if the sentence type is not understood
         '''
         match = NMEASentence.sentence_re.match(line)
         if not match:
