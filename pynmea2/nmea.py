@@ -111,7 +111,7 @@ class NMEASentence(NMEASentenceBase):
         if checksum:
             cs1 = int(checksum, 16)
             cs2 = NMEASentence.checksum(nmea_str)
-            if cs1 != cs2:
+            if cs1 != cs2 and check:
                 raise ChecksumError(
                     'checksum does not match: %02X != %02X' % (cs1, cs2), data)
         elif check:
