@@ -8,6 +8,19 @@ from decimal import Decimal
 
 from pynmea2.nmea_utils import getattr__
 
+class TalkerSentenceCustomFields(TalkerSentence):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        fields = kwargs.get('fields', None)
+        if fields:
+            self.name_to_idx = dict((f[1], i) for i, f in enumerate(fields))
+            self.fields = fields
+            
+    def __getattr__(self, name):
+        #pylint: disable=invalid-name
+        return getattr__(self, name, 'self')
+
 #pylint: disable=missing-docstring
 #pylint: disable=no-init
 #pylint: disable=too-few-public-methods
@@ -182,7 +195,7 @@ class GNS(TalkerSentence, LatLonFix):
         ('Differential reference station ID', 'diferential'),
     )
 
-class GRS(TalkerSentence):
+class GRS(TalkerSentenceCustomFields):
     """ Order of satellites will match those in the last GSA
     """
     fields = (
@@ -260,7 +273,7 @@ class GST(TalkerSentence):
     )
 
 
-class GSV(TalkerSentence):
+class GSV(TalkerSentenceCustomFields):
     fields = (
         ('Number of messages of type in cycle', 'num_messages'),
         ('Message Number', 'msg_num'),
@@ -283,16 +296,7 @@ class GSV(TalkerSentence):
         ('SNR 4', 'snr_4'),
     )  # 00-99 dB
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        fields = kwargs.get('fields', None)
-        if fields:
-            self.name_to_idx = dict((f[1], i) for i, f in enumerate(fields))
-            self.fields = fields
-            
-    def __getattr__(self, name):
-        #pylint: disable=invalid-name
-        return getattr__(self, name, 'self')
+
   
 
 class HDG(TalkerSentence):

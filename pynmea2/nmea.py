@@ -87,7 +87,7 @@ class NMEASentence(NMEASentenceBase):
         return reduce(operator.xor, map(ord, nmea_str), 0)
 
     @staticmethod
-    def parse(line, check=False, GSV_signal_id=False):
+    def parse(line, check=False, GSV_signal_id=False, GRS_ids=False):
         '''
         parse(line)
 
@@ -101,9 +101,14 @@ class NMEASentence(NMEASentenceBase):
         check: bool
             If True, checks the checksum.
         GSV_signal_id: bool
-            If True, GSV NMEA messages can have signalId appended
-            as in https://www.u-blox.com/en/docs/UBX-18010854.
-
+            If True, assume that GSV NMEA (4.10+) messages have
+            signalId appended as described in
+            https://www.u-blox.com/en/docs/UBX-18010854.
+        GRS_ids: bool
+            If True, assume that GRS NMEA (4.10+) messages have
+            systemId and signalId appended as described in
+            https://www.u-blox.com/en/docs/UBX-18010854.
+        
         Raises
         ------
         * ParseError if the string could not be parsed
@@ -141,6 +146,9 @@ class NMEASentence(NMEASentenceBase):
             if sentence == 'GSV':
                 if GSV_signal_id:
                     cls_kwargs['fields'] = cls.fields[:len(data)-1] + (('GNSS Signal ID', 'signal_id'),)
+            if sentence == 'GRS':
+                if GRS_ids:
+                    cls_kwargs['fields'] = cls.fields + (('GNSS System ID', 'system_id'), ('GNSS Signal ID', 'signal_id'))
             if not cls:
                 # TODO instantiate base type instead of fail
                 raise SentenceTypeError(

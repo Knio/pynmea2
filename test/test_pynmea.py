@@ -89,7 +89,22 @@ def test_GSV():
     with pytest.raises(pynmea2.ChecksumError):
         # Checksum checks also the signal_id
         pynmea2.parse("$GPGSV,3,3,11,26,49,301,08,29,58,056,37,31,50,235,22,123*55", GSV_signal_id=True, check=True)
-    
+
+def test_GRS():
+
+    # Test GRS message with systemId and signalId
+    data = "$GNGRS,121519.00,1,0.2,-1.4,-1.9,3.0,-0.2,1.2,-0.8,-1.2,,,,,3,7*70"
+    # There should be no signal_id when not asked.
+    msg = pynmea2.parse(data, GRS_ids=False)
+    assert not hasattr(msg, 'system_id')
+    assert not hasattr(msg, 'signal_id')
+
+    # There should be signal_id when asked.
+    msg = pynmea2.parse(data, GRS_ids=True)
+    assert msg.system_id == '3'
+    assert msg.signal_id == '7'
+
+
 
 def test_dollar():
     data = 'GPGSV,3,3,09,24,03,046,*47\r\n'
