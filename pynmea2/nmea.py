@@ -1,7 +1,7 @@
 import re
 import operator
 from functools import reduce
-
+from pynmea2.nmea_utils import getattr__
 
 class ParseError(ValueError):
     def __init__(self, message, data):
@@ -87,7 +87,7 @@ class NMEASentence(NMEASentenceBase):
         return reduce(operator.xor, map(ord, nmea_str), 0)
 
     @staticmethod
-    def parse(line, check=False):
+    def parse(line, check=False, GSV_signal_id=False):
         '''
         parse(line)
 
@@ -100,6 +100,9 @@ class NMEASentence(NMEASentenceBase):
             The NMEA string to be parsed
         check: bool
             If True, checks the checksum.
+        GSV_signal_id: bool
+            If True, GSV NMEA messages can have signalId appended
+            as in https://www.u-blox.com/en/docs/UBX-18010854.
 
         Raises
         ------
@@ -134,12 +137,15 @@ class NMEASentence(NMEASentenceBase):
             talker = talker_match.group('talker')
             sentence = talker_match.group('sentence')
             cls = TalkerSentence.sentence_types.get(sentence)
-
+            cls_kwargs = dict()
+            if sentence == 'GSV':
+                if GSV_signal_id:
+                    cls_kwargs['fields'] = cls.fields[:len(data)-1] + (('GNSS Signal ID', 'signal_id'),)
             if not cls:
                 # TODO instantiate base type instead of fail
                 raise SentenceTypeError(
                     'Unknown sentence type %s' % sentence_type, line)
-            return cls(talker, sentence, data)
+            return cls(talker, sentence, data, **cls_kwargs)
 
         query_match = NMEASentence.query_re.match(sentence_type)
         if query_match and not data_str:
@@ -159,25 +165,8 @@ class NMEASentence(NMEASentenceBase):
 
     def __getattr__(self, name):
         #pylint: disable=invalid-name
-        t = type(self)
-        try:
-            i = t.name_to_idx[name]
-        except KeyError:
-            raise AttributeError(name)
-        f = t.fields[i]
-        if i < len(self.data):
-            v = self.data[i]
-        else:
-            v = ''
-        if len(f) >= 3:
-            if v == '':
-                return None
-            try:
-                return f[2](v)
-            except:
-                return v
-        else:
-            return v
+        return getattr__(self, name, source='type')
+
 
     def __setattr__(self, name, value):
         #pylint: disable=invalid-name
@@ -192,13 +181,16 @@ class NMEASentence(NMEASentenceBase):
         #pylint: disable=invalid-name
         r = []
         d = []
-        t = type(self)
         for i, v in enumerate(self.data):
-            if i >= len(t.fields):
+            if i >= len(self.fields):
                 d.append(v)
                 continue
-            name = t.fields[i][1]
-            r.append('%s=%r' % (name, getattr(self, name)))
+            name = self.fields[i][1]
+            try: 
+                value = getattr(self, name)
+            except AttributeError:
+                continue
+            r.append('%s=%r' % (name, value))
 
         return '<%s(%s)%s>' % (
             type(self).__name__,
@@ -225,7 +217,7 @@ class NMEASentence(NMEASentenceBase):
 
 class TalkerSentence(NMEASentence):
     sentence_types = {}
-    def __init__(self, talker, sentence_type, data):
+    def __init__(self, talker, sentence_type, data, **kwargs):
         self.talker = talker
         self.sentence_type = sentence_type
         self.data = list(data)

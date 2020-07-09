@@ -2,6 +2,51 @@
 import datetime
 import re
 
+
+def getattr__(o, name, source='type'):
+    """
+    __getattr__ for the object `o`
+
+    Parameters
+    ---------
+    o: object instance
+        The object intance ("self")
+    name: str
+        The attribute name
+    source: str
+        'type' Uses the `name_to_idx`
+        and `fields` of the type(o).
+        'self' Uses the o.name_to_idx
+        and o.fields instead.
+    """
+    #pylint: disable=invalid-name
+
+    if source == 'type':
+        src = type(o)
+    elif source == 'self':
+        src = o
+    else:
+        raise ValueError('Unknown `source`: '+source)
+    try:
+        i = src.name_to_idx[name]
+    except KeyError:
+        raise AttributeError(name)
+    f = src.fields[i]
+    if i < len(o.data):
+        v = o.data[i]
+    else:
+        v = ''
+    if len(f) >= 3:
+        if v == '':
+            return None
+        try:
+            return f[2](v)
+        except:
+            return v
+    else:
+        return v
+
+
 def valid(s):
     return s == 'A'
 

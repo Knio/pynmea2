@@ -6,6 +6,7 @@ from ..seatalk_utils import *
 from collections import namedtuple
 from decimal import Decimal
 
+from pynmea2.nmea_utils import getattr__
 
 #pylint: disable=missing-docstring
 #pylint: disable=no-init
@@ -282,6 +283,17 @@ class GSV(TalkerSentence):
         ('SNR 4', 'snr_4'),
     )  # 00-99 dB
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        fields = kwargs.get('fields', None)
+        if fields:
+            self.name_to_idx = dict((f[1], i) for i, f in enumerate(fields))
+            self.fields = fields
+            
+    def __getattr__(self, name):
+        #pylint: disable=invalid-name
+        return getattr__(self, name, 'self')
+  
 
 class HDG(TalkerSentence):
     """ NMEA 0183 standard Heading, Deviation and Variation

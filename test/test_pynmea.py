@@ -71,6 +71,26 @@ def test_missing_4():
     assert msg.render() == data
 
 
+def test_GSV():
+
+    # Test a shorter GSV message
+    data = "$GPGSV,3,3,09,25,,,40,1*6E"
+    # There should be no signal_id when not asked.
+    msg = pynmea2.parse(data)
+    assert not hasattr(msg, 'signal_id')
+
+    # There should be signal_id when asked.
+    msg = pynmea2.parse(data, GSV_signal_id=True)
+    assert msg.signal_id == '1'
+    assert not hasattr(msg, 'sv_prn_num_2')
+
+    # OK checksum (signal_id included); no errors
+    pynmea2.parse("$GPGSV,3,3,11,26,49,301,08,29,58,056,37,31,50,235,22,1*55", GSV_signal_id=True, check=True)
+    with pytest.raises(pynmea2.ChecksumError):
+        # Checksum checks also the signal_id
+        pynmea2.parse("$GPGSV,3,3,11,26,49,301,08,29,58,056,37,31,50,235,22,123*55", GSV_signal_id=True, check=True)
+    
+
 def test_dollar():
     data = 'GPGSV,3,3,09,24,03,046,*47\r\n'
     msg = pynmea2.parse(data)
