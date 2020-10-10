@@ -1,3 +1,5 @@
+import datetime
+
 import pytest
 import pynmea2
 
@@ -27,6 +29,35 @@ def test_attribute():
     msg = pynmea2.parse(data)
     with pytest.raises(AttributeError):
         msg.foobar
+
+
+def test_as_dict():
+    msg = pynmea2.parse(data)
+    assert msg.as_dict() == {'timestamp': datetime.time(18, 43, 53, 70000), 'lat': '1929.045',
+                             'lat_dir': 'S', 'lon': '02410.506', 'lon_dir': 'E', 'gps_qual': 1,
+                             'num_sats': '04', 'horizontal_dil': '2.6', 'altitude': 100.0,
+                             'altitude_units': 'M', 'geo_sep': '-33.9', 'geo_sep_units': 'M',
+                             'age_gps_data': '', 'ref_station_id': '0000'}
+
+
+def test_as_dict_with_extras():
+    msg = pynmea2.parse(data)
+    msg.data.extend([123, "abc", 5.7])
+    assert msg.as_dict() == {'timestamp': datetime.time(18, 43, 53, 70000), 'lat': '1929.045',
+                             'lat_dir': 'S', 'lon': '02410.506', 'lon_dir': 'E', 'gps_qual': 1,
+                             'num_sats': '04', 'horizontal_dil': '2.6', 'altitude': 100.0,
+                             'altitude_units': 'M', 'geo_sep': '-33.9', 'geo_sep_units': 'M',
+                             'age_gps_data': '', 'ref_station_id': '0000', '_extra1': 123,
+                             '_extra2': 'abc', '_extra3': 5.7}
+
+
+def test_repr():
+    msg = pynmea2.parse(data)
+    assert repr(msg) == "<GGA(timestamp=datetime.time(18, 43, 53, 70000), lat='1929.045', " \
+                        "lat_dir='S', lon='02410.506', lon_dir='E', gps_qual=1, num_sats='04', " \
+                        "horizontal_dil='2.6', altitude=100.0, altitude_units='M', " \
+                        "geo_sep='-33.9', geo_sep_units='M', age_gps_data='', " \
+                        "ref_station_id='0000')>"
 
 
 def test_fail():
