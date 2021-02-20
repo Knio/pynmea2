@@ -232,7 +232,7 @@ class QuerySentence(NMEASentence):
         self.data = []
 
     def identifier(self):
-        return '%s%sQ,%s,' % (self.talker, self.listener, self.sentence_type)
+        return '%s%sQ,%s' % (self.talker, self.listener, self.sentence_type)
 
 
 class ProprietarySentence(NMEASentence):
