@@ -14,14 +14,14 @@ python:
 install:
     - pip install pip --upgrade
     - pip install pytest --upgrade
-    - pip install pylint --upgrade
+    # - pip install pylint --upgrade
 
 # command to run tests, e.g. python setup.py test
 script:
     - python setup.py sdist --format=zip
     - pip install dist/pynmea2*.zip
     - py.test
-    - pylint -E pynmea2
+    # - pylint -E pynmea2 ## pylint is not backwards compatible with itself
 
 after_success:
     - pip install coveralls coverage
