@@ -14,15 +14,13 @@ class UBX(nmea.ProprietarySentence):
         cls = _cls.sentence_types.get(name, _cls)
         return super(UBX, cls).__new__(cls)
 
-    def __init__(self, manufacturer, data):
-        self.sentence_type = manufacturer + data[1]
-        super(UBX, self).__init__(manufacturer, data[2:])
-
 
 class UBX00(UBX, LatLonFix):
     """ Lat/Long Position Data
     """
     fields = (
+        ("Blank", "_blank"),
+        ("UBX Type", "ubx_type"),
         ("Timestamp (UTC)", "timestamp", timestamp),
         ("Latitude", "lat"),
         ("Latitude Direction", "lat_dir"),
@@ -41,7 +39,6 @@ class UBX00(UBX, LatLonFix):
         ("Time Dilution of Precision", "tdop"),
         ("Number of Satellites Used", "num_svs"),
         ("Reserved", "reserved")
-
     )
 
 
@@ -49,6 +46,8 @@ class UBX03(UBX):
     """ Satellite Status
     """
     fields = (
+        ("Blank", "_blank"),
+        ("UBX Type", "ubx_type"),
         ("Number of GNSS Satellites Tracked", "num_sv", int),
     )
 
@@ -61,6 +60,8 @@ class UBX04(UBX):
     """ Time and Day Clock Information
     """
     fields = (
+        ("Blank", "_blank"),
+        ("UBX Type", "ubx_type"),
         ("UTC Time", "time", timestamp),
         ("UTC Date", "date", datestamp),
         ("UTC Time of Week", "utc_tow"),

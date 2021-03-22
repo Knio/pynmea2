@@ -105,10 +105,11 @@ def test_srf():
     data = '$PSRF999,0,1200,8,1,1'
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.srf.SRF
+    assert msg.render(checksum=False) == data
 
 
 def test_grm():
-    data = ' $PGRME,15.0,M,45.0,M,25.0,M*1C'
+    data = '$PGRME,15.0,M,45.0,M,25.0,M*1C'
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.grm.GRME
     assert msg.sentence_type == 'GRME'
@@ -118,6 +119,7 @@ def test_grm():
     assert msg.vpe_unit == 'M'
     assert msg.osepe == 25.0
     assert msg.osepe_unit == 'M'
+    assert msg.render() == data
 
 
 def test_tnl():
@@ -127,15 +129,19 @@ def test_tnl():
     assert msg.datestamp == datetime.date(2007,12,2)
     assert msg.latitude == 37.384897319
     assert msg.longitude == -122.00543668866666
+    assert msg.render() == data
 
 
 def test_ubx00():
     data = '$PUBX,00,074440.00,4703.74203,N,00736.82976,E,576.991,D3,2.0,2.0,0.091,0.00,-0.032,,0.76,1.05,0.65,14,0,0*70'
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.ubx.UBX00
+    assert msg.identifier() == 'PUBX'
+    assert msg.ubx_type == '00'
     assert msg.timestamp == datetime.time(7, 44, 40)
     assert msg.latitude == 47.06236716666667
     assert msg.lat_dir == 'N'
+    assert msg.render() == data
 
 
 def test_ubx03():
@@ -143,6 +149,7 @@ def test_ubx03():
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.ubx.UBX03
     assert msg.num_sv == 20
+    assert msg.render() == data
 
 
 def test_ubx04():
@@ -152,6 +159,7 @@ def test_ubx04():
     assert msg.date == datetime.date(2014, 10, 13)
     assert msg.time == datetime.time(7, 38, 24)
     assert msg.clk_bias == 495176
+    assert msg.render() == data
 
 
 def test_create():
