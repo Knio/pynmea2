@@ -23,7 +23,7 @@ class KWD(nmea.ProprietarySentence):
 class KWDWPL(KWD, nmea_utils.LatLonFix, nmea_utils.DatetimeFix, nmea_utils.ValidStatusFix):
     """ Kenwood Waypoint Location
 
-    https://github.com/wb2osz/direwolf/blob/master/waypoint.c
+    https://github.com/wb2osz/direwolf/blob/master/src/waypoint.c
 
     $PKWDWPL,hhmmss,v,ddmm.mm,ns,dddmm.mm,ew,speed,course,ddmmyy,alt,wname,ts*99
     Where,
