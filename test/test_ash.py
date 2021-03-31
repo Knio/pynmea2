@@ -32,6 +32,13 @@ def test_ashratt():
     assert msg.render() == data
 
 
+def test_ashratt_with_2_vs_3_decimal_timestamp():
+    msg_3 = pynmea2.parse('$PASHR,130533.620,0.311,T,-80.467,-1.395,,0.066,0.067,0.215,2,3*0B')
+    msg_2 = pynmea2.parse('$PASHR,130533.62,0.311,T,-80.467,-1.395,,0.066,0.067,0.215,2,3*3B')
+
+    assert msg_3.timestamp == msg_2.timestamp
+
+
 def test_ash_undefined():
     '''
     Test that non-ATT messages still fall back to the generic ASH type
