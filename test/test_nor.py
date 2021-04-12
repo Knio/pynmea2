@@ -198,10 +198,26 @@ def test_nors4():
 
 
 def test_norc1():
-    data = '$PNORC1,083013,132455,3,11.0,0.332,0.332,0.332,78.9,78.9,78.9,78,78,78*46'
+    data = '$PNORC1,161109,132455,3,11.0,0.332,0.332,0.332,0.332,78.9,78.9,78.9,78.9,78,78,78,78*56'
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.nor.NORC1
     assert msg.manufacturer == 'NOR'
+    assert msg.sentence_type == 'NORC1'
+    assert msg.datetime == datetime.datetime(2009, 11, 16, 13, 24, 55)
+    assert msg.cn == 3
+    assert msg.cp == 11.0
+    assert msg.vx == 0.332
+    assert msg.vy == 0.332
+    assert msg.vz == 0.332
+    assert msg.vz2 == 0.332
+    assert msg.amp1 == 78.9
+    assert msg.amp2 == 78.9
+    assert msg.amp3 == 78.9
+    assert msg.amp4 == 78.9
+    assert msg.r1 == 78
+    assert msg.r2 == 78
+    assert msg.r3 == 78
+    assert msg.r4 == 78
     assert msg.render() == data
 
 
