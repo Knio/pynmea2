@@ -14,16 +14,17 @@ def test_ashrltn():
 
 
 def test_ashratt():
-    data = '$PASHR,130533.620,0.311,T,-80.467,-1.395,,0.066,0.067,0.215,2,3*0B'
+    data = '$PASHR,130533.620,0.311,T,-80.467,-1.395,0.25,0.066,0.067,0.215,2,3*12'
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.ash.ASHRATT
-    assert msg.data == ['R', '130533.620', '0.311', 'T', '-80.467', '-1.395', '', '0.066', '0.067', '0.215', '2', '3']
+    assert msg.data == ['R', '130533.620', '0.311', 'T', '-80.467', '-1.395', '0.25', '0.066', '0.067', '0.215', '2', '3']
     assert msg.manufacturer == 'ASH'
     assert msg.timestamp == datetime.time(13, 5, 33, 620000)
     assert msg.true_heading == 0.311
     assert msg.is_true_heading == 'T'
     assert msg.roll == -80.467
     assert msg.pitch == -1.395
+    assert msg.heave == 0.25
     assert msg.roll_accuracy == 0.066
     assert msg.pitch_accuracy == 0.067
     assert msg.heading_accuracy == 0.215

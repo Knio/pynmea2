@@ -47,7 +47,7 @@ class ASHRATT(ASH):
         ('Is True Heading', 'is_true_heading'),
         ('Roll Angle', 'roll', float),
         ('Pitch Angle', 'pitch', float),
-        ('Heave', 'heading', float),
+        ('Heave', 'heave', float),
         ('Roll Accuracy Estimate', 'roll_accuracy', float),
         ('Pitch Accuracy Estimate', 'pitch_accuracy', float),
         ('Heading Accuracy Estimate', 'heading_accuracy', float),
