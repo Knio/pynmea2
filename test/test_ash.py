@@ -14,7 +14,7 @@ def test_ashrltn():
 
 
 def test_ashratt():
-    data = '$PASHR,130533.620,0.311,T,-80.467,-1.395,0.25,0.066,0.067,0.215,2,3*36'
+    data = '$PASHR,130533.620,0.311,T,-80.467,-1.395,0.25,0.066,0.067,0.215,2,3*12'
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.ash.ASHRATT
     assert msg.data == ['R', '130533.620', '0.311', 'T', '-80.467', '-1.395', '', '0.066', '0.067', '0.215', '2', '3']
