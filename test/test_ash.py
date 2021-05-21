@@ -17,7 +17,7 @@ def test_ashratt():
     data = '$PASHR,130533.620,0.311,T,-80.467,-1.395,0.25,0.066,0.067,0.215,2,3*12'
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.ash.ASHRATT
-    assert msg.data == ['R', '130533.620', '0.311', 'T', '-80.467', '-1.395', '', '0.066', '0.067', '0.215', '2', '3']
+    assert msg.data == ['R', '130533.620', '0.311', 'T', '-80.467', '-1.395', '0.25', '0.066', '0.067', '0.215', '2', '3']
     assert msg.manufacturer == 'ASH'
     assert msg.timestamp == datetime.time(13, 5, 33, 620000)
     assert msg.true_heading == 0.311
