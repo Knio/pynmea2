@@ -108,15 +108,16 @@ class NMEASentence(NMEASentenceBase):
         sentence_type   = match.group('sentence_type').upper()
         data            = data_str.split(',')
 
-        if checksum:
-            cs1 = int(checksum, 16)
-            cs2 = NMEASentence.checksum(nmea_str)
-            if cs1 != cs2:
+        if check:
+            if checksum:
+                cs1 = int(checksum, 16)
+                cs2 = NMEASentence.checksum(nmea_str)
+                if cs1 != cs2:
+                    raise ChecksumError(
+                        'checksum does not match: %02X != %02X' % (cs1, cs2), data)
+            else:
                 raise ChecksumError(
-                    'checksum does not match: %02X != %02X' % (cs1, cs2), data)
-        elif check:
-            raise ChecksumError(
-                'strict checking requested but checksum missing', data)
+                    'strict checking requested but checksum missing', data)
 
         talker_match = NMEASentence.talker_re.match(sentence_type)
         if talker_match:
