@@ -39,7 +39,10 @@ def dm_to_sd(dm):
     # '12319.943281'
     if not dm or dm == '0':
         return 0.
-    d, m = re.match(r'^(\d+)(\d\d\.\d+)$', dm).groups()
+    r = re.match(r'^(\d+)(\d\d\.\d+)$', dm)
+    if not r:
+        raise ValueError("Geographic coordinate value '{}' is not valid DDDMM.MMM".format(dm))
+    d, m = r.groups()
     return float(d) + float(m) / 60
 
 
