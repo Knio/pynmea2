@@ -1036,3 +1036,36 @@ class ALK(TalkerSentence,SeaTalk):
         ("Data Byte 8", "data_byte8"),
         ("Data Byte 9", "data_byte9")
     )
+
+# Implemented by Davis Chappins for FLARM traffic
+#PFLAU: Operating status and priority intruder and obstacle data 
+class LAU(TalkerSentence):
+    fields = (
+        ("RX","RX"),
+        ("TX","TX"),  
+        ("GPS","GPS"),
+        ("Power","Power"),
+        ("AlarmLevel","AlarmLevel"),
+        ("RelativeBearing","RelativeBearing"),
+        ("AlarmType","AlarmType"),
+        ("RelativeVertial","RelativeVertical"),
+        ("RelativeDistance","RelativeDistance"),
+        
+    )
+
+#PFLAA: Data on other moving objects around 
+class LAA(TalkerSentence):
+    fields = (
+        ("AlarmLevel","AlarmLevel"),
+        ("RelativeNorth","RelativeNorth"),
+        ("RelativeEast","RelativeEast"),
+        ("RelativeVertical","RelativeVertical"),
+        ("ID-Type","ID-Type"),
+        ("ID","ID"),
+        ("Track","Track"),
+        ("TurnRate","TurnRate"),
+        ("GroundSpeed","GroundSpeed"),
+        ("ClimbRate","ClimbRate"),
+        ("Type","Type"),
+    )
+
