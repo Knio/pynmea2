@@ -1036,3 +1036,17 @@ class ALK(TalkerSentence,SeaTalk):
         ("Data Byte 8", "data_byte8"),
         ("Data Byte 9", "data_byte9")
     )
+
+class DBK(TalkerSentence):
+    """ DBK - Depth below keel
+        $--DBK,x.x,f,x.x,M,x.x,F*hh<CR><LF>
+        Example: $SDDBK,12.3,f,3.7,M,2.0,F*2F
+    """
+    fields = (
+        ('Depth below keel, feet', 'depth_feet', Decimal),
+        ('Feets', 'feets'),
+        ('Depth below keel, meters', 'depth_meter', Decimal),
+        ('Meters', 'meters'),
+        ('Depth below keel, fathoms', 'depth_ fathoms', Decimal),
+        ('Fathoms', 'fathoms'),
+    )
