@@ -1,5 +1,6 @@
 import pynmea2
 import datetime
+import pytz
 
 def test_proprietary_1():
     # A sample proprietary sentence from a LCJ Capteurs
@@ -249,7 +250,7 @@ def test_KWDWPL():
     assert msg.sog == None
     assert msg.cog == None
     assert msg.datestamp == datetime.date(2020, 3, 20)
-    assert msg.datetime == datetime.datetime(2020, 3, 20, 5, 31, 25)
+    assert msg.datetime == pytz.utc.localize(datetime.datetime(2020, 3, 20, 5, 31, 25))
     assert msg.altitude == None
     assert msg.wname == 'AC7FD-1'
     assert msg.ts == '/-'

@@ -15,6 +15,8 @@ setup(
     packages=['pynmea2','pynmea2.types','pynmea2.types.proprietary'],
     keywords='python nmea gps parse parsing nmea0183 0183',
 
+    install_requires=['pytz'],
+    
     classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',

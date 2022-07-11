@@ -1,4 +1,5 @@
 import datetime
+import pytz
 
 import pynmea2
 
@@ -203,7 +204,7 @@ def test_norc1():
     assert type(msg) == pynmea2.nor.NORC1
     assert msg.manufacturer == 'NOR'
     assert msg.sentence_type == 'NORC1'
-    assert msg.datetime == datetime.datetime(2009, 11, 16, 13, 24, 55)
+    assert msg.datetime == pytz.utc.localize(datetime.datetime(2009, 11, 16, 13, 24, 55))
     assert msg.cn == 3
     assert msg.cp == 11.0
     assert msg.vx == 0.332

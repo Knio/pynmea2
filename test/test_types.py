@@ -1,6 +1,6 @@
 import pytest
 import pynmea2
-
+import pytz
 import datetime
 
 from decimal import Decimal
@@ -118,7 +118,7 @@ def test_RMC():
     assert msg.datestamp == datetime.date(1994, 11, 19)
     assert msg.latitude == 49.274166666666666
     assert msg.longitude == -123.18533333333333
-    assert msg.datetime == datetime.datetime(1994, 11, 19, 22, 54, 46)
+    assert msg.datetime == pytz.utc.localize(datetime.datetime(1994, 11, 19, 22, 54, 46))
     assert msg.is_valid == True
     assert msg.render() == data
 

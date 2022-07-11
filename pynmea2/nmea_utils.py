@@ -1,5 +1,6 @@
 #pylint: disable=invalid-name
 import datetime
+import pytz
 import re
 
 def valid(s):
@@ -102,7 +103,7 @@ class DatetimeFix(object):
     #pylint: disable=no-member
     @property
     def datetime(self):
-        return datetime.datetime.combine(self.datestamp, self.timestamp)
+        return datetime.datetime.combine(self.datestamp, self.timestamp, pytz.UTC)
 
 
 class ValidStatusFix(object):
