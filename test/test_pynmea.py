@@ -25,8 +25,7 @@ def test_checksum():
 
 def test_attribute():
     msg = pynmea2.parse(data)
-    with pytest.raises(AttributeError):
-        msg.foobar
+    assert msg.foobar is None
 
 
 def test_fail():

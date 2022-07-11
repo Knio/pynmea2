@@ -1,6 +1,10 @@
 import re
 import operator
 from functools import reduce
+from logging import getLogger
+
+
+log = getLogger()
 
 
 class ParseError(ValueError):
@@ -149,10 +153,12 @@ class NMEASentence(NMEASentenceBase):
     def __getattr__(self, name):
         #pylint: disable=invalid-name
         t = type(self)
-        try:
-            i = t.name_to_idx[name]
-        except KeyError:
-            raise AttributeError(name)
+
+        if name not in t.name_to_idx:
+            log.debug("%s has no attribute %s", self.__class__.__name__, name)
+            return None
+        i = t.name_to_idx[name]
+
         f = t.fields[i]
         if i < len(self.data):
             v = self.data[i]
