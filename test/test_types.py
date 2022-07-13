@@ -123,6 +123,76 @@ def test_RMC():
     assert msg.render() == data
 
 
+def test_RMC_valid():
+    '''The RMC mode indicator and navigation status values are optional.
+    Test that when supplied the whole message must be valid. When not supplied
+    only test validation against supplied values.
+
+    Supplied means that a `,` exists it does NOT mean that a value had to be
+    supplied in the space provided. See 
+
+    https://orolia.com/manuals/VSP/Content/NC_and_SS/Com/Topics/APPENDIX/NMEA_RMCmess.htm
+
+    for more information about the RMC Message additions.
+    '''
+    msgs = [
+        # Original
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,*33',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,*24',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,*72',
+        
+        # RMC Timing Messages
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,S*4C',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,N*51',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,*1F',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,S*5B',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,N*46',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,*08',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,S*0D',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,N*10',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,*5E',
+        
+        # RMC Nav Messags
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,S,S*33',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,S,V*36',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,S,*60',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,N,A*3C',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,N,V*2B',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,N,*7D',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,,A*72',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,,V*65',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,,*33',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,S,A*36',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,S,V*21',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,S,*77',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,N,A*2B',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,N,V*3C',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,N,*6A',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,,A*65',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,,V*72',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,,*24',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,S,A*60',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,S,V*77',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,S,*21',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,N,A*7D',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,N,V*6A',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,N,*3C',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,,A*33',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,,V*24',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,,*72',
+    ]
+
+    # only the first of each section is valid
+    expected = [False] * 39
+    expected[0] = True
+    expected[3] = True
+    expected[12] = True
+
+    for i, msg in enumerate(msgs):
+        parsed = pynmea2.parse(msg)
+        assert expected[i] == parsed.is_valid
+
+
 def test_TXT():
     data = '$GNTXT,01,01,02,ROM BASE 2.01 (75331) Oct 29 2013 13:28:17*44'
     msg = pynmea2.parse(data)

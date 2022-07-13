@@ -112,6 +112,23 @@ class ValidStatusFix(object):
         return self.status == 'A'
 
 
+class ValidRMCStatusFix(ValidStatusFix):
+    #pylint: disable=no-member
+    @property
+    def is_valid(self):
+        statuses = [super().is_valid]
+
+        if self.name_to_idx["mode_indicator"] < len(self.data):
+            statuses.append(self.mode_indicator in (
+                'A','D', 'E', 'F', 'M', 'P', 'R', 'S'
+            ))
+
+        if self.name_to_idx["nav_status"] < len(self.data):
+            statuses.append(self.nav_status in ('S', 'C', 'U'))
+
+        return False not in statuses
+
+
 class ValidGSAFix(object):
     #pylint: disable=no-member
     @property
