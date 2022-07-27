@@ -103,7 +103,8 @@ class DatetimeFix(object):
     #pylint: disable=no-member
     @property
     def datetime(self):
-        return datetime.datetime.combine(self.datestamp, self.timestamp, pytz.UTC)
+        dt = datetime.datetime.combine(self.datestamp, self.timestamp)
+        return pytz.utc.localize(dt)
 
 
 class ValidStatusFix(object):
