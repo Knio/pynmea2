@@ -116,7 +116,7 @@ class ValidRMCStatusFix(ValidStatusFix):
     #pylint: disable=no-member
     @property
     def is_valid(self):
-        statuses = [super().is_valid]
+        statuses = [super(ValidRMCStatusFix, self).is_valid]
 
         if self.name_to_idx["mode_indicator"] < len(self.data):
             statuses.append(self.mode_indicator in (
