@@ -116,12 +116,13 @@ class ValidRMCStatusFix(ValidStatusFix):
     #pylint: disable=no-member
     @property
     def is_valid(self):
-        statuses = (
-            super(ValidRMCStatusFix, self).is_valid,
-            getattr(self, 'mode_indicator', '') in 'ADEFMPRS',
-            getattr(self, 'nav_status', '') in 'SCU',
-        )
-        return all(statuses)
+        status = super(ValidRMCStatusFix, self).is_valid
+        try:
+            status &= self.mode_indicator in tuple('ADEFMPRS')
+            status &= self.nav_status in tuple('SCU')
+        except AttributeError:
+            pass
+        return status
 
 
 class ValidGSAFix(object):
