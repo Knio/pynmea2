@@ -344,7 +344,7 @@ class RMB(TalkerSentence, ValidStatusFix):
         ("Arrival Alarm", "arrival_alarm"),
     ) # A = Arrived, V = Not arrived
 
-class RMC(TalkerSentence, ValidStatusFix, LatLonFix, DatetimeFix):
+class RMC(TalkerSentence, ValidRMCStatusFix, LatLonFix, DatetimeFix):
     """ Recommended Minimum Specific GPS/TRANSIT Data
     """
     fields = (
@@ -359,6 +359,8 @@ class RMC(TalkerSentence, ValidStatusFix, LatLonFix, DatetimeFix):
         ("Datestamp", "datestamp", datestamp),
         ("Magnetic Variation", "mag_variation"),
         ("Magnetic Variation Direction", "mag_var_dir"),
+        ("Mode Indicator", "mode_indicator"),
+        ("Navigational Status", "nav_status"),
     )
 
 class RTE(TalkerSentence):
