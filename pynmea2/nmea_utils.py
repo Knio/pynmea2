@@ -117,11 +117,10 @@ class ValidRMCStatusFix(ValidStatusFix):
     @property
     def is_valid(self):
         status = super(ValidRMCStatusFix, self).is_valid
-        try:
+        if self.name_to_idx["mode_indicator"] < len(self.data):
             status &= self.mode_indicator in tuple('ADEFMPRS')
+        if self.name_to_idx["nav_status"] < len(self.data):
             status &= self.nav_status in tuple('SCU')
-        except AttributeError:
-            pass
         return status
 
 
