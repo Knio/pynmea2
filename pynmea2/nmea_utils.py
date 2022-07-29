@@ -1,7 +1,12 @@
 #pylint: disable=invalid-name
-import datetime
-import pytz
+import datetime    
 import re
+
+from platform import python_version
+_archaic = python_version() < "3.6"
+if _archaic:
+    import pytz
+
 
 def valid(s):
     return s == 'A'
@@ -103,8 +108,11 @@ class DatetimeFix(object):
     #pylint: disable=no-member
     @property
     def datetime(self):
-        dt = datetime.datetime.combine(self.datestamp, self.timestamp)
-        return pytz.utc.localize(dt)
+        if _archaic:
+            dt = datetime.datetime.combine(self.datestamp, self.timestamp)
+            return pytz.utc.localize(dt)
+        else: 
+            return datetime.datetime.combine(self.datetime, self.timestamp, tzinfo=datetime.timezone.utc)
 
 
 class ValidStatusFix(object):
