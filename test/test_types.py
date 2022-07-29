@@ -1,9 +1,15 @@
 import pytest
 import pynmea2
-import pytz
 import datetime
-
 from decimal import Decimal
+
+def _convertTime(dt):
+    try:
+        import pytz
+        return pytz.utc.localize(dt)
+    except ImportError:
+        return dt.replace(tzinfo=datetime.timezone.utc)
+
 
 def test_GGA():
     data = "$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,100.00,M,-33.9,M,,0000*6D"
@@ -118,7 +124,7 @@ def test_RMC():
     assert msg.datestamp == datetime.date(1994, 11, 19)
     assert msg.latitude == 49.274166666666666
     assert msg.longitude == -123.18533333333333
-    assert msg.datetime == pytz.utc.localize(datetime.datetime(1994, 11, 19, 22, 54, 46))
+    assert msg.datetime == _convertTime(datetime.datetime(1994, 11, 19, 22, 54, 46))
     assert msg.is_valid == True
     assert msg.render() == data
 

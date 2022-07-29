@@ -1,9 +1,9 @@
 #pylint: disable=invalid-name
-import datetime    
+import datetime
 import re
 
-from platform import python_version
-_archaic = python_version() < "3.6"
+from sys import version_info as vi
+_archaic = vi.major == 2 or (vi.major == 3 and vi.minor < 6)
 if _archaic:
     import pytz
 
@@ -112,7 +112,7 @@ class DatetimeFix(object):
             dt = datetime.datetime.combine(self.datestamp, self.timestamp)
             return pytz.utc.localize(dt)
         else: 
-            return datetime.datetime.combine(self.datetime, self.timestamp, tzinfo=datetime.timezone.utc)
+            return datetime.datetime.combine(self.datestamp, self.timestamp, tzinfo=datetime.timezone.utc)
 
 
 class ValidStatusFix(object):
