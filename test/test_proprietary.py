@@ -5,7 +5,7 @@ def test_proprietary_1():
     # A sample proprietary sentence from a LCJ Capteurs
     # anemometer.
     data = "$PLCJ,5F01,66FC,AA,9390,6373"
-    msg = pynmea2.parse(data)
+    msg = pynmea2.parse(data, False)
     assert msg.manufacturer == "LCJ"
     assert msg.data == ['','5F01','66FC','AA','9390','6373']
     assert msg.render(checksum=False) == data
@@ -18,7 +18,7 @@ def test_proprietary_2():
     #       due to the lack of a comma after the manufacturer ID and
     #       extra comma at the end.
     data = "$PLCJE81B8,64A0,2800,2162,0E,"
-    msg = pynmea2.parse(data)
+    msg = pynmea2.parse(data, False)
     assert msg.manufacturer == 'LCJ'
     assert msg.data == ['E81B8', '64A0', '2800', '2162', '0E', '']
     assert repr(msg) == "<ProprietarySentence() data=['E81B8', '64A0', '2800', '2162', '0E', '']>"
@@ -92,7 +92,7 @@ def test_proprietary_with_comma():
 def test_srf():
     # implemented sentence
     data = '$PSRF100,0,1200,8,1,1'
-    msg = pynmea2.parse(data)
+    msg = pynmea2.parse(data, False)
     assert type(msg) == pynmea2.srf.SRF100
     assert msg.sentence_type == 'SRF100'
     assert msg.protocol == '0'
@@ -103,7 +103,7 @@ def test_srf():
 
     # unimplemented sentence
     data = '$PSRF999,0,1200,8,1,1'
-    msg = pynmea2.parse(data)
+    msg = pynmea2.parse(data, False)
     assert type(msg) == pynmea2.srf.SRF
     assert msg.render(checksum=False) == data
 
@@ -175,7 +175,7 @@ def test_create():
 
 def test_unknown_sentence():
     data = 'PZZZABC,1,2,3'
-    msg = pynmea2.parse(data)
+    msg = pynmea2.parse(data, False)
     assert type(msg) == pynmea2.ProprietarySentence
     assert msg.manufacturer == 'ZZZ'
     assert msg.data == ['ABC', '1', '2', '3']

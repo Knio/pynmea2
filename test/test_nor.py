@@ -253,7 +253,7 @@ def test_nor_undefined():
     Test that non-NOR messages still fall back to the generic NOR type
     '''
     data = '$PNORTT3,XYZ,123'
-    msg = pynmea2.parse(data)
+    msg = pynmea2.parse(data, False)
     assert type(msg) == pynmea2.nor.NOR
     assert msg.manufacturer == 'NOR'
     assert msg.sentence_type == 'NORTT3'

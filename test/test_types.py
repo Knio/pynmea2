@@ -132,7 +132,7 @@ def test_TXT():
 
 def test_ZDA():
     data = '''$GPZDA,010203.05,06,07,2008,-08,30'''
-    msg = pynmea2.parse(data)
+    msg = pynmea2.parse(data, False)
     assert isinstance(msg, pynmea2.ZDA)
     assert msg.timestamp == datetime.time(hour=1, minute=2, second=3, microsecond=50000)
     assert msg.day == 6
@@ -145,7 +145,7 @@ def test_ZDA():
 
 def test_VPW():
     data = "$XXVPW,1.2,N,3.4,M"
-    msg = pynmea2.parse(data)
+    msg = pynmea2.parse(data, False)
     assert isinstance(msg, pynmea2.VPW)
     assert msg.talker == 'XX'
     assert msg.speed_kn == 1.2
@@ -155,7 +155,7 @@ def test_VPW():
 
 def test_BOD():
     data = "XXBOD,045.,T,023.,M,DEST,START"
-    msg = pynmea2.parse(data)
+    msg = pynmea2.parse(data, False)
     assert isinstance(msg, pynmea2.BOD)
     assert msg.talker == 'XX'
 
@@ -204,7 +204,7 @@ def test_GSA():
 
 def test_VBW():
     data = "XXVBW,1.2,3.4,A,5.6,7.8,A"
-    msg = pynmea2.parse(data)
+    msg = pynmea2.parse(data, False)
     assert msg.is_valid == True
     assert msg.render(checksum=False, dollar=False) == data
 

@@ -34,7 +34,7 @@ def test_fail():
         pynmea2.parse('FOOBAR')
 
     with pytest.raises(pynmea2.SentenceTypeError):
-        pynmea2.parse('$GPABC,1,2,3')
+        pynmea2.parse('$GPABC,1,2,3', False)
 
 
 def test_mixin():
@@ -97,7 +97,7 @@ def test_missing_latlon():
 
 def test_query():
     data = 'CCGPQ,GGA'
-    msg = pynmea2.parse(data)
+    msg = pynmea2.parse(data, False)
     assert isinstance(msg, pynmea2.QuerySentence)
     assert msg.talker == 'CC'
     assert msg.listener == 'GP'

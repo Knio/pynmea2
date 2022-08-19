@@ -45,7 +45,7 @@ def test_ash_undefined():
     Test that non-ATT messages still fall back to the generic ASH type
     '''
     data = '$PASHR,XYZ,123'
-    msg = pynmea2.parse(data)
+    msg = pynmea2.parse(data, False)
     assert type(msg) == pynmea2.ash.ASH
     assert msg.manufacturer == 'ASH'
     # assert msg.sentence_type == 'XYZ'

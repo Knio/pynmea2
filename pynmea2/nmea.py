@@ -87,7 +87,7 @@ class NMEASentence(NMEASentenceBase):
         return reduce(operator.xor, map(ord, nmea_str), 0)
 
     @staticmethod
-    def parse(line, check=False):
+    def parse(line, check=True):
         '''
         parse(line)
 
