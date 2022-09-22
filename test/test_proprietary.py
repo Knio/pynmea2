@@ -138,7 +138,7 @@ def test_ubx00():
     assert type(msg) == pynmea2.ubx.UBX00
     assert msg.identifier() == 'PUBX'
     assert msg.ubx_type == '00'
-    assert msg.timestamp == datetime.time(7, 44, 40)
+    assert msg.timestamp == datetime.time(7, 44, 40, tzinfo=datetime.timezone.utc)
     assert msg.latitude == 47.06236716666667
     assert msg.lat_dir == 'N'
     assert msg.render() == data
@@ -157,7 +157,7 @@ def test_ubx04():
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.ubx.UBX04
     assert msg.date == datetime.date(2014, 10, 13)
-    assert msg.time == datetime.time(7, 38, 24)
+    assert msg.time == datetime.time(7, 38, 24, tzinfo=datetime.timezone.utc)
     assert msg.clk_bias == 495176
     assert msg.render() == data
 
@@ -239,7 +239,7 @@ def test_KWDWPL():
     data = "$PKWDWPL,053125,V,4531.7900,N,12253.4800,W,,,200320,,AC7FD-1,/-*10"
     msg = pynmea2.parse(data)
     assert msg.manufacturer == "KWD"
-    assert msg.timestamp == datetime.time(5, 31, 25)
+    assert msg.timestamp == datetime.time(5, 31, 25, tzinfo=datetime.timezone.utc)
     assert msg.status == 'V'
     assert msg.is_valid == False
     assert msg.lat == '4531.7900'
@@ -249,7 +249,7 @@ def test_KWDWPL():
     assert msg.sog == None
     assert msg.cog == None
     assert msg.datestamp == datetime.date(2020, 3, 20)
-    assert msg.datetime == datetime.datetime(2020, 3, 20, 5, 31, 25)
+    assert msg.datetime == datetime.datetime(2020, 3, 20, 5, 31, 25, tzinfo=datetime.timezone.utc)
     assert msg.altitude == None
     assert msg.wname == 'AC7FD-1'
     assert msg.ts == '/-'

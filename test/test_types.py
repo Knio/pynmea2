@@ -13,7 +13,7 @@ def test_GGA():
     assert isinstance(msg, pynmea2.GGA)
 
     # Timestamp
-    assert msg.timestamp        == datetime.time(18, 43, 53, 70000)
+    assert msg.timestamp        == datetime.time(18, 43, 53, 70000, tzinfo=datetime.timezone.utc)
     # Latitude
     assert msg.lat              == '1929.045'
     # Latitude Direction
@@ -99,7 +99,7 @@ def test_GST():
     data = "$GPGST,172814.0,0.006,0.023,0.020,273.6,0.023,0.020,0.031*6A"
     msg = pynmea2.parse(data)
     assert isinstance(msg, pynmea2.GST)
-    assert msg.timestamp == datetime.time(hour=17, minute=28, second=14)
+    assert msg.timestamp == datetime.time(hour=17, minute=28, second=14, tzinfo=datetime.timezone.utc)
     assert msg.rms == 0.006
     assert msg.std_dev_major == 0.023
     assert msg.std_dev_minor == 0.020
@@ -114,11 +114,11 @@ def test_RMC():
     data = '''$GPRMC,225446,A,4916.45,N,12311.12,W,000.5,054.7,191194,020.3,E*68'''
     msg = pynmea2.parse(data)
     assert isinstance(msg, pynmea2.RMC)
-    assert msg.timestamp == datetime.time(hour=22, minute=54, second=46)
+    assert msg.timestamp == datetime.time(hour=22, minute=54, second=46, tzinfo=datetime.timezone.utc)
     assert msg.datestamp == datetime.date(1994, 11, 19)
     assert msg.latitude == 49.274166666666666
     assert msg.longitude == -123.18533333333333
-    assert msg.datetime == datetime.datetime(1994, 11, 19, 22, 54, 46)
+    assert msg.datetime == datetime.datetime(1994, 11, 19, 22, 54, 46, tzinfo=datetime.timezone.utc)
     assert msg.is_valid == True
     assert msg.render() == data
 
@@ -129,7 +129,7 @@ def test_RMC_valid():
     only test validation against supplied values.
 
     Supplied means that a `,` exists it does NOT mean that a value had to be
-    supplied in the space provided. See 
+    supplied in the space provided. See
 
     https://orolia.com/manuals/VSP/Content/NC_and_SS/Com/Topics/APPENDIX/NMEA_RMCmess.htm
 
@@ -140,7 +140,7 @@ def test_RMC_valid():
         '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,*33',
         '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,*24',
         '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,*72',
-        
+
         # RMC Timing Messages
         '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,S*4C',
         '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,N*51',
@@ -151,7 +151,7 @@ def test_RMC_valid():
         '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,S*0D',
         '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,N*10',
         '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,*5E',
-        
+
         # RMC Nav Messags
         '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,S,S*33',
         '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,S,V*36',
@@ -204,14 +204,16 @@ def test_ZDA():
     data = '''$GPZDA,010203.05,06,07,2008,-08,30'''
     msg = pynmea2.parse(data)
     assert isinstance(msg, pynmea2.ZDA)
-    assert msg.timestamp == datetime.time(hour=1, minute=2, second=3, microsecond=50000)
+    assert msg.timestamp == datetime.time(hour=1, minute=2, second=3, microsecond=50000, tzinfo=datetime.timezone.utc)
     assert msg.day == 6
     assert msg.month == 7
     assert msg.year == 2008
+    assert msg.tzinfo.utcoffset(0) == datetime.timedelta(hours=-8, minutes=30)
     assert msg.local_zone == -8
     assert msg.local_zone_minutes == 30
     assert msg.datestamp == datetime.date(2008, 7, 6)
-    assert msg.datetime == datetime.datetime(2008, 7, 6, 1, 2, 3, 50000, msg.tzinfo)
+    assert msg.datetime == datetime.datetime(2008, 7, 6, 1, 2, 3, 50000, tzinfo=datetime.timezone.utc)
+    assert msg.localdatetime == datetime.datetime(2008, 7, 5, 17, 32, 3, 50000, tzinfo=msg.tzinfo)
 
 def test_VPW():
     data = "$XXVPW,1.2,N,3.4,M"
