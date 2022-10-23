@@ -11,7 +11,7 @@ def test_norbt0():
     assert msg.sentence_type == 'NORBT0'
     assert msg.beam == 1
     assert msg.datestamp == datetime.date(2021, 7, 4)
-    assert msg.timestamp == datetime.time(13, 13, 35, 334100)
+    assert msg.timestamp == datetime.time(13, 13, 35, 334100, tzinfo=datetime.timezone.utc)
     assert msg.dt1 == 23.961
     assert msg.dt2 == -48.122
     assert msg.bv == -32.76800
@@ -164,7 +164,7 @@ def test_nors1():
     assert msg.manufacturer == 'NOR'
     assert msg.sentence_type == 'NORS1'
     assert msg.datestamp == datetime.date(2009, 11, 16)
-    assert msg.timestamp == datetime.time(13, 24, 55)
+    assert msg.timestamp == datetime.time(13, 24, 55, tzinfo=datetime.timezone.utc)
     assert msg.ec == 0
     assert msg.sc == '34000034'
     assert msg.battery_voltage == 23.9
@@ -203,7 +203,7 @@ def test_norc1():
     assert type(msg) == pynmea2.nor.NORC1
     assert msg.manufacturer == 'NOR'
     assert msg.sentence_type == 'NORC1'
-    assert msg.datetime == datetime.datetime(2009, 11, 16, 13, 24, 55)
+    assert msg.datetime == datetime.datetime(2009, 11, 16, 13, 24, 55, tzinfo=datetime.timezone.utc)
     assert msg.cn == 3
     assert msg.cp == 11.0
     assert msg.vx == 0.332
@@ -242,7 +242,7 @@ def test_norh4():
     assert msg.manufacturer == 'NOR'
     assert msg.sentence_type == 'NORH4'
     assert msg.datestamp == datetime.date(2009, 11, 16)
-    assert msg.timestamp == datetime.time(14, 34, 59)
+    assert msg.timestamp == datetime.time(14, 34, 59, tzinfo=datetime.timezone.utc)
     assert msg.ec == 0
     assert msg.sc == '204C0002'
     assert msg.render() == data

@@ -2,6 +2,17 @@
 import datetime
 import re
 
+
+# python 2.7 backport
+if not hasattr(datetime, 'timezone'):
+    class UTC(datetime.tzinfo):
+        def utcoffset(self, dt):
+            return datetime.timedelta(0)
+    class timezone(object):
+        utc = UTC()
+    datetime.timezone = timezone
+
+
 def valid(s):
     return s == 'A'
 
@@ -18,7 +29,8 @@ def timestamp(s):
         hour=int(s[0:2]),
         minute=int(s[2:4]),
         second=int(s[4:6]),
-        microsecond=ms)
+        microsecond=ms,
+        tzinfo=datetime.timezone.utc)
     return t
 
 

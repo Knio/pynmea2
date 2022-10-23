@@ -507,7 +507,7 @@ class XTE(TalkerSentence):
     )
 
 
-class ZDA(TalkerSentence):
+class ZDA(TalkerSentence, DatetimeFix):
     fields = (
         ("Timestamp", "timestamp", timestamp), # hhmmss.ss = UTC
         ("Day", "day", int), # 01 to 31
@@ -526,9 +526,9 @@ class ZDA(TalkerSentence):
         return TZInfo(self.local_zone, self.local_zone_minutes)
 
     @property
-    def datetime(self):
+    def localdatetime(self):
         d = datetime.datetime.combine(self.datestamp, self.timestamp)
-        return d.replace(tzinfo=self.tzinfo)
+        return d.astimezone(self.tzinfo)
 
 
 
