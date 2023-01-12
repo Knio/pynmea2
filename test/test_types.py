@@ -341,3 +341,13 @@ def test_HEV():
     assert msg.talker == "GP"
     assert msg.sentence_type == "HEV"
     assert msg.heave == -0.01
+
+
+def test_MTA():
+    data = "$WIMTA,010.0,C*2A"
+    msg = pynmea2.parse(data)
+    assert msg.render() == data
+    assert msg.talker == 'WI'
+    assert msg.sentence_type == 'MTA'
+    assert msg.temperature == 10.0
+    assert msg.units == 'C'
