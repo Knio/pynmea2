@@ -102,3 +102,40 @@ class KWDWPL(KWD, nmea_utils.LatLonFix, nmea_utils.DatetimeFix, nmea_utils.Valid
         ("Waypoint Name", "wname"),
         ("Table and Symbol", "ts"),
     )
+
+class KND(nmea.ProprietarySentence):
+    sentence_types = {}
+
+    def __new__(_cls, manufacturer, data):
+        name = manufacturer + data[0]
+        cls = _cls.sentence_types.get(name, _cls)
+        return super(KND, cls).__new__(cls)
+
+    def __init__(self, manufacturer, data):
+        self.sentence_type = manufacturer + data[0]
+        super(KND, self).__init__(manufacturer, data)
+
+
+class KNDS(KND, nmea_utils.LatLonFix, nmea_utils.DatetimeFix, nmea_utils.ValidStatusFix):
+    """
+    $PKNDS,hhmmss,v,ddmm.mm,ns,dddmm.mm,ew,speed,course,ddmmyyDD.dd,ew,svid,status,fut*99
+    $PKNDS,124640,A,4954.1458,N,11923.5992,W,000.0,000.0,120223,19.20,W00,U00002,207,00,*29
+
+    """
+    fields = (
+        ("Subtype", "subtype"),
+        ("Time of Receipt", "timestamp", nmea_utils.timestamp),
+        ("GPS Status (Void)","status"),
+        ("Latitude", "lat"),
+        ("Latitude Direction", "lat_dir"),
+        ("Longitude", "lon"),
+        ("Longitude Direction", "lon_dir"),
+        ("Speed over Ground Knot", "sog", float),
+        ("Course over Ground", "cog", float),
+        ("Date", "datestamp", nmea_utils.datestamp),
+        ("Magnetic variation", "declination", float),
+        ("Declination Direction", "dec_dir"),
+        ("Sender ID", "senderid"),
+        ("Sender Status", "senderstatus", Decimal),
+        ("Future Reserved", "future", Decimal),
+    )

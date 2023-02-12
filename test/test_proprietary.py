@@ -255,3 +255,21 @@ def test_KWDWPL():
     assert msg.ts == '/-'
     assert msg.latitude == 45.529833333333336
     assert msg.longitude == -122.89133333333334
+
+def test_PKNDS():
+    # A sample proprietary Kenwood sentence used for GPS data communications in NEXEDGE Digital
+    data = "$PKNDS,124640,A,4954.1458,N,11923.5992,W,000.0,000.0,120223,19.20,W00,U00002,207,00,*29"
+    msg = pynmea2.parse(data)
+    assert msg.manufacturer == "KND"
+    assert msg.timestamp == datetime.time(12, 46, 40, tzinfo=datetime.timezone.utc)
+    assert msg.status == 'A'
+    assert msg.is_valid == True
+    assert msg.lat == '4954.1458'
+    assert msg.lat_dir == 'N'
+    assert msg.lon == '11923.5992'
+    assert msg.lon_dir == 'W'
+    assert msg.datestamp == datetime.date(2023, 2, 12)
+    assert msg.datetime == datetime.datetime(2023, 2, 12, 12, 46, 40, tzinfo=datetime.timezone.utc)
+    assert msg.senderid == 'U00002'
+    assert msg.senderstatus  == 207
+
