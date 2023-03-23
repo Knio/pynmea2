@@ -1038,3 +1038,126 @@ class ALK(TalkerSentence,SeaTalk):
         ("Data Byte 8", "data_byte8"),
         ("Data Byte 9", "data_byte9")
     )
+    
+# ------------------------- Implemented by Erko Klietz ----------------------- #
+# ---------------------------------------------------------------------------- #
+class ALF(TalkerSentence):
+    #        1 2 3   4       5 6 7  8   9  10  11 12  13
+    #        | | |   |       | | |  |   |   |   |  |   |
+    # $--ALF,x,x,x,hhmmss.ss,a,a,a,aaa,x.x,x.x,x.x,x,c---c*hh <CR><LF>
+    
+    # Field Number:
+    #  1) Total number of ALF sentences for this message, 1 to 2
+    #  2) Sentence number, 1 to 2
+    #  3) Sequential message identifier, 0 to 9
+    #  4) Time of last change
+    #  5) Alert category, A, B or C
+    #  6) Alert priority, E, A, W or C
+    #  7) Alert state, A, S, N, O, U or V
+    #  8) Manufacturer mnemonic code
+    #  9) Alert identifier
+    # 10) Alert instance, 1 to 999999
+    # 11) Revision counter, 1 to 99
+    # 12) Escalation counter, 0 to 9
+    # 13) Alert text
+    
+    fields = (
+        ("Total number of sentences"," total_sentences", int),
+        ("Sentence number", "sentence_number", int),
+        ("Sequential message identifer", "seq_msg_id", int),
+        ("Time of last change", "time", timestamp),
+        ("Alert category","category"),
+        ("Alert priority", "priority"),
+        ("Alert state", "state"),
+        ("Manufacturer mnemonic code", "mnemonic_code", int),
+        ("Alert identifier","id", int),
+        ("Alert instance", "instance",int),
+        ("Revision counter","rev_count",int),
+        ("Excalaton counter","exc_count", int),
+        ("Alert text", "description")        
+    )
+    
+class ACN(TalkerSentence):
+    #          1        2   3   4  5 6   
+    #          |        |   |   |  | |
+    # $--ACN,hhmmss.ss,aaa,x.x,x.x,c,a*hh<CR><LF>
+    
+    # Field number:
+    #  1) Time
+    #  2) Manufacturer mnemonic code
+    #  3) Alert Identifier 10000-9999999
+    #  4) Alert Instance 1 to 99999
+    #  5) Alert command A, Q, O, S
+    #  6) Sentence status flag
+    fields = (
+        ("device time","time", timestamp),
+        ("Manufacturer mnemonic code", "mnemonic_code", int),
+        ("Alert identifier", "id", int),
+        ("Alert instance", "instance",int),
+        ("Alert command", "command"),
+        ("Sentence status flag", "status")
+    )
+    
+ class ARC(TalkerSentence):
+    #          1        2   3   4  5 6   
+    #          |        |   |   |  | |
+    # $--ARC,hhmmss.ss,aaa,x.x,x.x,c*hh <CR><LF>
+    
+    # Field number:
+    #  1) Time
+    #  2) Manufacturer mnemonic code
+    #  3) Alert Identifier 10000-9999999
+    #  4) Alert Instance 1 to 99999
+    #  5) Refused alert command A, Q, O, S
+    
+    fields = (
+        ("device time","time", timestamp),
+        ("Manufacturer mnemonic code", "mnemonic_code", int),
+        ("Alert identifier", "id", int),
+        ("Alert instance", "instance",int),
+        ("Refused alert command", "command")
+    )   
+    
+    
+    """
+# ---------------------------- Not implemented yet --------------------------- #
+# ---------------------------------------------------------------------------- #   
+class ALC(TalkerSentence):
+    #                      ----- 5 -----
+    #         1  2  3  4   1   2   3   4  
+    #         |  |  |  |   |   |   |   |
+    # $--ALC,xx,xx,xx,x.x,aaa,x.x,x.x,x.x*hh <CR><LF>
+    
+    # Field number:
+    #  1) Total number of sentences for this message
+    #  2) Sentence number
+    #  3) Sequential message identifier
+    #  4) Number of alert entries
+    #  5) Alert entry [see ALF sentences]
+    #  5.1) Manufacturer Identifier
+    #  5.2) Alert Identifier
+    #  5.3) Alert instance
+    #  5.4) Revision Counter
+    
+    fields = (
+        ("Total number of sentences"," total_sentences", int),
+        ("Sentence number", "sentence_number", int),
+        ("Sequential message identifer", "seq_msg_id", int),
+        ("Number of alert entries", "entried", int),
+        ("Alert category","category"),
+        ("Alert priority", "priority"),
+        ("Alert state", "state"),
+        ("Manufacturer mnemonic code", "mnemonic_code", int),
+        ("Alert identifier","id", int),
+        ("Alert instance", int),
+        ("Revision counter","rev_count",int),
+        ("Excalaton counter","exc_count", int),
+        ("Alert text", "description")        
+    )
+    """
+    
+
+
+    
+    
+    
