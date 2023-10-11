@@ -43,6 +43,19 @@ class ALM(TalkerSentence):
     )
 
 
+class ALR(TalkerSentence):
+    """ Set alarm state
+        $--ALR,hhmmss.ss,xxx,A,A,c--c*hh<CR><LF>
+    """
+    fields = (
+        ('Time of alarm condition change, UTC', 'timestamp', timestamp),
+        ('Unique alarm number (identifier) at alarm source', 'alarm_num'),
+        ('Alarm condition (A=threshold exceeded, V=not exceeded)', 'alarm_con'),
+        ('Alarm\'s acknowledge state (A=acknowledged, V=unacknowledged)', 'alarm_state'),
+        ('Alarm\'s description text', 'description'),
+    )
+
+
 class APA(TalkerSentence):
     """ Autopilot Sentence "A"
     """
@@ -281,6 +294,21 @@ class GSV(TalkerSentence):
         ('Azimuth, deg from true north 4', 'azimuth_4'), # 000 to 159
         ('SNR 4', 'snr_4'),
     )  # 00-99 dB
+
+
+class HBT(TalkerSentence):
+    """ Heartbeat supervision sentence
+        Format: $--HBT,<1>,<2>,<3>*hh<CR><LF>
+        e.g. $AIHBT,30,A,5*0D
+    <1> Configured repeat interval
+    <2> Equipment status
+    <3> Sequential sentence identifier
+    """
+    fields = (
+        ("Configured repeat interval", "interval", float),
+        ("Equipment status", "eq_status"),
+        ("Sequential sentence identifier", "seq_sent_iden", int),
+    )
 
 
 class HDG(TalkerSentence):
