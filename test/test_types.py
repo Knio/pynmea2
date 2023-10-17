@@ -306,3 +306,28 @@ def test_GRS():
     assert msg.sv_res_05 == -0.1
     assert msg.sv_res_06 == 0.5
     assert msg.sv_res_07 == None
+
+
+def test_HBT():
+    data = "$AIHBT,30,A,1*09"
+    msg = pynmea2.parse(data)
+    assert msg.render() == data
+    assert isinstance(msg, pynmea2.HBT)
+    assert msg.talker == 'AI'
+    assert msg.sentence_type == 'HBT'
+    assert msg.interval == 30
+    assert msg.eq_status == 'A'
+    assert msg.seq_sent_iden == 1
+
+
+def test_ALR():
+    data = "$AIALR,,006,V,V,AIS:general failure*1A"
+    msg = pynmea2.parse(data)
+    assert msg.render() == data
+    assert isinstance(msg, pynmea2.ALR)
+    assert msg.talker == 'AI'
+    assert msg.sentence_type == 'ALR'
+    assert msg.alarm_num == '006'
+    assert msg.alarm_con == 'V'
+    assert msg.alarm_state == 'V'
+    assert msg.description == 'AIS:general failure'
