@@ -12,7 +12,7 @@ The `pynmea2` homepage is located at http://github.com/Knio/pynmea2
 `pynmea2` is compatable with Python 2.7 and Python 3.4+
 
 ![Python version](https://img.shields.io/pypi/pyversions/pynmea2.svg?style=flat)
-[![Build Status](https://www.travis-ci.com/Knio/pynmea2.svg?branch=master)](https://www.travis-ci.com/Knio/pynmea2)
+[![Build status](https://github.com/Knio/pynmea2/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/Knio/pynmea2/actions/workflows/ci.yml?query=branch%3Amaster+)
 [![Coverage status](https://img.shields.io/coveralls/github/Knio/pynmea2/master.svg?style=flat)](https://coveralls.io/r/Knio/pynmea2?branch=master)
 
 ### Installation
