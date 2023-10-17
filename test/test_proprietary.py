@@ -255,3 +255,74 @@ def test_KWDWPL():
     assert msg.ts == '/-'
     assert msg.latitude == 45.529833333333336
     assert msg.longitude == -122.89133333333334
+
+def test_PKNDS():
+    # A sample proprietary Kenwood sentence used for GPS data communications in NEXEDGE Digital
+    data = "$PKNDS,114400,A,4954.1450,N,11923.6043,W,001.4,356.8,130223,19.20,W00,U00002,207,00,*2E"
+    msg = pynmea2.parse(data)
+    assert msg.manufacturer == "KND"
+    assert msg.timestamp == datetime.time(11, 44, 00, tzinfo=datetime.timezone.utc)
+    assert msg.status == 'A'
+    assert msg.is_valid == True
+    assert msg.lat == '4954.1450'
+    assert msg.lat_dir == 'N'
+    assert msg.lon == '11923.6043'
+    assert msg.lon_dir == 'W'
+    assert msg.datestamp == datetime.date(2023, 2, 13)
+    assert msg.datetime == datetime.datetime(2023, 2, 13, 11, 44, 00, tzinfo=datetime.timezone.utc)
+    assert msg.senderid == 'U00002'
+    assert msg.senderstatus  == 207
+    assert msg.latitude == 49.90241666666667
+    assert msg.longitude == -119.393405
+
+def test_PKNSH():
+    # A sample proprietary Kenwood sentence used for GPS data communications in NEXEDGE Digital
+    data = "$PKNSH,4954.1450,N,11923.6043,W,114400,A,U00002,*44"
+    msg = pynmea2.parse(data)
+    assert msg.manufacturer == "KNS"
+    assert msg.timestamp == datetime.time(11, 44, 00, tzinfo=datetime.timezone.utc)
+    assert msg.status == 'A'
+    assert msg.is_valid == True
+    assert msg.lat == '4954.1450'
+    assert msg.lat_dir == 'N'
+    assert msg.lon == '11923.6043'
+    assert msg.lon_dir == 'W'
+    assert msg.senderid == 'U00002'
+    assert msg.latitude == 49.90241666666667
+    assert msg.longitude == -119.393405
+
+def test_PKLDS():
+    # A sample proprietary Kenwood sentence used for GPS data communications in FleetSync II signaling
+    data = "$PKLDS,122434,A,4954.1474,N,11923.6044,W,001.1,194.9,130223,19.20,W00,100,1001,80,00,*60"
+    msg = pynmea2.parse(data)
+    assert msg.manufacturer == "KLD"
+    assert msg.timestamp == datetime.time(12, 24, 34, tzinfo=datetime.timezone.utc)
+    assert msg.status == 'A'
+    assert msg.is_valid == True
+    assert msg.lat == '4954.1474'
+    assert msg.lat_dir == 'N'
+    assert msg.lon == '11923.6044'
+    assert msg.lon_dir == 'W'
+    assert msg.datestamp == datetime.date(2023, 2, 13)
+    assert msg.datetime == datetime.datetime(2023, 2, 13, 12, 24, 34, tzinfo=datetime.timezone.utc)
+    assert msg.senderid == '1001'
+    assert msg.fleet == 100
+    assert msg.latitude == 49.902456666666666
+    assert msg.longitude == -119.39340666666666
+
+def test_PKLSH():
+    # A sample proprietary Kenwood sentence used for GPS data communications in FleetSync II signaling
+    data = "$PKLSH,4954.1474,N,11923.6044,W,122434,A,100,1001,*3F"
+    msg = pynmea2.parse(data)
+    assert msg.manufacturer == "KLS"
+    assert msg.timestamp == datetime.time(12, 24, 34, tzinfo=datetime.timezone.utc)
+    assert msg.status == 'A'
+    assert msg.is_valid == True
+    assert msg.lat == '4954.1474'
+    assert msg.lat_dir == 'N'
+    assert msg.lon == '11923.6044'
+    assert msg.lon_dir == 'W'
+    assert msg.senderid == '1001'
+    assert msg.fleet == 100
+    assert msg.latitude == 49.902456666666666
+    assert msg.longitude == -119.39340666666666

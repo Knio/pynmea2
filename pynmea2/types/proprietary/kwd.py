@@ -6,6 +6,54 @@ from datetime import date, time
 from ... import nmea
 from ... import nmea_utils
 
+class KLD(nmea.ProprietarySentence):
+    sentence_types = {}
+
+    def __new__(_cls, manufacturer, data):
+        name = manufacturer + data[0]
+        cls = _cls.sentence_types.get(name, _cls)
+        return super(KLD, cls).__new__(cls)
+
+    def __init__(self, manufacturer, data):
+        self.sentence_type = manufacturer + data[0]
+        super(KLD, self).__init__(manufacturer, data)
+
+class KND(nmea.ProprietarySentence):
+    sentence_types = {}
+
+    def __new__(_cls, manufacturer, data):
+        name = manufacturer + data[0]
+        cls = _cls.sentence_types.get(name, _cls)
+        return super(KND, cls).__new__(cls)
+
+    def __init__(self, manufacturer, data):
+        self.sentence_type = manufacturer + data[0]
+        super(KND, self).__init__(manufacturer, data)
+
+class KLS(nmea.ProprietarySentence):
+    sentence_types = {}
+
+    def __new__(_cls, manufacturer, data):
+        name = manufacturer + data[0]
+        cls = _cls.sentence_types.get(name, _cls)
+        return super(KLS, cls).__new__(cls)
+
+    def __init__(self, manufacturer, data):
+        self.sentence_type = manufacturer + data[0]
+        super(KLS, self).__init__(manufacturer, data)
+
+class KNS(nmea.ProprietarySentence):
+    sentence_types = {}
+
+    def __new__(_cls, manufacturer, data):
+        name = manufacturer + data[0]
+        cls = _cls.sentence_types.get(name, _cls)
+        return super(KNS, cls).__new__(cls)
+
+    def __init__(self, manufacturer, data):
+        self.sentence_type = manufacturer + data[0]
+        super(KNS, self).__init__(manufacturer, data)
+
 
 class KWD(nmea.ProprietarySentence):
     sentence_types = {}
@@ -102,3 +150,87 @@ class KWDWPL(KWD, nmea_utils.LatLonFix, nmea_utils.DatetimeFix, nmea_utils.Valid
         ("Waypoint Name", "wname"),
         ("Table and Symbol", "ts"),
     )
+
+class KLDS(KLD, nmea_utils.LatLonFix, nmea_utils.DatetimeFix, nmea_utils.ValidStatusFix):
+    """
+    $PKLDS,hhmmss,v,ddmm.mm,ns,dddmm.mm,ew,speed,course,ddmmyy,DD.dd,ewSV,fleet,svid,status,fut*99
+    $PKLDS,001235,A,3544.6650,N,13940.1900,E,015.0,038.8,110498,10.80,W00,100,2000,15,00,*??
+    """
+    fields = (
+        ("Subtype", "subtype"),
+        ("Time of Receipt", "timestamp", nmea_utils.timestamp),
+        ("GPS Status (Void)","status"),
+        ("Latitude", "lat"),
+        ("Latitude Direction", "lat_dir"),
+        ("Longitude", "lon"),
+        ("Longitude Direction", "lon_dir"),
+        ("Speed over Ground Knot", "sog", float),
+        ("Course over Ground", "cog", float),
+        ("Date", "datestamp", nmea_utils.datestamp),
+        ("Magnetic variation", "declination", float),
+        ("Declination Direction", "dec_dir"),
+        ("Fleet", "fleet", Decimal),
+        ("Sender ID", "senderid"),
+        ("Sender Status", "senderstatus", Decimal),
+        ("Future Reserved", "future", Decimal),
+    )
+
+
+
+class KNDS(KND, nmea_utils.LatLonFix, nmea_utils.DatetimeFix, nmea_utils.ValidStatusFix):
+    """
+    $PKNDS,hhmmss,v,ddmm.mm,ns,dddmm.mm,ew,speed,course,ddmmyy,DD.dd,ewSV,svid,status,fut*99
+    $PKNDS,124640,A,4954.1458,N,11923.5992,W,000.0,000.0,120223,19.20,W00,U00002,207,00,*29
+
+    """
+    fields = (
+        ("Subtype", "subtype"),
+        ("Time of Receipt", "timestamp", nmea_utils.timestamp),
+        ("GPS Status (Void)","status"),
+        ("Latitude", "lat"),
+        ("Latitude Direction", "lat_dir"),
+        ("Longitude", "lon"),
+        ("Longitude Direction", "lon_dir"),
+        ("Speed over Ground Knot", "sog", float),
+        ("Course over Ground", "cog", float),
+        ("Date", "datestamp", nmea_utils.datestamp),
+        ("Magnetic variation", "declination", float),
+        ("Declination Direction", "dec_dir"),
+        ("Sender ID", "senderid"),
+        ("Sender Status", "senderstatus", Decimal),
+        ("Future Reserved", "future", Decimal),
+    )
+
+class KLSH(KLS, nmea_utils.LatLonFix, nmea_utils.DatetimeFix, nmea_utils.ValidStatusFix):
+    """
+    $PKLSH,ddmm.mm,ns,dddmm.mm,ew,hhmmss,v,fleet,svid,*99
+    $PKLSH,4000.0000,N,13500.0000,E,021720,A,100,2000,* ??
+    """
+    fields = (
+        ("Subtype", "subtype"),
+        ("Latitude", "lat"),
+        ("Latitude Direction", "lat_dir"),
+        ("Longitude", "lon"),
+        ("Longitude Direction", "lon_dir"),
+        ("Time of Receipt", "timestamp", nmea_utils.timestamp),
+        ("GPS Status (Void)","status"),
+        ("Fleet", "fleet", Decimal),
+        ("Sender ID", "senderid"),
+    )
+
+class KNSH(KNS, nmea_utils.LatLonFix, nmea_utils.DatetimeFix, nmea_utils.ValidStatusFix):
+    """
+    $PKLSH,ddmm.mm,ns,dddmm.mm,ew,hhmmss,v,svid,*99
+    $PKNSH,4000.0000,N,13500.0000,E,021720,A,U00001,* ??
+    """
+    fields = (
+        ("Subtype", "subtype"),
+        ("Latitude", "lat"),
+        ("Latitude Direction", "lat_dir"),
+        ("Longitude", "lon"),
+        ("Longitude Direction", "lon_dir"),
+        ("Time of Receipt", "timestamp", nmea_utils.timestamp),
+        ("GPS Status (Void)","status"),
+        ("Sender ID", "senderid"),
+    )
+
