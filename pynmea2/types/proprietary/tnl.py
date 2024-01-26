@@ -144,7 +144,7 @@ class TNLVHD(TNL, DatetimeFix):
         ('Empty', '_'),
         ('Sentence Type', 'type'),
         ('Timestamp', 'timestamp', timestamp),
-        ("Datestamp", 'datestamp', datestamp),
+        ('Datestamp', 'datestamp', datestamp),
         ('Azimuth Angle', 'azimuth', float),
         ('AzimuthTime', 'azdt', float),
         ('Vertical Angle', 'vertical', float),
