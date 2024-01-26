@@ -63,19 +63,11 @@ def test_proprietary_type():
 
 
 def test_proprietary_with_comma():
-    # class with no extra comma
-    class TNLDG(pynmea2.tnl.TNL):
-        fields = ()
-
-    # raise Exception(TNL.sentence_types)
-    # raise Exception(pynmea2.ProprietarySentence.sentence_types)
-
     data = "$PTNLDG,44.0,33.0,287.0,100,0,4,1,0,,,*3E"
     msg = pynmea2.parse(data)
-    assert isinstance(msg, TNLDG)
+    assert isinstance(msg, pynmea2.tnl.TNLDG)
     assert msg.data == ['DG', '44.0', '33.0', '287.0', '100', '0', '4', '1', '0', '', '', '']
     assert str(msg) == data
-
 
     # type with extra comma
 
