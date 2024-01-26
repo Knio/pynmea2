@@ -68,7 +68,7 @@ def test_tnldg_lband():
     assert msg.manufacturer == 'TNL'
     assert msg.strength == 124.0
     assert msg.snr == 10.5
-    assert msg.frequency == 5,1557855.0
+    assert msg.frequency == 1557855.0
     assert msg.bitrate == 1200
     assert msg.channel_no == 2
     assert msg.status == '4'
