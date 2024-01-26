@@ -9,7 +9,7 @@ def test_tnlpjk():
     assert type(msg) == pynmea2.tnl.TNLPJK
     assert msg.manufacturer == 'TNL'
     assert msg.type == 'PJK'
-    assert msg.timestamp == datetime.time(20, 28, 31, 500000)
+    assert msg.timestamp == datetime.time(20, 28, 31, 500000, tzinfo=datetime.timezone.utc)
     assert msg.datestamp == datetime.date(2012, 11, 1)
     assert msg.northing == 805083.350
     assert msg.north == 'N'
@@ -27,7 +27,7 @@ def test_tnlpjk2():
     assert type(msg) == pynmea2.tnl.TNLPJK
     assert msg.manufacturer == 'TNL'
     assert msg.type == 'PJK'
-    assert msg.timestamp == datetime.time(1, 7, 17, 0)
+    assert msg.timestamp == datetime.time(1, 7, 17, 0, tzinfo=datetime.timezone.utc)
     assert msg.datestamp == datetime.date(1996, 8, 17)
     assert msg.northing == 732646.511
     assert msg.north == 'N'
@@ -81,7 +81,7 @@ def test_tnlvgk():
     assert type(msg) == pynmea2.tnl.TNLVGK
     assert msg.manufacturer == 'TNL'
     assert msg.type == 'VGK'
-    assert msg.timestamp == datetime.time(16, 1, 59, 0)
+    assert msg.timestamp == datetime.time(16, 1, 59, 0, tzinfo=datetime.timezone.utc)
     assert msg.datestamp == datetime.date(1997, 9, 1)
     assert msg.east == -0.161
     assert msg.north == 9.985
@@ -96,7 +96,7 @@ def test_tnlvhd():
     assert type(msg) == pynmea2.tnl.TNLVHD
     assert msg.manufacturer == 'TNL'
     assert msg.type == 'VHD'
-    assert msg.timestamp == datetime.time(3, 5, 56, 0)
+    assert msg.timestamp == datetime.time(3, 5, 56, 0, tzinfo=datetime.timezone.utc)
     assert msg.datestamp == datetime.date(1998, 9, 30)
     assert msg.azimuth == 187.718
     assert msg.azdt == -22.138
