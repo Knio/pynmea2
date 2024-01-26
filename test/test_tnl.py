@@ -104,6 +104,6 @@ def test_tnlvhd():
     assert msg.vertdt == -5.015
     assert msg.range == 0.033
     assert msg.rdt == 0.006
-    assert msg.gps_quality == 3
+    assert msg.gps_quality == '3'
     assert msg.num_sats == 7
     assert msg.pdop == 2.4

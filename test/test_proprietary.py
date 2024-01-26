@@ -75,7 +75,7 @@ def test_proprietary_with_comma():
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.tnl.TNLPJT
     assert msg.manufacturer == 'TNL'
-    assert msg.sentence_type == 'PJT'
+    assert msg.type == 'PJT'
     assert msg.coord_name == 'NAD83(Conus)'
     assert msg.project_name == 'CaliforniaZone 4 0404'
     assert str(msg) == data
