@@ -31,6 +31,15 @@ def test_stream():
     assert len(list(sr.next())) == 0
 
 
+def test_iter():
+    sr = pynmea2.NMEAStreamReader(StringIO(DATA))
+    for batch in sr:
+        for msg in batch:
+            assert isinstance(msg, pynmea2.GGA)
+            break
+        break
+
+
 def test_raise_errors():
     sr = pynmea2.NMEAStreamReader(errors='raise')
     assert list(sr.next('foobar')) == []

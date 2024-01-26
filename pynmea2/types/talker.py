@@ -43,6 +43,19 @@ class ALM(TalkerSentence):
     )
 
 
+class ALR(TalkerSentence):
+    """ Set alarm state
+        $--ALR,hhmmss.ss,xxx,A,A,c--c*hh<CR><LF>
+    """
+    fields = (
+        ('Time of alarm condition change, UTC', 'timestamp', timestamp),
+        ('Unique alarm number (identifier) at alarm source', 'alarm_num'),
+        ('Alarm condition (A=threshold exceeded, V=not exceeded)', 'alarm_con'),
+        ('Alarm\'s acknowledge state (A=acknowledged, V=unacknowledged)', 'alarm_state'),
+        ('Alarm\'s description text', 'description'),
+    )
+
+
 class APA(TalkerSentence):
     """ Autopilot Sentence "A"
     """
@@ -181,6 +194,26 @@ class GNS(TalkerSentence, LatLonFix):
         ('Differential reference station ID', 'diferential'),
     )
 
+class GRS(TalkerSentence):
+    """ Order of satellites will match those in the last GSA
+    """
+    fields = (
+        ('Timestamp', 'timestamp', timestamp),
+        ('Residuals mode', 'residuals_mode', int),
+        ('SV 01 Residual (m)', 'sv_res_01', float),
+        ('SV 02 Residual (m)', 'sv_res_02', float),
+        ('SV 03 Residual (m)', 'sv_res_03', float),
+        ('SV 04 Residual (m)', 'sv_res_04', float),
+        ('SV 05 Residual (m)', 'sv_res_05', float),
+        ('SV 06 Residual (m)', 'sv_res_06', float),
+        ('SV 07 Residual (m)', 'sv_res_07', float),
+        ('SV 08 Residual (m)', 'sv_res_08', float),
+        ('SV 09 Residual (m)', 'sv_res_09', float),
+        ('SV 10 Residual (m)', 'sv_res_10', float),
+        ('SV 11 Residual (m)', 'sv_res_11', float),
+        ('SV 12 Residual (m)', 'sv_res_12', float),
+    )
+
 class BWW(TalkerSentence):
     """ Bearing, Waypoint to Waypoint
     """
@@ -263,6 +296,21 @@ class GSV(TalkerSentence):
     )  # 00-99 dB
 
 
+class HBT(TalkerSentence):
+    """ Heartbeat supervision sentence
+        Format: $--HBT,<1>,<2>,<3>*hh<CR><LF>
+        e.g. $AIHBT,30,A,5*0D
+    <1> Configured repeat interval
+    <2> Equipment status
+    <3> Sequential sentence identifier
+    """
+    fields = (
+        ("Configured repeat interval", "interval", float),
+        ("Equipment status", "eq_status"),
+        ("Sequential sentence identifier", "seq_sent_iden", int),
+    )
+
+
 class HDG(TalkerSentence):
     """ NMEA 0183 standard Heading, Deviation and Variation
         Format: $HCHDG,<1>,<2>,<3>,<4>,<5>*hh<CR><LF>
@@ -324,7 +372,7 @@ class RMB(TalkerSentence, ValidStatusFix):
         ("Arrival Alarm", "arrival_alarm"),
     ) # A = Arrived, V = Not arrived
 
-class RMC(TalkerSentence, ValidStatusFix, LatLonFix, DatetimeFix):
+class RMC(TalkerSentence, ValidRMCStatusFix, LatLonFix, DatetimeFix):
     """ Recommended Minimum Specific GPS/TRANSIT Data
     """
     fields = (
@@ -339,6 +387,8 @@ class RMC(TalkerSentence, ValidStatusFix, LatLonFix, DatetimeFix):
         ("Datestamp", "datestamp", datestamp),
         ("Magnetic Variation", "mag_variation"),
         ("Magnetic Variation Direction", "mag_var_dir"),
+        ("Mode Indicator", "mode_indicator"),
+        ("Navigational Status", "nav_status"),
     )
 
 class RTE(TalkerSentence):
@@ -485,7 +535,7 @@ class XTE(TalkerSentence):
     )
 
 
-class ZDA(TalkerSentence):
+class ZDA(TalkerSentence, DatetimeFix):
     fields = (
         ("Timestamp", "timestamp", timestamp), # hhmmss.ss = UTC
         ("Day", "day", int), # 01 to 31
@@ -504,9 +554,9 @@ class ZDA(TalkerSentence):
         return TZInfo(self.local_zone, self.local_zone_minutes)
 
     @property
-    def datetime(self):
+    def localdatetime(self):
         d = datetime.datetime.combine(self.datestamp, self.timestamp)
-        return d.replace(tzinfo=self.tzinfo)
+        return d.astimezone(self.tzinfo)
 
 
 
@@ -1015,4 +1065,36 @@ class ALK(TalkerSentence,SeaTalk):
         ("Data Byte 7", "data_byte7"),
         ("Data Byte 8", "data_byte8"),
         ("Data Byte 9", "data_byte9")
+    )
+
+# Implemented by Davis Chappins for FLARM traffic
+#PFLAU: Operating status and priority intruder and obstacle data 
+class LAU(TalkerSentence):
+    fields = (
+        ("RX","RX"),
+        ("TX","TX"),  
+        ("GPS","GPS"),
+        ("Power","Power"),
+        ("AlarmLevel","AlarmLevel"),
+        ("RelativeBearing","RelativeBearing"),
+        ("AlarmType","AlarmType"),
+        ("RelativeVertial","RelativeVertical"),
+        ("RelativeDistance","RelativeDistance"),
+        
+    )
+
+#PFLAA: Data on other moving objects around 
+class LAA(TalkerSentence):
+    fields = (
+        ("AlarmLevel","AlarmLevel"),
+        ("RelativeNorth","RelativeNorth"),
+        ("RelativeEast","RelativeEast"),
+        ("RelativeVertical","RelativeVertical"),
+        ("ID-Type","ID-Type"),
+        ("ID","ID"),
+        ("Track","Track"),
+        ("TurnRate","TurnRate"),
+        ("GroundSpeed","GroundSpeed"),
+        ("ClimbRate","ClimbRate"),
+        ("Type","Type"),
     )

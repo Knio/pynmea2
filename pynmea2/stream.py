@@ -59,3 +59,17 @@ class NMEAStreamReader(object):
                     yield e
                 if self.errors == 'ignore':
                     pass
+
+    __next__ = next
+
+    def __iter__(self):
+        '''
+        Support the iterator protocol.
+
+        This allows NMEAStreamReader object to be used in a for loop.
+
+          for batch in NMEAStreamReader(stream):
+              for msg in batch:
+                  print msg
+        '''
+        return self
