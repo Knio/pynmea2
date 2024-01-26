@@ -17,13 +17,13 @@ class TNL(nmea.ProprietarySentence):
         '''
             Return the correct sentence type based on the first field
         '''
-        sentence_type = data[0] or data[1]
-        name = manufacturer + sentence_type
-        if name not in _cls.sentence_types:
-            # TNLDG does not have a sentence type
+
+        name_check = manufacturer + data[1]
+        if name_check not in _cls.sentence_types:
             if TNLDG.match(data):
                 return super(TNL, TNLDG).__new__(TNLDG)
-        cls = _cls.sentence_types.get(name, _cls)
+
+        cls = _cls.sentence_types.get(name_check, _cls)
         return super(TNL, cls).__new__(cls)
 
     def __init__(self, manufacturer, data):
@@ -81,7 +81,7 @@ class TNLDG(TNL):
 
     def __init__(self, *args, **kwargs):
         self.subtype = 'TNL'
-        super(TNLDG, self).__init(*args, **kwargs)
+        super(TNLDG, self).__init__(*args, **kwargs)
 
     fields = (
         ('Empty', '_'),
