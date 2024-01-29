@@ -15,19 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        # python-version: ["2.7", "3.4", "3.5", "3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
-
-# What works:
-#  macos 3.8-3.11
-#  ubuntu 3.8-3.11
-
-
-      #  exclude:
-      #   - os: macos-latest
-      #     python-version: "3.9"
-      #   - os: windows-latest
-      #     python-version: "3.9"
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
@@ -39,7 +27,7 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install pytest
         python -m pip install flake8
-        python -m pip install wheel
+        python -m pip install setuptools wheel
         python -m pip install importlib_metadata
     - name: Lint with flake8
       run: |
