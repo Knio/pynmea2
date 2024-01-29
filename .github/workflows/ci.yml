@@ -4,7 +4,7 @@
 name: pynmea2
 on:
   push:
-    branches: ["master", "py3v12-compatability"]
+    branches: ["master"]
   pull_request:
     branches: ["master"]
 
