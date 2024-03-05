@@ -1,6 +1,7 @@
 # -- TRIMBLE -- #
 
 # pylint: disable=wildcard-import,unused-wildcard-import
+from decimal import Decimal
 from ... import nmea
 from ...nmea_utils import *
 """ Support for proprietary messages from BD9xx recievers.
@@ -16,14 +17,14 @@ class TNL(nmea.ProprietarySentence):
         '''
             Return the correct sentence type based on the first field
         '''
-        sentence_type = data[0] or data[1]
+        sentence_type = data[1]
         name = manufacturer + sentence_type
-        cls = _cls.sentence_types.get(name, _cls)
+        if name not in _cls.sentence_types:
+            # TNLDG does not have a sentence type
+            if TNLDG.match(data):
+                return super(TNL, TNLDG).__new__(TNLDG)
+        cls = _cls.sentence_types.get(name, TNL)
         return super(TNL, cls).__new__(cls)
-
-    def __init__(self, manufacturer, data):
-        self.sentence_type = data[0] or data[1]
-        super(TNL, self).__init__(manufacturer, data)
 
 
 class TNLAVR(TNL):
@@ -66,6 +67,29 @@ class TNLBPQ(TNL, LatLonFix, DatetimeFix):
         ('Total number of satelites in use', 'num_sats'),
     )
 
+class TNLDG(TNL):
+    """
+        Trimble DG message (L-band, beacon signal strength, etc)
+    """
+    @staticmethod
+    def match(data):
+        return re.match(r'\d+\.\d{1}', data[1])
+
+    def __init__(self, *args, **kwargs):
+        self.subtype = 'DG'
+        super(TNLDG, self).__init__(*args, **kwargs)
+
+    fields = (
+        ('Empty', '_'),
+        ('Signal strength', 'strength', float),
+        ('SNR in db', 'snr', float),
+        ('Signal frequency in kHz', 'frequency', float),
+        ('Bit rate', 'bitrate', Decimal),
+        ('Channel number', 'channel_no', Decimal),
+        ('Tracking status', 'status'),
+        ('Channel used', 'channel_used'),
+        ('Tracking performance indicator', 'performance', Decimal),
+    )
 
 class TNLGGK(TNL, LatLonFix, DatetimeFix):
     """
@@ -89,6 +113,24 @@ class TNLGGK(TNL, LatLonFix, DatetimeFix):
     )
 
 
+class TNLVGK(TNL, DatetimeFix):
+    """
+        Trimble VGK (vector information) message
+    """
+    fields = (
+        ('Empty', '_'),
+        ('Sentence Type', 'type'),
+        ('Timestamp', 'timestamp', timestamp),
+        ('Datestamp', 'datestamp', datestamp),
+        ('East component', 'east', float),
+        ('North component', 'north', float),
+        ('Up component', 'up', float),
+        ('GPS Quality', 'gps_quality'),
+        ('Number of satelites', 'num_sats', Decimal),
+        ('DOP of fix', 'dop', float),
+        ('Meters', 'meters'),
+    )
+
 class TNLVHD(TNL, DatetimeFix):
     """
         Trimble VHD Message
@@ -97,18 +139,37 @@ class TNLVHD(TNL, DatetimeFix):
         ('Empty', '_'),
         ('Sentence Type', 'type'),
         ('Timestamp', 'timestamp', timestamp),
-        ("Datestamp", "datestamp", datestamp),
-        ('Azimuth Angle', 'azimuth'),
-        ('AzimuthTime', 'azdt'),
-        ('Vertical Angle', 'vertical'),
-        ('VerticalTime', 'vertdt'),
-        ('Range', 'range'),
-        ('RangeTime', 'rdt'),
+        ('Datestamp', 'datestamp', datestamp),
+        ('Azimuth Angle', 'azimuth', float),
+        ('AzimuthTime', 'azdt', float),
+        ('Vertical Angle', 'vertical', float),
+        ('VerticalTime', 'vertdt', float),
+        ('Range', 'range', float),
+        ('RangeTime', 'rdt', float),
         ('GPS Quality', 'gps_quality'),
-        ('Total number of satelites in use', 'num_sats'),
-        ('PDOP', 'pdop'),
+        ('Total number of satelites in use', 'num_sats', Decimal),
+        ('PDOP', 'pdop', float),
     )
 
+class TNLPJK(TNL, DatetimeFix):
+    """
+        Trimble PJK message
+    """
+    fields = (
+        ('Empty', '_'),
+        ('Sentence Type', 'type'),
+        ('Timestamp', 'timestamp', timestamp),
+        ('Datestamp', 'datestamp', datestamp),
+        ('Northing', 'northing', float),
+        ('North', 'north'),
+        ('Easting', 'easting', float),
+        ('East', 'east'),
+        ('GPS Quality', 'gps_quality'),
+        ('Number of satellites', 'num_sats', Decimal),
+        ('DOP of fix', 'dop', float),
+        ('Height of antenna phase center', 'height'),
+        ('Meters', 'meters'),
+    )
 
 class TNLPJT(TNL):
     """
