@@ -181,3 +181,39 @@ class TNLPJT(TNL):
         ('Coordinate System', 'coord_name'),
         ('Project Name', 'project_name'),
     )
+
+class TNLEVT(TNL, DatetimeFix):
+    """
+        Trimble EVT message (used for events like hardware triggers)
+
+        0 	Talker ID $PTNL
+        1 	Message ID EVT
+        2 	Event time. UTC time of event in format hhmmss.ssssss
+        3 	Port number. Port event markers receiver: "1" or "2" (optional), if two ports are available.
+        4 	NNNNNN. Incremental number of events on each independent port.
+        5 	WWWW. Week number of event (since 06 January 1980).
+        6 	Day of week. Days denoted 0 = Sunday…6 = Saturday.
+        7 	Leap second. UTC Leap Second offset from GPS time, Currently 18 seconds as of 07 July 2017.
+        8 	The checksum data, always begins with *
+
+        Example message:
+        $PTNL,EVT,131007.999785,2,460,2181,5,18*72
+    """
+    fields = (
+        ('Empty', '_'),
+        ('Sentence Type', 'type'),
+        ('Timestamp', 'timestamp', timestamp),
+        ('Port Number', 'port_num', int),
+        ('Event Number', 'event_num', int),
+        ('GPS Week Number', 'gps_week_num', int),
+        ('GPS Day of the Week', 'gps_day_num', int),
+        ('Leap Seconds', 'leap_secs', int)
+    )
+
+    # We can derive the date from GPS Week Number and Day of the Week
+    # Presumingly 1024 overflow was taken into accound by the GPS unit
+    @property
+    def datestamp(self):
+        gps_epoch = datetime.date(year=1980, month=1, day=6)
+        return gps_epoch + datetime.timedelta(
+                weeks=self.gps_week_num, days=self.gps_day_num)
