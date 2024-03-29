@@ -120,7 +120,3 @@ def test_tnlevt():
     assert msg.gps_week_num == 2181
     assert msg.gps_day_num == 5
     assert msg.leap_secs == 18
-
-    assert msg.datestamp == datetime.date(2021, 10, 29)
-    assert msg.datetime == datetime.datetime(
-            2021, 10, 29, 13, 10, 7, 999785, tzinfo=datetime.timezone.utc)

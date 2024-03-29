@@ -210,18 +210,3 @@ class TNLEVT(TNL, DatetimeFix):
         ('GPS Day of the Week', 'gps_day_num', int),
         ('Leap Seconds', 'leap_secs', int)
     )
-
-    # We can derive the date from GPS Week Number and Day of the Week
-    # Presumingly 1024 overflow was taken into accound by the GPS unit
-    # Taking into account that the GPS day could have overflown during
-    # leap seconds, if 0 <= UTC timestamp < leap seconds
-    @property
-    def datestamp(self):
-        gps_epoch = datetime.date(year=1980, month=1, day=6)
-        gps_week_day_delta = datetime.timedelta(weeks=self.gps_week_num, days=self.gps_day_num)
-        utc_time_delta = datetime.timedelta(
-                hours=self.timestamp.hour, minutes=self.timestamp.minute,
-                seconds=self.timestamp.second)
-        utc_leap_delta = datetime.timedelta(seconds=self.leap_secs)
-
-        return gps_epoch + gps_week_day_delta + utc_time_delta - utc_leap_delta
