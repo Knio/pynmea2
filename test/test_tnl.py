@@ -107,3 +107,16 @@ def test_tnlvhd():
     assert msg.gps_quality == '3'
     assert msg.num_sats == 7
     assert msg.pdop == 2.4
+
+def test_tnlevt():
+    data = '$PTNL,EVT,131007.999785,2,460,2181,5,18*72'
+    msg = pynmea2.parse(data)
+    assert type(msg) == pynmea2.tnl.TNLEVT
+    assert msg.manufacturer == 'TNL'
+    assert msg.type == 'EVT'
+    assert msg.timestamp == datetime.time(13, 10, 7, 999785, tzinfo=datetime.timezone.utc)
+    assert msg.port_num == 2
+    assert msg.event_num == 460
+    assert msg.gps_week_num == 2181
+    assert msg.gps_day_num == 5
+    assert msg.leap_secs == 18
