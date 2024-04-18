@@ -7,19 +7,13 @@ Support for proprietary messages from Furuno receivers.
 from ... import nmea
 from ...nmea_utils import *
 
-
 class FEC(nmea.ProprietarySentence):
     sentence_types = {}
 
     def __new__(_cls, manufacturer, data):
         name = manufacturer + data[1]
-        print(data)
         cls = _cls.sentence_types.get(name, _cls)
         return super(FEC, cls).__new__(cls)
-
-    # def __init__(self, manufacturer, data):
-    #     self.sentence_type = manufacturer + data[0]
-    #     super(FEC, self).__init__(manufacturer, data)
 
 class FECGPatt(FEC):
     """
