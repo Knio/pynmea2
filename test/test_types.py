@@ -331,3 +331,13 @@ def test_ALR():
     assert msg.alarm_con == 'V'
     assert msg.alarm_state == 'V'
     assert msg.description == 'AIS:general failure'
+
+
+def test_HEV():
+    data = "$GPHEV,-0.01*52"
+    msg = pynmea2.parse(data)
+    assert msg.render() == data
+    assert isinstance(msg, pynmea2.HEV)
+    assert msg.talker == "GP"
+    assert msg.sentence_type == "HEV"
+    assert msg.heave == -0.01
