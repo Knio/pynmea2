@@ -1098,3 +1098,11 @@ class LAA(TalkerSentence):
         ("ClimbRate","ClimbRate"),
         ("Type","Type"),
     )
+
+# Implemented by Joep de Jong
+# GPHEV: Heave
+class HEV(TalkerSentence):
+    """
+    Heave
+    """
+    fields = (("Heave", "heave", float),)
