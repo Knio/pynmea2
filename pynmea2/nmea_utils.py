@@ -2,6 +2,17 @@
 import datetime
 import re
 
+
+# python 2.7 backport
+if not hasattr(datetime, 'timezone'):
+    class UTC(datetime.tzinfo):
+        def utcoffset(self, dt):
+            return datetime.timedelta(0)
+    class timezone(object):
+        utc = UTC()
+    datetime.timezone = timezone
+
+
 def valid(s):
     return s == 'A'
 
@@ -18,7 +29,8 @@ def timestamp(s):
         hour=int(s[0:2]),
         minute=int(s[2:4]),
         second=int(s[4:6]),
-        microsecond=ms)
+        microsecond=ms,
+        tzinfo=datetime.timezone.utc)
     return t
 
 
@@ -39,7 +51,10 @@ def dm_to_sd(dm):
     # '12319.943281'
     if not dm or dm == '0':
         return 0.
-    d, m = re.match(r'^(\d+)(\d\d\.\d+)$', dm).groups()
+    r = re.match(r'^(\d+)(\d\d\.\d+)$', dm)
+    if not r:
+        raise ValueError("Geographic coordinate value '{}' is not valid DDDMM.MMM".format(dm))
+    d, m = r.groups()
     return float(d) + float(m) / 60
 
 
@@ -107,6 +122,18 @@ class ValidStatusFix(object):
     @property
     def is_valid(self):
         return self.status == 'A'
+
+
+class ValidRMCStatusFix(ValidStatusFix):
+    #pylint: disable=no-member
+    @property
+    def is_valid(self):
+        status = super(ValidRMCStatusFix, self).is_valid
+        if self.name_to_idx["mode_indicator"] < len(self.data):
+            status &= self.mode_indicator in tuple('ADEFMPRS')
+        if self.name_to_idx["nav_status"] < len(self.data):
+            status &= self.nav_status in tuple('SCU')
+        return status
 
 
 class ValidGSAFix(object):

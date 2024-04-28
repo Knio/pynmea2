@@ -1,4 +1,5 @@
 from . import ash
+from . import fec
 from . import grm
 from . import kwd
 from . import mgn
@@ -8,4 +9,5 @@ from . import sxn
 from . import tnl
 from . import ubx
 from . import vtx
+from . import nor
 

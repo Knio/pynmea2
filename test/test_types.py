@@ -13,7 +13,7 @@ def test_GGA():
     assert isinstance(msg, pynmea2.GGA)
 
     # Timestamp
-    assert msg.timestamp        == datetime.time(18, 43, 53, 70000)
+    assert msg.timestamp        == datetime.time(18, 43, 53, 70000, tzinfo=datetime.timezone.utc)
     # Latitude
     assert msg.lat              == '1929.045'
     # Latitude Direction
@@ -99,7 +99,7 @@ def test_GST():
     data = "$GPGST,172814.0,0.006,0.023,0.020,273.6,0.023,0.020,0.031*6A"
     msg = pynmea2.parse(data)
     assert isinstance(msg, pynmea2.GST)
-    assert msg.timestamp == datetime.time(hour=17, minute=28, second=14)
+    assert msg.timestamp == datetime.time(hour=17, minute=28, second=14, tzinfo=datetime.timezone.utc)
     assert msg.rms == 0.006
     assert msg.std_dev_major == 0.023
     assert msg.std_dev_minor == 0.020
@@ -114,13 +114,83 @@ def test_RMC():
     data = '''$GPRMC,225446,A,4916.45,N,12311.12,W,000.5,054.7,191194,020.3,E*68'''
     msg = pynmea2.parse(data)
     assert isinstance(msg, pynmea2.RMC)
-    assert msg.timestamp == datetime.time(hour=22, minute=54, second=46)
+    assert msg.timestamp == datetime.time(hour=22, minute=54, second=46, tzinfo=datetime.timezone.utc)
     assert msg.datestamp == datetime.date(1994, 11, 19)
     assert msg.latitude == 49.274166666666666
     assert msg.longitude == -123.18533333333333
-    assert msg.datetime == datetime.datetime(1994, 11, 19, 22, 54, 46)
+    assert msg.datetime == datetime.datetime(1994, 11, 19, 22, 54, 46, tzinfo=datetime.timezone.utc)
     assert msg.is_valid == True
     assert msg.render() == data
+
+
+def test_RMC_valid():
+    '''The RMC mode indicator and navigation status values are optional.
+    Test that when supplied the whole message must be valid. When not supplied
+    only test validation against supplied values.
+
+    Supplied means that a `,` exists it does NOT mean that a value had to be
+    supplied in the space provided. See
+
+    https://orolia.com/manuals/VSP/Content/NC_and_SS/Com/Topics/APPENDIX/NMEA_RMCmess.htm
+
+    for more information about the RMC Message additions.
+    '''
+    msgs = [
+        # Original
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,*33',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,*24',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,*72',
+
+        # RMC Timing Messages
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,S*4C',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,N*51',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,*1F',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,S*5B',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,N*46',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,*08',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,S*0D',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,N*10',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,*5E',
+
+        # RMC Nav Messags
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,S,S*33',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,S,V*36',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,S,*60',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,N,A*3C',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,N,V*2B',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,N,*7D',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,,A*72',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,,V*65',
+        '$GPRMC,123519.00,A,4807.038,N,01131.000,E,,,230394,,,,*33',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,S,A*36',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,S,V*21',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,S,*77',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,N,A*2B',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,N,V*3C',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,N,*6A',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,,A*65',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,,V*72',
+        '$GPRMC,123519.00,V,4807.038,N,01131.000,E,,,230394,,,,*24',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,S,A*60',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,S,V*77',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,S,*21',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,N,A*7D',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,N,V*6A',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,N,*3C',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,,A*33',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,,V*24',
+        '$GPRMC,123519.00,,4807.038,N,01131.000,E,,,230394,,,,*72',
+    ]
+
+    # only the first of each section is valid
+    expected = [False] * 39
+    expected[0] = True
+    expected[3] = True
+    expected[12] = True
+
+    for i, msg in enumerate(msgs):
+        parsed = pynmea2.parse(msg)
+        assert expected[i] == parsed.is_valid
 
 
 def test_TXT():
@@ -134,14 +204,16 @@ def test_ZDA():
     data = '''$GPZDA,010203.05,06,07,2008,-08,30'''
     msg = pynmea2.parse(data)
     assert isinstance(msg, pynmea2.ZDA)
-    assert msg.timestamp == datetime.time(hour=1, minute=2, second=3, microsecond=50000)
+    assert msg.timestamp == datetime.time(hour=1, minute=2, second=3, microsecond=50000, tzinfo=datetime.timezone.utc)
     assert msg.day == 6
     assert msg.month == 7
     assert msg.year == 2008
+    assert msg.tzinfo.utcoffset(0) == datetime.timedelta(hours=-8, minutes=30)
     assert msg.local_zone == -8
     assert msg.local_zone_minutes == 30
     assert msg.datestamp == datetime.date(2008, 7, 6)
-    assert msg.datetime == datetime.datetime(2008, 7, 6, 1, 2, 3, 50000, msg.tzinfo)
+    assert msg.datetime == datetime.datetime(2008, 7, 6, 1, 2, 3, 50000, tzinfo=datetime.timezone.utc)
+    assert msg.localdatetime == datetime.datetime(2008, 7, 5, 17, 32, 3, 50000, tzinfo=msg.tzinfo)
 
 def test_VPW():
     data = "$XXVPW,1.2,N,3.4,M"
@@ -234,3 +306,38 @@ def test_GRS():
     assert msg.sv_res_05 == -0.1
     assert msg.sv_res_06 == 0.5
     assert msg.sv_res_07 == None
+
+
+def test_HBT():
+    data = "$AIHBT,30,A,1*09"
+    msg = pynmea2.parse(data)
+    assert msg.render() == data
+    assert isinstance(msg, pynmea2.HBT)
+    assert msg.talker == 'AI'
+    assert msg.sentence_type == 'HBT'
+    assert msg.interval == 30
+    assert msg.eq_status == 'A'
+    assert msg.seq_sent_iden == 1
+
+
+def test_ALR():
+    data = "$AIALR,,006,V,V,AIS:general failure*1A"
+    msg = pynmea2.parse(data)
+    assert msg.render() == data
+    assert isinstance(msg, pynmea2.ALR)
+    assert msg.talker == 'AI'
+    assert msg.sentence_type == 'ALR'
+    assert msg.alarm_num == '006'
+    assert msg.alarm_con == 'V'
+    assert msg.alarm_state == 'V'
+    assert msg.description == 'AIS:general failure'
+
+
+def test_HEV():
+    data = "$GPHEV,-0.01*52"
+    msg = pynmea2.parse(data)
+    assert msg.render() == data
+    assert isinstance(msg, pynmea2.HEV)
+    assert msg.talker == "GP"
+    assert msg.sentence_type == "HEV"
+    assert msg.heave == -0.01

@@ -1,32 +1,32 @@
-pynmea2
-=======
+# pynmea2
 
 `pynmea2` is a python library for the [NMEA 0183](http://en.wikipedia.org/wiki/NMEA_0183) protocol
 
 `pynmea2` is based on [`pynmea`](https://code.google.com/p/pynmea/) by Becky Lewis
 
-The `pynmea2` homepage is located at http://github.com/Knio/pynmea2
+The `pynmea2` homepage is located at <http://github.com/Knio/pynmea2>
 
- ### Compatibility
+## Compatibility
 
 `pynmea2` is compatable with Python 2.7 and Python 3.4+
 
 ![Python version](https://img.shields.io/pypi/pyversions/pynmea2.svg?style=flat)
-[![Build status](https://img.shields.io/travis/Knio/pynmea2/master.svg?style=flat)](https://travis-ci.org/Knio/pynmea2)
+[![Build status](https://github.com/Knio/pynmea2/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/Knio/pynmea2/actions/workflows/ci.yml?query=branch%3Amaster+)
 [![Coverage status](https://img.shields.io/coveralls/github/Knio/pynmea2/master.svg?style=flat)](https://coveralls.io/r/Knio/pynmea2?branch=master)
 
-### Installation
+## Installation
 
 The recommended way to install `pynmea2` is with
 [pip](http://pypi.python.org/pypi/pip/):
 
-    pip install pynmea2
+```bash
+pip install pynmea2
+```
 
 [![PyPI version](https://img.shields.io/pypi/v/pynmea2.svg?style=flat)](https://pypi.org/project/pynmea2/)
 [![PyPI downloads](https://img.shields.io/pypi/dm/pynmea2.svg?style=flat)](https://pypi.org/project/pynmea2/)
 
-Parsing
--------
+## Parsing
 
 You can parse individual NMEA sentences using the `parse(data, check=False)` function, which takes a string containing a
 NMEA 0183 sentence and returns a `NMEASentence` object. Note that the leading '$' is optional and trailing whitespace is ignored when parsing a sentence.
@@ -98,8 +98,7 @@ You can also convert an `NMEASentence` to a dictionary using `as_dict()`:
 ```
 If there are unnamed fields, they are stored at `_extra1`, `_extra2`, etc.
 
-Generating
-----------
+## Generating
 
 You can create a `NMEASentence` object by calling the constructor with talker, message type, and data fields:
 
@@ -108,7 +107,6 @@ You can create a `NMEASentence` object by calling the constructor with talker, m
 >>> msg = pynmea2.GGA('GP', 'GGA', ('184353.07', '1929.045', 'S', '02410.506', 'E', '1', '04', '2.6', '100.00', 'M', '-33.9', 'M', '', '0000'))
 ```
 
-
 and generate a NMEA string from a `NMEASentence` object:
 
 ```python
@@ -116,9 +114,7 @@ and generate a NMEA string from a `NMEASentence` object:
 '$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,100.00,M,-33.9,M,,0000*6D'
 ```
 
-
-File reading example
---------
+## File reading example
 
 See [examples/read_file.py](/examples/read_file.py)
 
@@ -136,9 +132,7 @@ for line in file.readlines():
         continue
 ```
 
-
-pySerial device example
----------
+## `pySerial` device example
 
 See [examples/read_serial.py](/examples/read_serial.py)
 
