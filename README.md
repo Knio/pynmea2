@@ -91,6 +91,13 @@ For example, `latitude` and `longitude` properties exist as helpers to access th
 "-19°29′02.7000″"
 ```
 
+You can also convert an `NMEASentence` to a dictionary using `as_dict()`: 
+```python
+>>> msg.as_dict()
+{'timestamp': datetime.time(18, 43, 53, 70000), 'lat': '1929.045', 'lat_dir': 'S', 'lon': '02410.506', 'lon_dir': 'E', 'gps_qual': 1, 'num_sats': '04', 'horizontal_dil': '2.6', 'altitude': 100.0, 'altitude_units': 'M', 'geo_sep': '-33.9', 'geo_sep_units': 'M', 'age_gps_data': '', 'ref_station_id': '0000'}
+```
+If there are unnamed fields, they are stored at `_extra1`, `_extra2`, etc.
+
 Generating
 ----------
 
