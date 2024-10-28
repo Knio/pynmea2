@@ -8,7 +8,7 @@ The `pynmea2` homepage is located at <http://github.com/Knio/pynmea2>
 
 ## Compatibility
 
-`pynmea2` is compatable with Python 2.7 and Python 3.4+
+`pynmea2` is compatible with Python 2.7 and Python 3.4+
 
 ![Python version](https://img.shields.io/pypi/pyversions/pynmea2.svg?style=flat)
 [![Build status](https://github.com/Knio/pynmea2/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/Knio/pynmea2/actions/workflows/ci.yml?query=branch%3Amaster+)
