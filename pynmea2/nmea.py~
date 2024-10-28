@@ -30,16 +30,16 @@ NMEASentenceBase = NMEASentenceType('NMEASentenceBase', (object,), {})
 
 
 class NMEASentence(NMEASentenceBase):
-    """
+    '''
     Base NMEA Sentence
 
     Parses and generates NMEA strings
 
     Examples:
 
-    # >>> s = NMEASentence.parse("$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,100.00,M,-33.9,M,,0000*6D")
-    # >>> print(s)
-    """
+    >>> s = NMEASentence.parse("$GPGGA,184353.07,1929.045,S,02410.506,E,1,04,2.6,100.00,M,-33.9,M,,0000*6D")
+    >>> print(s)
+    '''
 
     sentence_re = re.compile(r'''
         # start of string, optional whitespace, optional '$'
@@ -88,7 +88,7 @@ class NMEASentence(NMEASentenceBase):
 
     @staticmethod
     def parse(line, check=False):
-        """
+        '''
         parse(line)
 
         Parses a string representing a NMEA 0183 sentence, and returns a
@@ -96,7 +96,7 @@ class NMEASentence(NMEASentenceBase):
 
         Raises ValueError if the string could not be parsed, or if the checksum
         did not match.
-        """
+        '''
         match = NMEASentence.sentence_re.match(line)
         if not match:
             raise ParseError('could not parse data', line)
@@ -107,15 +107,6 @@ class NMEASentence(NMEASentenceBase):
         checksum        = match.group('checksum')
         sentence_type   = match.group('sentence_type').upper()
         data            = data_str.split(',')
-
-        # The following is necessary to extract the manufacturer (always "QTM") and subtype from concatenated type e.g. PQTMSAVEPAR rather than PQTM,SAVEPAR
-        if sentence_type.startswith("PQTM") and len(sentence_type) > 4:
-            manufacturer = "QTM"
-            subtype = sentence_type[4:]  # Extract "SAVEPAR" part
-            data.insert(0, subtype)  # Add subtype to data for class handling
-            full_type = manufacturer + subtype  # Create full type for lookup
-        else:
-            raise ParseError('Unsupported PQTM sentence type: %s' % sentence_type, line)
 
         if checksum:
             cs1 = int(checksum, 16)
@@ -251,4 +242,4 @@ class ProprietarySentence(NMEASentence):
         self.data = list(data)
 
     def identifier(self):
-        return 'P%s' % self.manufacturer
+        return 'P%s' % (self.manufacturer)
