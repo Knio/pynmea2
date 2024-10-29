@@ -10,4 +10,5 @@ from . import tnl
 from . import ubx
 from . import vtx
 from . import nor
+from . import qtm
 
