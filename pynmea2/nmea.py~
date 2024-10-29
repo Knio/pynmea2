@@ -242,4 +242,4 @@ class ProprietarySentence(NMEASentence):
         self.data = list(data)
 
     def identifier(self):
-        return 'P%s' % (self.manufacturer)
+        return 'P%s' % self.manufacturer
