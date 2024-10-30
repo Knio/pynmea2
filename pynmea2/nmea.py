@@ -122,9 +122,9 @@ class NMEASentence(NMEASentenceBase):
         # For PQTM messages, extract the manufacturer (always "QTM") and subtype from concatenated type
         if sentence_type.startswith("PQTM") and len(sentence_type) > 4:
             manufacturer = "QTM"
-            subtype = sentence_type[4:]  # Extract "SAVEPAR" part
-            data.insert(0, subtype)  # Add subtype to data for class handling
-            manufacturer += subtype  # Create full type for lookup
+            sentence_type = sentence_type[4:]  # Extract "SAVEPAR" part
+            data.insert(0, sentence_type)  # Add sentence_type to data for class handling
+            manufacturer += sentence_type  # Create full type for lookup
 
         talker_match = NMEASentence.talker_re.match(sentence_type)
         if talker_match:

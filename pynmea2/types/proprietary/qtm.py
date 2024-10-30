@@ -1,5 +1,4 @@
 from ... import nmea
-from ...nmea_utils import *
 
 class QTM(nmea.ProprietarySentence):
     sentence_types = {}
@@ -18,7 +17,7 @@ class QTMVERNO(QTM):
     - $PQTMVERNO,<VerStr>,<BuildDate>,<BuildTime>*<Checksum>
     """
     fields = (
-        ('subtype', 'subtype'),  # VERNO
+        ('sentence_type', 'sentence_type'),  # VERNO
         ('version', 'version'),  # Example: LC29HAANR01A04S
         ('build_date', 'build_date'),  # Format: YYYY/MM/DD
         ('build_time', 'build_time'),  # Format: HH:MM:SS
@@ -29,20 +28,20 @@ class QTMVERNO(QTM):
         # print(data)  # Debugging print to confirm input structure
 
         # Assign attributes using the shared utils for formatting
-        self.subtype = data[0]
+        self.sentence_type = data[0]
         self.version = data[1]
         self.date = data[2]  # Use the new date parser
         self.build_time = data[3]  # Use the shared timestamp function
 
-    def __repr__(self):
-        # Improved __repr__ for better readability
-        return ("<QTMVERNO(subtype={subtype}, version='{version}', "
-                "build_date={build_date}, build_time={build_time})>").format(
-            subtype=self.subtype,
-            version=self.version,
-            build_date=self.build_date,
-            build_time=self.build_time
-        )
+    # def __repr__(self):
+    #     # Improved __repr__ for better readability
+    #     return ("<QTMVERNO(sentence_type={sentence_type}, version='{version}', "
+    #             "build_date={build_date}, build_time={build_time})>").format(
+    #         sentence_type=self.sentence_type,
+    #         version=self.version,
+    #         build_date=self.build_date,
+    #         build_time=self.build_time
+    #     )
 
 class QTMSAVEPAR(QTM):
     """
@@ -52,7 +51,7 @@ class QTMSAVEPAR(QTM):
     - $PQTMSAVEPAR,OK*72
     """
     fields = (
-        ('subtype', 'subtype'),
+        ('sentence_type', 'sentence_type'),
         ('status', 'status')
     )
 
@@ -68,7 +67,7 @@ class QTMRESTOREPAR(QTM):
     - $PQTMRESTOREPAR,OK*3B
     """
     fields = (
-        ('subtype', 'subtype'),
+        ('sentence_type', 'sentence_type'),
         ('status', 'status')
     )
 
@@ -87,7 +86,7 @@ class QTMEPE(QTM):
     """
 
     fields = (
-        ('subtype', 'subtype'),  # EPE
+        ('sentence_type', 'sentence_type'),  # EPE
         ('msg_ver', 'msg_ver'),  # Message version (always 2)
         ('epe_north', 'epe_north'),  # Estimated north error (in meters)
         ('epe_east', 'epe_east'),  # Estimated east error (in meters)
@@ -101,7 +100,7 @@ class QTMEPE(QTM):
         # print(data)  # Debugging print to confirm input structure
 
         # Set attributes based on input data
-        self.subtype = data[0]
+        self.sentence_type = data[0]
         self.msg_ver = int(data[1])
         self.epe_north = float(data[2])
         self.epe_east = float(data[3])
@@ -119,7 +118,7 @@ class QTMCFGGEOFENCE(QTM):
     """
 
     fields = (
-        ('Subtype', 'subtype'),  # Always "CFGGEOGENCE"
+        ('sentence_type', 'sentence_type'),  # Always "CFGGEOGENCE"
         ('Status', 'status'),  # "OK"
         ('Index', 'index'),  # Geofence index (0-3)
         ('Enabled', 'enabled'),  # 0 = Disabled, 1 = Enabled
@@ -140,7 +139,7 @@ class QTMCFGGEOFENCE(QTM):
         # print(data)  # Debugging print to confirm input structure
 
         # Extract and assign the mandatory fields
-        self.subtype = data[0]  # Should always be "CFGGEOGENCE"
+        self.sentence_type = data[0]  # Should always be "CFGGEOGENCE"
         self.status = data[1]  # Should be "OK"
         self.index = data[2]
         self.enabled = data[3]  # 0 = Disabled, 1 = Enabled
@@ -176,7 +175,7 @@ class QTMGEOFENCESTATUS(QTM):
     """
 
     fields = (
-        ('Subtype', 'subtype'),  # Always "GEOFENCESTATUS"
+        ('sentence_type', 'sentence_type'),  # Always "GEOFENCESTATUS"
         ('MsgVer', 'msg_ver'),  # Message version (Always 1)
         ('Time', 'time'),  # UTC time (hhmmss.sss)
         ('State0', 'state0'),  # Geofence state 0
@@ -190,7 +189,7 @@ class QTMGEOFENCESTATUS(QTM):
         # print(data)  # Debugging print to confirm input structure
 
         # Assign the parsed fields
-        self.subtype = data[0]  # Should always be "GEOFENCESTATUS"
+        self.sentence_type = data[0]  # Should always be "GEOFENCESTATUS"
         self.msg_ver = data[1]  # Always 1
         self.time = data[2]  # UTC time in hhmmss.sss format
 
@@ -229,7 +228,7 @@ class QTMCFGSVIN(QTM):
     """
 
     fields = (
-        ('subtype', 'subtype'),  # CFGSVIN
+        ('sentence_type', 'sentence_type'),  # CFGSVIN
         ('status', 'status'),  # OK
         ('mode', 'mode'),  # Receiver mode (0, 1, 2)
         ('min_dur', 'min_dur'),  # Survey-in duration (in seconds)
@@ -244,7 +243,7 @@ class QTMCFGSVIN(QTM):
         # print(data)  # Debugging print to confirm input structure
 
         # Set attributes based on input data
-        self.subtype = data[0]  # Always "CFGSVIN"
+        self.sentence_type = data[0]  # Always "CFGSVIN"
         self.status = data[1]  # Should be "OK"
         self.mode = data[2]  # Mode (0, 1, or 2)
         self.min_dur = data[3]  # Survey-in minimum duration
@@ -276,7 +275,7 @@ class QTMSVINSTATUS(QTM):
     """
 
     fields = (
-        ('subtype', 'subtype'),  # Always "SVINSTATUS"
+        ('sentence_type', 'sentence_type'),  # Always "SVINSTATUS"
         ('msg_ver', 'msg_ver'),  # Message version (Always 1)
         ('tow', 'tow'),  # GPS Time of Week (milliseconds)
         ('valid', 'valid'),  # Survey-in validity flag (0, 1, 2)
@@ -295,7 +294,7 @@ class QTMSVINSTATUS(QTM):
         # print(data)  # Debugging print to confirm input structure
 
         # Assign the parsed fields to class attributes
-        self.subtype = data[0]
+        self.sentence_type = data[0]
         self.msg_ver = data[1]
         self.tow = data[2]
         self.valid = self.parse_validity(data[3])
@@ -334,7 +333,7 @@ class QTMGNSSSTART(QTM):
     """
 
     fields = (
-        ('subtype', 'subtype'),  # Always "GNSSSTART"
+        ('sentence_type', 'sentence_type'),  # Always "GNSSSTART"
         ('status', 'status'),  # Always "OK"
     )
 
@@ -342,8 +341,8 @@ class QTMGNSSSTART(QTM):
         super(QTMGNSSSTART, self).__init__(manufacturer, data)
         # print(data)  # Debugging print to confirm input structure
 
-        # Extract subtype and status
-        self.subtype = data[0]
+        # Extract sentence_type and status
+        self.sentence_type = data[0]
         self.status = data[1]
 
 class QTMGNSSSTOP(QTM):
@@ -360,7 +359,7 @@ class QTMGNSSSTOP(QTM):
     """
 
     fields = (
-        ('subtype', 'subtype'),  # Always "GNSSSTOP"
+        ('sentence_type', 'sentence_type'),  # Always "GNSSSTOP"
         ('status', 'status'),  # Always "OK"
     )
 
@@ -368,8 +367,8 @@ class QTMGNSSSTOP(QTM):
         super(QTMGNSSSTOP, self).__init__(manufacturer, data)
         # print(data)  # Debugging print to confirm input structure
 
-        # Extract subtype and status
-        self.subtype = data[0]
+        # Extract sentence_type and status
+        self.sentence_type = data[0]
         self.status = data[1]
 
 class QTMPVT(QTM):
@@ -385,7 +384,7 @@ class QTMPVT(QTM):
     """
 
     fields = (
-        ('subtype', 'subtype'),  # PVT
+        ('sentence_type', 'sentence_type'),  # PVT
         ('msg_ver', 'msg_ver'),  # Always 1
         ('tow', 'tow'),  # Time of week in milliseconds
         ('date', 'date'),  # UTC Date in YYYYMMDD format
@@ -412,7 +411,7 @@ class QTMPVT(QTM):
         # print(data)  # Debugging print to confirm input structure
 
         # Assigning the values from the input data
-        self.subtype = data[0]
+        self.sentence_type = data[0]
         self.msg_ver = data[1]
         self.tow = data[2]
         self.date = data[3]
@@ -443,7 +442,7 @@ class QTMCFGNMEADP(QTM):
     """
 
     fields = (
-        ('subtype', 'subtype'),  # Always "CFGNMEADP"
+        ('sentence_type', 'sentence_type'),  # Always "CFGNMEADP"
         ('Status', 'status'),  # "OK"
         ('UTC_DP', 'utc_dp'),  # Decimal places for UTC seconds in NMEA messages
         ('POS_DP', 'pos_dp'),  # Decimal places for latitude/longitude in NMEA messages
@@ -458,7 +457,7 @@ class QTMCFGNMEADP(QTM):
         # print(data)  # Debugging print to confirm input structure
 
         # Assign the parsed fields from the input data
-        self.subtype = data[0]  # Should always be "CFGNMEADP"
+        self.sentence_type = data[0]  # Should always be "CFGNMEADP"
         self.status = data[1]  # Should be "OK"
         self.utc_dp = int(data[2])
         self.pos_dp = int(data[3])
@@ -481,7 +480,7 @@ class QTMCFGRCVRMODE(QTM):
     """
 
     fields = (
-        ('subtype', 'subtype'),  # Always "CFGRCVRMODE"
+        ('sentence_type', 'sentence_type'),  # Always "CFGRCVRMODE"
         ('status', 'status'),  # "OK"
         ('mode', 'mode'),  # Mode of operation as a string ("0", "1", or "2")
     )
@@ -491,7 +490,7 @@ class QTMCFGRCVRMODE(QTM):
         # print(data)  # Debugging print to confirm input structure
 
         # Assign fields for the successful set response
-        self.subtype = data[0]  # Should always be "CFGRCVRMODE"
+        self.sentence_type = data[0]  # Should always be "CFGRCVRMODE"
         self.status = data[1]  # Should be "OK"
         self.mode = data[2]  # Mode should be parsed as a string
 
@@ -528,7 +527,7 @@ class QTMPL(QTM):
     """
 
     fields = (
-        ('subtype', 'subtype'),  # Always "PL"
+        ('sentence_type', 'sentence_type'),  # Always "PL"
         ('msg_ver', 'msg_ver'),  # Message version (Always 1)
         ('tow', 'tow'),  # Time of week in milliseconds
         ('pul', 'pul'),  # Probability of uncertainty level (%)
@@ -550,7 +549,7 @@ class QTMPL(QTM):
         # print(data)  # Debugging print to confirm input structure
 
         # Assign parsed fields to the instance
-        self.subtype = data[0]
+        self.sentence_type = data[0]
         self.msg_ver = data[1]
         self.tow = data[2]
         self.pul = data[3]
@@ -581,7 +580,7 @@ class QTMCFGSBAS(QTM):
     """
 
     fields = (
-        ('subtype', 'subtype'),  # Always "CFGSBAS"
+        ('sentence_type', 'sentence_type'),  # Always "CFGSBAS"
         ('status', 'status'),  # "OK"
         ('value', 'value'),  # SBAS configuration value (Hexadecimal)
     )
@@ -591,7 +590,7 @@ class QTMCFGSBAS(QTM):
         # print(data)  # Debugging print to confirm input structure
 
         # Assign fields for the successful set response
-        self.subtype = data[0]  # Should always be "CFGSBAS"
+        self.sentence_type = data[0]  # Should always be "CFGSBAS"
         self.status = data[1]  # Should be "OK"
         self.value = data[2]  # Hexadecimal value representing SBAS configuration
 
@@ -626,7 +625,7 @@ class QTMCFGCNST(QTM):
     """
 
     fields = (
-        ('subtype', 'subtype'),  # Always "CFGCNST"
+        ('sentence_type', 'sentence_type'),  # Always "CFGCNST"
         ('status', 'status'),  # "OK"
         ('gps', 'gps'),  # GPS Enabled/Disabled
         ('glonass', 'glonass'),  # GLONASS Enabled/Disabled
@@ -641,7 +640,7 @@ class QTMCFGCNST(QTM):
         # print(data)  # Debugging print to confirm input structure
 
         # Assign fields for the successful set response
-        self.subtype = data[0]  # Should always be "CFGCNST"
+        self.sentence_type = data[0]  # Should always be "CFGCNST"
         self.status = data[1]  # Should be "OK"
         self.gps = data[2]
         self.glonass = data[3]
@@ -686,7 +685,7 @@ class QTMDOP(QTM):
     """
 
     fields = (
-        ('subtype', 'subtype'),  # Always "DOP"
+        ('sentence_type', 'sentence_type'),  # Always "DOP"
         ('msg_ver', 'msg_ver'),  # Message version (Always 1)
         ('tow', 'tow'),  # Time of week (ms)
         ('gdop', 'gdop'),  # Geometric DOP
@@ -703,7 +702,7 @@ class QTMDOP(QTM):
         # print(data)  # Debugging print to confirm input structure
 
         # Assign fields from the data
-        self.subtype = data[0]  # Always "DOP"
+        self.sentence_type = data[0]  # Always "DOP"
         self.msg_ver = data[1]  # Always 1
         self.tow = data[2]  # Time of week in milliseconds
         self.gdop = data[3]
@@ -729,12 +728,12 @@ class QTMCFGFIXRATE(QTM):
     - $PQTMCFGFIXRATE,OK*<Checksum><CR><LF> (Successful Set Response)
 
     Attributes:
-    - subtype: CFGFIXRATE (always)
+    - sentence_type: CFGFIXRATE (always)
     - status: OK (indicates a successful set)
     """
 
     fields = (
-        ('subtype', 'subtype'),  # Always "CFGFIXRATE"
+        ('sentence_type', 'sentence_type'),  # Always "CFGFIXRATE"
         ('status', 'status')     # Always "OK"
     )
 
@@ -743,7 +742,7 @@ class QTMCFGFIXRATE(QTM):
         # print(data)  # Debugging print to confirm input structure
 
         # Assign the parsed data to attributes
-        self.subtype = data[0]  # "CFGFIXRATE"
+        self.sentence_type = data[0]  # "CFGFIXRATE"
         self.status = data[1]   # "OK"
 
 class QTMVEL(QTM):
@@ -769,7 +768,7 @@ class QTMVEL(QTM):
     """
 
     fields = (
-        ('subtype', 'subtype'),  # Always "VEL"
+        ('sentence_type', 'sentence_type'),  # Always "VEL"
         ('msg_ver', 'msg_ver'),  # Message version (Always 1)
         ('time', 'time'),  # UTC time (hhmmss.sss)
         ('vel_n', 'vel_n'),  # North velocity (m/s)
@@ -788,7 +787,7 @@ class QTMVEL(QTM):
         # print(data)  # Debugging print to confirm input structure
 
         # Assign parsed values to attributes
-        self.subtype = data[0]
+        self.sentence_type = data[0]
         self.version = data[1]
         self.time = data[2]
         self.vel_n = float(data[3])
@@ -814,7 +813,7 @@ class QTMCFGODO(QTM):
     """
 
     fields = (
-        ('subtype', 'subtype'),  # Always "CFGODO"
+        ('sentence_type', 'sentence_type'),  # Always "CFGODO"
         ('status', 'status'),  # "OK"
         ('state', 'state'),  # 0 = Disabled, 1 = Enabled
         ('init_dist', 'init_dist')  # Initial distance in meters
@@ -825,7 +824,7 @@ class QTMCFGODO(QTM):
         # print(data)  # Debugging print to confirm input structure
 
         # Assign fields for the successful set response
-        self.subtype = data[0]  # Should always be "CFGODO"
+        self.sentence_type = data[0]  # Should always be "CFGODO"
         self.status = data[1]  # Should be "OK"
         self.state = data[2]  # Odometer state: 0 = Disabled, 1 = Enabled
         self.init_dist = data[3]  # Initial distance in meters
@@ -847,7 +846,7 @@ class QTMODO(QTM):
     Outputs the odometer information.
 
     Supports:
-    - $PQTMMODO,<MsgVer>,<Time>,<State>,<Dist>*<Checksum><CR><LF>
+    - $PQTMODO,<MsgVer>,<Time>,<State>,<Dist>*<Checksum><CR><LF>
 
     Fields:
     - MsgVer: Message version (Always 1).
@@ -857,7 +856,7 @@ class QTMODO(QTM):
     """
 
     fields = (
-        ('subtype', 'subtype'),  # Always "MODO"
+        ('sentence_type', 'sentence_type'),  # Always "MODO"
         ('msg_ver', 'msg_ver'),  # Message version (1)
         ('time', 'time'),  # UTC time (hhmmss.sss)
         ('state', 'state'),  # Odometer state: 0 = Disabled, 1 = Enabled
@@ -869,7 +868,7 @@ class QTMODO(QTM):
         # print(data)  # Debugging print to confirm input structure
 
         # Assign the parsed fields
-        self.subtype = data[0]  # Should always be "MODO"
+        self.sentence_type = data[0]  # Should always be "MODO"
         self.msg_ver = data[1]  # Always 1
         self.time = data[2]  # UTC time in hhmmss.sss format
         self.state = data[3]  # Odometer state
