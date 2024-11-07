@@ -211,6 +211,118 @@ class QTMGEOFENCESTATUS(QTM):
         }
         return state_map.get(state_value, "Invalid state")  # Handle unexpected values
 
+class QTMJAMMINGSTATUS(QTM):
+    """
+    PQTMJAMMINGSTATUS Message
+
+    Supports:
+    - $PQTJAMMINGSTATUS,<MsgVer>,<Status>*<Checksum>
+
+    Jamming Detection Status Meaning:
+    - 0 = Unknown
+    - 1 = No jamming, healthy status
+    - 2 = Warning status
+    - 3 = Critical status
+    """
+
+    fields = (
+        ('sentence_type', 'sentence_type'),  # Always "JAMMINGSTATUS"
+        ('MsgVer', 'msg_ver'),  # Message version (Always 1)
+        ('Status', 'status')  # Jamming detection status
+    )
+
+    def __init__(self, manufacturer, data):
+        super(QTMJAMMINGSTATUS, self).__init__(manufacturer, data)
+        # print(data)  # Debugging print to confirm input structure
+
+        # Assign the parsed fields
+        self.sentence_type = data[0]  # Should always be "JAMMINGSTATUS"
+        self.msg_ver = data[1]  # Always 1 for this message version
+        self.status = self.parse_status(data[2])  # Jamming detection status
+
+    @staticmethod
+    def parse_status(status_value):
+        """
+        Parse the status field and return the corresponding description.
+        """
+        status_map = {
+            "0": "Unknown",
+            "1": "No jamming, healthy status",
+            "2": "Warning status",
+            "3": "Critical status"
+        }
+        return status_map.get(status_value, "Invalid status")  # Handle unexpected values
+
+class QTMUNIQID(QTM):
+    """
+    PQTMUNIQID Command Response
+
+    Supports:
+    - $PQTMUNIQID,OK,<Length>,<ID>*<Checksum>
+
+    Field Description:
+    - Length: Length of the chip unique ID in bytes
+    - ID: The chip unique ID in hexadecimal format
+    """
+
+    fields = (
+        ('sentence_type', 'sentence_type'),  # Always "UNIQID"
+        ('Response', 'response'),  # Response type, always "OK" for success
+        ('Length', 'length'),  # Length of chip unique ID in bytes
+        ('ID', 'chip_id')  # Chip unique ID in hexadecimal
+    )
+
+    def __init__(self, manufacturer, data):
+        super(QTMUNIQID, self).__init__(manufacturer, data)
+        # Assign the parsed fields
+        self.sentence_type = "UNIQID"
+        self.response = data[1]  # "OK"
+        self.length = data[2]  # Length of chip unique ID
+        self.chip_id = data[3]  # Chip unique ID in hexadecimal
+
+class QTMANTENNASTATUS(QTM):
+    """
+    PQTMTANTENNASTATUS Message
+
+    Supports:
+    - $PQTMTANTENNASTATUS,<MsgVer>,<AntStatus>,<AntPowerInd>,<ModeInd>*<Checksum>
+
+    Field Descriptions:
+    - MsgVer: Message version (Always 3 for this version)
+    - AntStatus: Antenna status
+        - 0 = Unknown
+        - 1 = Normal
+        - 2 = Open-circuit
+        - 3 = Short-circuit
+    - AntPowerInd: Antenna power indicator
+        - 0 = Power-off
+        - 1 = Power-on
+        - 2 = Unknown
+    - ModeInd: Antenna mode indicator
+        - 0 = Unknown
+        - 1 = Automatic mode, using integrated antenna
+        - 2 = Automatic mode, using external antenna
+        - 3 = Manual mode, using integrated antenna
+        - 4 = Manual mode, using external antenna
+    """
+
+    fields = (
+        ('sentence_type', 'sentence_type'),  # Always "ANTENNASTATUS"
+        ('MsgVer', 'msg_ver'),  # Message version, always "3"
+        ('AntStatus', 'ant_status'),  # Antenna status
+        ('AntPowerInd', 'ant_power_ind'),  # Antenna power indicator
+        ('ModeInd', 'mode_ind')  # Antenna mode indicator
+    )
+
+    def __init__(self, manufacturer, data):
+        super(QTMANTENNASTATUS, self).__init__(manufacturer, data)
+        # Assign the parsed fields
+        self.sentence_type = "ANTENNASTATUS"
+        self.msg_ver = data[1]  # Always 3 for this message version
+        self.ant_status = data[2]  # Antenna status
+        self.ant_power_ind = data[3]  # Antenna power indicator
+        self.mode_ind = data[4]  # Antenna mode indicator
+
 class QTMCFGSVIN(QTM):
     """
     PQTMCFGSVIN Message
@@ -883,3 +995,69 @@ class QTMODO(QTM):
             "1": "Enabled"
         }
         return state_map.get(self.state, "Unknown state")
+
+class QTMLS(QTM):
+    """
+    PQTMLS Message
+
+    Supports:
+    - $PQTMLS,<MsgVer>,<TOW>,<LS_Ref>,<WN>,<LS>,<Flag>,<LSF_Ref>,<Reserved>,<WNLSF>,<DN>,<LSF>*<Checksum>
+
+    Field Descriptions:
+    - MsgVer: Message version (Always 1)
+    - TOW: Time of week in seconds
+    - LS_Ref: Referenced constellation for current leap second information
+    - WN: UTC reference week number
+    - LS: Current number of leap seconds since January 6, 1980
+    - Flag: Marker for future occurrences of leap seconds
+    - LSF_Ref: Constellation for the leap second forecast
+    - Reserved: Always null
+    - WNLSF: Week number of the new leap second
+    - DN: Day of the week when the leap second takes effect
+    - LSF: Leap second count after future changes
+    """
+
+    fields = (
+        ('sentence_type', 'sentence_type'),  # Always "MLS"
+        ('MsgVer', 'msg_ver'),  # Message version
+        ('TOW', 'tow'),  # Time of week
+        ('LS_Ref', 'ls_ref'),  # Leap second reference
+        ('WN', 'wn'),  # UTC reference week number
+        ('LS', 'ls'),  # Current number of leap seconds
+        ('Flag', 'flag'),  # Leap second availability flag
+        ('LSF_Ref', 'lsf_ref'),  # Leap second forecast reference
+        ('Reserved', 'reserved'),  # Reserved field
+        ('WNLSF', 'wnlsf'),  # Week number of the new leap second
+        ('DN', 'dn'),  # Day of the week for the new leap second
+        ('LSF', 'lsf')  # Leap second count after future changes
+    )
+
+    def __init__(self, manufacturer, data):
+        super(QTMLS, self).__init__(manufacturer, data)
+        # Assign the parsed fields
+        self.sentence_type = "MLS"
+        self.msg_ver = data[1]  # Message version
+        self.tow = data[2]  # Time of week
+        self.ls_ref = self.parse_constellation(data[3])  # Leap second reference constellation
+        self.wn = data[4]  # UTC reference week number
+        self.ls = data[5]  # Current number of leap seconds
+        self.flag = "Available" if data[6] == "1" else "Invalid"  # Leap second flag
+        self.lsf_ref = self.parse_constellation(data[7])  # Leap second forecast reference
+        self.reserved = data[8]  # Reserved field (null)
+        self.wnlsf = data[9]  # Week number of the new leap second
+        self.dn = data[10]  # Day of the week for the new leap second
+        self.lsf = data[11]  # Leap second count after future changes
+
+    @staticmethod
+    def parse_constellation(value):
+        """
+        Parse the constellation reference and return the corresponding description.
+        """
+        constellation_map = {
+            "0": "No source",
+            "1": "GPS",
+            "2": "Reserved",
+            "3": "Galileo",
+            "4": "BDS"
+        }
+        return constellation_map.get(value, "Unknown")

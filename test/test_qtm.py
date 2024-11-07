@@ -71,6 +71,28 @@ def test_pqtmgeofencestatus():
     assert msg.state2 == "Unknown"
     assert msg.state3 == "Inside geofence"
 
+def test_qtmuniqid():
+    """Test QTMUNIQID Command Response with successful example data."""
+    # Example of a successful response
+    data_success = "$PQTMUNIQID,OK,8,1A2B3C4D5E6F7A8B*0A"
+    msg_success = pynmea2.parse(data_success)
+
+    assert type(msg_success) == pynmea2.qtm.QTMUNIQID
+    assert msg_success.sentence_type == "UNIQID"
+    assert msg_success.response == "OK"
+    assert msg_success.length == "8"  # Length of chip unique ID
+    assert msg_success.chip_id == "1A2B3C4D5E6F7A8B"  # Chip unique ID
+
+def test_pqtmjammingstatus():
+    """Test PQTMJAMMINGSTATUS with example data."""
+    data = "$PQTMJAMMINGSTATUS,1,2*44"  # Example NMEA sentence with MsgVer=1, Status=2
+    msg = pynmea2.parse(data)
+
+    assert type(msg) == pynmea2.qtm.QTMJAMMINGSTATUS
+    assert msg.sentence_type == "JAMMINGSTATUS"
+    assert msg.msg_ver == "1"
+    assert msg.status == "Warning status"  # Status 2 should be "Warning status"
+
 def test_pqtmcfgsvin():
     """Test PQTMCFGSVIN with a successful response."""
     data = "$PQTMCFGSVIN,OK,2,300,1.5,6378137.0,0.0,0.0*7A"
@@ -288,6 +310,19 @@ def test_pqtmvel():
     assert msg.spd_acc == "0.254"
     assert msg.heading_acc == "0.25"
 
+def test_pqtmantennastatus():
+    """Test PQTMTANTENNASTATUS Message with example data."""
+    # Example of a successful message
+    data = "$PQTMANTENNASTATUS,3,2,1,1*52"
+    msg = pynmea2.parse(data)
+
+    assert type(msg) == pynmea2.qtm.QTMANTENNASTATUS
+    assert msg.sentence_type == "ANTENNASTATUS"
+    assert msg.msg_ver == "3"  # Message version
+    assert msg.ant_status == "2"  # Open-circuit status
+    assert msg.ant_power_ind == "1"  # Power-on
+    assert msg.mode_ind == "1"  # Automatic mode, using integrated antenna
+
 def test_pqtmcfgodo():
     """Test PQTMCFGODO with a successful response."""
     data = "$PQTMCFGODO,OK,1,100*36"
@@ -312,4 +347,25 @@ def test_pqtmodo():
     assert msg.state == "1"
     assert msg.dist == "112.3"
     assert msg.get_state_description() == "Enabled"
+
+def test_pqtmls():
+    """Test PQTMLS Message with example data."""
+    # Example of a PQTMLS message
+    data = "$PQTMLS,1,195494,1,2299,18,0,1,,137,7,18*2C"
+    msg = pynmea2.parse(data)
+
+    assert type(msg) == pynmea2.qtm.QTMLS
+    assert msg.sentence_type == "MLS"
+    assert msg.msg_ver == "1"  # Message version
+    assert msg.tow == "195494"  # Time of week
+    assert msg.ls_ref == "GPS"  # Leap second reference: GPS
+    assert msg.wn == "2299"  # UTC reference week number
+    assert msg.ls == "18"  # Current number of leap seconds
+    assert msg.flag == "Invalid"  # Leap second flag: Invalid
+    assert msg.lsf_ref == "GPS"  # Leap second forecast reference: GPS
+    assert msg.reserved == ""  # Reserved field
+    assert msg.wnlsf == "137"  # Week number of the new leap second
+    assert msg.dn == "7"  # Day of the week: Saturday
+    assert msg.lsf == "18"  # Leap second count after changes
+
 
