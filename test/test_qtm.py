@@ -5,7 +5,7 @@ def test_pqtmverno():
     data = "$PQTMVERNO,LC29HAANR01A04S,2022/11/04,16:39:48*34"
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.qtm.QTMVERNO
-    assert msg.subtype == "VERNO"
+    assert msg.sentence_type == "VERNO"
     assert msg.version == "LC29HAANR01A04S"
     assert msg.build_date == "2022/11/04"
     assert msg.build_time == "16:39:48"
@@ -29,7 +29,7 @@ def test_qtmepe():
     data = "$PQTMEPE,2,3.393,3.476,12.713,4.857,13.609*5D"
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.qtm.QTMEPE
-    assert msg.subtype == "EPE"
+    assert msg.sentence_type == "EPE"
     assert msg.msg_ver == "2"
     assert msg.epe_north == "3.393"
     assert msg.epe_east == "3.476"
@@ -42,7 +42,7 @@ def test_pqtmcfggeofence():
     data = "$PQTMCFGGEOFENCE,OK,1,1,0,2,30.123,-90.123,5.0,-91.456,31.789,-92.012,32.000,-93.000*41"
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.qtm.QTMCFGGEOFENCE
-    assert msg.subtype == "CFGGEOFENCE"
+    assert msg.sentence_type == "CFGGEOFENCE"
     assert msg.status == "OK"
     assert msg.index == "1"
     assert msg.enabled == "1"
@@ -63,7 +63,7 @@ def test_pqtmgeofencestatus():
     msg = pynmea2.parse(data)
 
     assert type(msg) == pynmea2.qtm.QTMGEOFENCESTATUS
-    assert msg.subtype == "GEOFENCESTATUS"
+    assert msg.sentence_type == "GEOFENCESTATUS"
     assert msg.msg_ver == "1"
     assert msg.time == "093444.000"
     assert msg.state0 == "Outside geofence"
@@ -77,7 +77,7 @@ def test_pqtmcfgsvin():
     msg = pynmea2.parse(data)
 
     assert type(msg) == pynmea2.qtm.QTMCFGSVIN
-    assert msg.subtype == "CFGSVIN"
+    assert msg.sentence_type == "CFGSVIN"
     assert msg.status == "OK"
     assert msg.mode == "2"
     assert msg.min_dur == "300"
@@ -92,7 +92,7 @@ def test_pqtmsvinstatus():
     msg = pynmea2.parse(data)
 
     assert type(msg) == pynmea2.qtm.QTMSVINSTATUS
-    assert msg.subtype == "SVINSTATUS"
+    assert msg.sentence_type == "SVINSTATUS"
     assert msg.msg_ver == "1"
     assert msg.tow == "2241"
     assert msg.valid == "In-progress"
@@ -110,7 +110,7 @@ def test_pqtmgpsstart():
     data = "$PQTMGNSSSTART,OK*79"
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.qtm.QTMGNSSSTART
-    assert msg.subtype == "GNSSSTART"
+    assert msg.sentence_type == "GNSSSTART"
     assert msg.status == "OK"
 
 def test_pqtmgnssstop():
@@ -118,7 +118,7 @@ def test_pqtmgnssstop():
     data = "$PQTMGNSSSTOP,OK*21"
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.qtm.QTMGNSSSTOP
-    assert msg.subtype == "GNSSSTOP"
+    assert msg.sentence_type == "GNSSSTOP"
     assert msg.status == "OK"
 
 def test_pqtmpvt():
@@ -127,7 +127,7 @@ def test_pqtmpvt():
     msg = pynmea2.parse(data)
 
     assert type(msg) == pynmea2.qtm.QTMPVT
-    assert msg.subtype == "PVT"
+    assert msg.sentence_type == "PVT"
     assert msg.msg_ver == "1"
     assert msg.tow == "31075000"
     assert msg.date == "20221225"
@@ -154,7 +154,7 @@ def test_pqtmcfgnmeadp():
     msg = pynmea2.parse(data)
 
     assert type(msg) == pynmea2.qtm.QTMCFGNMEADP
-    assert msg.subtype == "CFGNMEADP"
+    assert msg.sentence_type == "CFGNMEADP"
     assert msg.status == "OK"
     assert msg.utc_dp == "3"
     assert msg.pos_dp == "6"
@@ -169,7 +169,7 @@ def test_pqtmcfgrcvrmode():
     msg = pynmea2.parse(data)
 
     assert type(msg) == pynmea2.qtm.QTMCFGRCVRMODE
-    assert msg.subtype == "CFGRCVRMODE"
+    assert msg.sentence_type == "CFGRCVRMODE"
     assert msg.status == "OK"
     assert msg.mode == "2"
 
@@ -183,7 +183,7 @@ def test_pqtmpl():
     msg = pynmea2.parse(data)
 
     assert type(msg) == pynmea2.qtm.QTMPL
-    assert msg.subtype == "PL"
+    assert msg.sentence_type == "PL"
     assert msg.msg_ver == "1"
     assert msg.tow == "55045200"
     assert msg.pul == "5.00"
@@ -205,7 +205,7 @@ def test_pqtmcfgsbas():
     msg = pynmea2.parse(data)
 
     assert type(msg) == pynmea2.qtm.QTMCFGSBAS
-    assert msg.subtype == "CFGSBAS"
+    assert msg.sentence_type == "CFGSBAS"
     assert msg.status == "OK"
     assert msg.value == "2A"  # Hexadecimal value for SBAS configuration
 
@@ -222,7 +222,7 @@ def test_pqtmcfgcnst():
     msg = pynmea2.parse(data)
 
     assert type(msg) == pynmea2.qtm.QTMCFGCNST
-    assert msg.subtype == "CFGCNST"
+    assert msg.sentence_type == "CFGCNST"
     assert msg.status == "OK"
     assert msg.gps == "1"
     assert msg.glonass == "1"
@@ -245,7 +245,7 @@ def test_pqtmdop():
     msg = pynmea2.parse(data)
 
     assert type(msg) == pynmea2.qtm.QTMDOP
-    assert msg.subtype == "DOP"
+    assert msg.sentence_type == "DOP"
     assert msg.msg_ver == "1"
     assert msg.tow == "570643000"
     assert msg.gdop == "1.01"
@@ -266,7 +266,7 @@ def test_pqtmcfgfixrate():
     msg = pynmea2.parse(data)
 
     assert type(msg) == pynmea2.qtm.QTMCFGFIXRATE
-    assert msg.subtype == "CFGFIXRATE"
+    assert msg.sentence_type == "CFGFIXRATE"
     assert msg.status == "OK"
 
 def test_pqtmvel():
@@ -276,7 +276,7 @@ def test_pqtmvel():
 
     assert type(msg) == pynmea2.qtm.QTMVEL
     assert msg.version == "1"
-    assert msg.subtype == "VEL"
+    assert msg.sentence_type == "VEL"
     assert msg.time == "154512.100"
     assert msg.vel_n == "1.251"
     assert msg.vel_e == "2.452"
@@ -294,7 +294,7 @@ def test_pqtmcfgodo():
     msg = pynmea2.parse(data)
 
     assert type(msg) == pynmea2.qtm.QTMCFGODO
-    assert msg.subtype == "CFGODO"
+    assert msg.sentence_type == "CFGODO"
     assert msg.status == "OK"
     assert msg.state == "1"
     assert msg.init_dist == "100"
@@ -306,7 +306,7 @@ def test_pqtmodo():
     msg = pynmea2.parse(data)
 
     assert type(msg) == pynmea2.qtm.QTMODO
-    assert msg.subtype == "ODO"
+    assert msg.sentence_type == "ODO"
     assert msg.msg_ver == "1"
     assert msg.time == "120635.000"
     assert msg.state == "1"
