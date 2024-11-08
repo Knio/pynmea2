@@ -1061,3 +1061,558 @@ class QTMLS(QTM):
             "4": "BDS"
         }
         return constellation_map.get(value, "Unknown")
+
+class QTMDRCAL(QTM):
+    """
+    PQTMDRCAL Message
+
+    Supports:
+    - $PQTMDRCAL,<MsgVer>,<CalState>,<NavType>*<Checksum>
+
+    Field Descriptions:
+    - MsgVer: Message version (Always 1)
+    - CalState: DR calibration state
+        - 0 = Not calibrated
+        - 1 = DR is lightly calibrated
+        - 2 = DR is fully calibrated
+        - 3 = DR is fully calibrated with high-precision heading
+    - NavType: Navigation type
+        - 0 = No position
+        - 1 = GNSS only
+        - 2 = DR only
+        - 3 = Combination (GNSS + DR)
+    """
+
+    fields = (
+        ('sentence_type', 'sentence_type'),  # Always "DRCAL"
+        ('MsgVer', 'msg_ver'),  # Message version
+        ('CalState', 'cal_state'),  # DR calibration state
+        ('NavType', 'nav_type')  # Navigation type
+    )
+
+    def __init__(self, manufacturer, data):
+        super(QTMDRCAL, self).__init__(manufacturer, data)
+        # Assign the parsed fields
+        self.sentence_type = "DRCAL"
+        self.msg_ver = data[1]  # Message version
+        self.cal_state = self.parse_cal_state(data[2])  # DR calibration state
+        self.nav_type = self.parse_nav_type(data[3])  # Navigation type
+
+    @staticmethod
+    def parse_cal_state(value):
+        """
+        Parse the calibration state and return the corresponding description.
+        """
+        cal_state_map = {
+            "0": "Not calibrated",
+            "1": "DR is lightly calibrated",
+            "2": "DR is fully calibrated",
+            "3": "DR is fully calibrated with high-precision heading"
+        }
+        return cal_state_map.get(value, "Unknown")
+
+    @staticmethod
+    def parse_nav_type(value):
+        """
+        Parse the navigation type and return the corresponding description.
+        """
+        nav_type_map = {
+            "0": "No position",
+            "1": "GNSS only",
+            "2": "DR only",
+            "3": "Combination (GNSS + DR)"
+        }
+        return nav_type_map.get(value, "Unknown")
+
+class QTMIMUTYPE(QTM):
+    """
+    PQTMIMUTYPE Message
+
+    Supports:
+    - $PQTMIMUTYPE,<MsgVer>,<Status>*<Checksum>
+
+    Field Descriptions:
+    - MsgVer: Message version (Always 1)
+    - Status: IMU initialization status
+        - 0 = IMU initialization failed
+        - Others = IMU initialization successful
+    """
+
+    fields = (
+        ('sentence_type', 'sentence_type'),  # Always "IMUTYPE"
+        ('MsgVer', 'msg_ver'),  # Message version
+        ('Status', 'status')  # IMU initialization status
+    )
+
+    def __init__(self, manufacturer, data):
+        super(QTMIMUTYPE, self).__init__(manufacturer, data)
+        # Assign the parsed fields
+        self.sentence_type = "IMUTYPE"
+        self.msg_ver = data[1]  # Message version
+        self.status = self.parse_status(data[2])  # IMU initialization status
+
+    @staticmethod
+    def parse_status(value):
+        """
+        Parse the IMU initialization status and return the corresponding description.
+        """
+        return "IMU initialization failed" if value == "0" else "IMU initialization successful"
+
+class QTMVEHMSG(QTM):
+    """
+    PQTMVEHMSG Message
+
+    Supports:
+    - $PQTMVEHMSG,<MsgVer>,<Timestamp>,<Param1>,<Param2>,...,<ParamN>*<Checksum>
+
+    Field Descriptions:
+    - MsgVer: Message version indicating the type of vehicle information
+        - 1: Vehicle speed (in m/s)
+        - 2: Cumulative wheel ticks
+        - 3: Speeds of four wheels (in m/s)
+        - 4: Cumulative wheel ticks of four wheels
+    - Timestamp: Time since power-on in milliseconds
+    - Parameters: Vary depending on MsgVer
+    """
+
+    fields = (
+        ('sentence_type', 'sentence_type'),  # Always "VEHMSG"
+        ('MsgVer', 'msg_ver'),  # Message version
+        ('Timestamp', 'timestamp')  # Timestamp since power-on
+    )
+
+    def __init__(self, manufacturer, data):
+        super(QTMVEHMSG, self).__init__(manufacturer, data)
+        self.sentence_type = "VEHMSG"
+        self.msg_ver = data[1]  # Message version
+        self.timestamp = data[2]  # Timestamp in milliseconds
+
+        # Parse parameters based on MsgVer
+        self.parameters = self.parse_parameters(data[3:], self.msg_ver)
+
+    def parse_parameters(self, params, msg_ver):
+        """
+        Parse parameters based on MsgVer.
+        """
+        if msg_ver == "1":
+            return {"VehSpeed": float(params[0])}  # Speed in m/s
+        elif msg_ver == "2":
+            return {
+                "WheelTickCNT": int(params[0]),  # Cumulative wheel ticks
+                "FWD_Ind": self.parse_fwd_ind(int(params[1]))  # Forward/backward indicator
+            }
+        elif msg_ver == "3":
+            return {
+                "LF_Spd": float(params[0]),  # Left front wheel speed
+                "RF_Spd": float(params[1]),  # Right front wheel speed
+                "LR_Spd": float(params[2]),  # Left rear wheel speed
+                "RR_Spd": float(params[3])   # Right rear wheel speed
+            }
+        elif msg_ver == "4":
+            return {
+                "LF_TickCNT": int(params[0]),  # Left front wheel tick count
+                "RF_TickCNT": int(params[1]),  # Right front wheel tick count
+                "LR_TickCNT": int(params[2]),  # Left rear wheel tick count
+                "RR_TickCNT": int(params[3]),  # Right rear wheel tick count
+                "FWD_Ind": self.parse_fwd_ind(int(params[4]))  # Forward/backward indicator
+            }
+        else:
+            return {}
+
+    @staticmethod
+    def parse_fwd_ind(value):
+        """
+        Parse the forward/backward indicator.
+        """
+        fwd_ind_map = {
+            0: "Invalid state",
+            1: "Forward",
+            2: "Backward"
+        }
+        return fwd_ind_map.get(value, "Unknown")
+
+class QTMINS(QTM):
+    """
+    PQTMINS Message
+
+    Supports:
+    - $PQTMINS,<Timestamp>,<SolType>,<Lat>,<Lon>,<Height>,<VEL_N>,<VEL_E>,<VEL_D>,<Roll>,<Pitch>,<Yaw>*<Checksum>
+
+    Field Descriptions:
+    - Timestamp: Time since power-on in milliseconds
+    - SolType: Solution type
+        - 0 = DR not ready. Roll and pitch ready.
+        - 1 = DR not ready. GNSS, roll, pitch, and relative heading ready.
+        - 2 = GNSS + DR mode. DR calibrated.
+        - 3 = DR only mode.
+    - Lat: Latitude in degrees
+    - Lon: Longitude in degrees
+    - Height: Height in meters
+    - VEL_N: Northward velocity in m/s
+    - VEL_E: Eastward velocity in m/s
+    - VEL_D: Downward velocity in m/s
+    - Roll: Roll angle in degrees, range: -180.0 to 180.0
+    - Pitch: Pitch angle in degrees, range: -90.0 to 90.0
+    - Yaw: Heading angle in degrees, range: 0.0 to 360.0
+    """
+
+    fields = (
+        ('sentence_type', 'sentence_type'),  # Always "INS"
+        ('Timestamp', 'timestamp'),  # Time since power-on
+        ('SolType', 'sol_type'),  # Solution type
+        ('Lat', 'latitude'),  # Latitude
+        ('Lon', 'longitude'),  # Longitude
+        ('Height', 'height'),  # Height in meters
+        ('VEL_N', 'vel_n'),  # Northward velocity
+        ('VEL_E', 'vel_e'),  # Eastward velocity
+        ('VEL_D', 'vel_d'),  # Downward velocity
+        ('Roll', 'roll'),  # Roll angle
+        ('Pitch', 'pitch'),  # Pitch angle
+        ('Yaw', 'yaw')  # Heading angle
+    )
+
+    def __init__(self, manufacturer, data):
+        super(QTMINS, self).__init__(manufacturer, data)
+        # Assign the parsed fields
+        self.sentence_type = "INS"
+        self.timestamp = int(data[1])  # Timestamp in milliseconds
+        self.sol_type = self.parse_solution_type(int(data[2]))  # Solution type
+        self.latitude = float(data[3])  # Latitude
+        self.longitude = float(data[4])  # Longitude
+        self.height = float(data[5])  # Height in meters
+        self.vel_n = float(data[6])  # Northward velocity
+        self.vel_e = float(data[7])  # Eastward velocity
+        self.vel_d = float(data[8])  # Downward velocity
+        self.roll = float(data[9])  # Roll angle
+        self.pitch = float(data[10])  # Pitch angle
+        self.yaw = float(data[11])  # Heading angle
+
+    @staticmethod
+    def parse_solution_type(value):
+        """
+        Parse the solution type and return the corresponding description.
+        """
+        solution_type_map = {
+            0: "DR not ready. Roll and pitch ready.",
+            1: "DR not ready. GNSS, roll, pitch, and relative heading ready.",
+            2: "GNSS + DR mode. DR calibrated.",
+            3: "DR only mode."
+        }
+        return solution_type_map.get(value, "Unknown")
+
+class QTMGPS(QTM):
+    """
+    PQTMGPS Message
+
+    Supports:
+    - $PQTMGPS,<Timestamp>,<TOW>,<Lat>,<Lon>,<Altitude>,<Speed>,<Heading>,<Accuracy>,<HDOP>,<PDOP>,<NumSatUsed>,<FixMode>*<Checksum>
+
+    Field Descriptions:
+    - Timestamp: Time since power-on in milliseconds (string)
+    - TOW: Time of week in seconds (string)
+    - Lat: Latitude in degrees (string)
+    - Lon: Longitude in degrees (string)
+    - Altitude: Altitude in meters (string)
+    - Speed: Ground speed in m/s (string)
+    - Heading: Heading of vehicle in degrees (string)
+    - Accuracy: Horizontal accuracy estimate in meters (string)
+    - HDOP: Horizontal dilution of precision (string)
+    - PDOP: Position dilution of precision (string)
+    - NumSatUsed: Number of satellites used in navigation (string)
+    - FixMode: Fix mode (string)
+    """
+
+    fields = (
+        ('sentence_type', 'sentence_type'),  # Always "GPS"
+        ('Timestamp', 'timestamp'),  # Time since power-on
+        ('TOW', 'tow'),  # Time of week
+        ('Lat', 'latitude'),  # Latitude
+        ('Lon', 'longitude'),  # Longitude
+        ('Altitude', 'altitude'),  # Altitude in meters
+        ('Speed', 'speed'),  # Ground speed in m/s
+        ('Heading', 'heading'),  # Heading in degrees
+        ('Accuracy', 'accuracy'),  # Horizontal accuracy in meters
+        ('HDOP', 'hdop'),  # Horizontal dilution of precision
+        ('PDOP', 'pdop'),  # Position dilution of precision
+        ('NumSatUsed', 'num_sat_used'),  # Number of satellites used
+        ('FixMode', 'fix_mode')  # Fix mode
+    )
+
+    def __init__(self, manufacturer, data):
+        super(QTMGPS, self).__init__(manufacturer, data)
+        # Assign the parsed fields, keeping them as strings
+        self.sentence_type = "GPS"
+        self.timestamp = data[1]  # Timestamp as string
+        self.tow = data[2]  # Time of week as string
+        self.latitude = data[3]  # Latitude as string
+        self.longitude = data[4]  # Longitude as string
+        self.altitude = data[5]  # Altitude as string
+        self.speed = data[6]  # Speed as string
+        self.heading = data[7]  # Heading as string
+        self.accuracy = data[8]  # Accuracy as string
+        self.hdop = data[9]  # HDOP as string
+        self.pdop = data[10]  # PDOP as string
+        self.num_sat_used = data[11]  # NumSatUsed as string
+        self.fix_mode = self.parse_fix_mode(data[12])  # FixMode as string
+
+    @staticmethod
+    def parse_fix_mode(value):
+        """
+        Parse the fix mode and return the corresponding description.
+        """
+        fix_mode_map = {
+            "0": "No fix",
+            "2": "2D fix",
+            "3": "3D fix (including RTK float or RTK fixed)"
+        }
+        return fix_mode_map.get(value, "Unknown")
+
+class QTMVEHMOT(QTM):
+    """
+    PQTMVEHMOT Message
+
+    Supports:
+    - Version 1: $PQTMVEHMOT,1,<PeakAcceleration>,<PeakAngularRate>*<Checksum>
+    - Version 2: $PQTMVEHMOT,2,<UTC>,<VehType>,<MotState>,<AccStatus>,<TurningStatus>,<Res0>,<Res1>,<Res2>,<Res3>,<Res4>*<Checksum>
+
+    Field Descriptions:
+    - MsgVer: Message version (1 or 2)
+    - Version 1:
+        - PeakAcceleration: Peak acceleration of the vehicle (string)
+        - PeakAngularRate: Peak angular rate of the vehicle (string)
+    - Version 2:
+        - UTC: UTC time in hhmmss.sss format (string)
+        - VehType: Vehicle type (1 to 4, string)
+        - MotState: Motion state of the vehicle (string)
+        - AccStatus: Vehicle acceleration status (string)
+        - TurningStatus: Vehicle turning status (string)
+        - Res0 to Res4: Reserved fields, always null (string)
+    """
+
+    fields = (
+        ('sentence_type', 'sentence_type'),  # Always "VEHMOT"
+        ('MsgVer', 'msg_ver'),  # Message version
+    )
+
+    def __init__(self, manufacturer, data):
+        super(QTMVEHMOT, self).__init__(manufacturer, data)
+        self.sentence_type = "VEHMOT"
+        self.msg_ver = data[1]  # Message version
+
+        if self.msg_ver == "1":
+            # Version 1: Peak Acceleration and Angular Rate
+            self.peak_acceleration = data[2]  # Peak acceleration as string
+            self.peak_angular_rate = data[3]  # Peak angular rate as string
+        elif self.msg_ver == "2":
+            # Version 2: Detailed Vehicle Motion Information
+            self.utc = data[2]  # UTC time as string
+            self.veh_type = data[3]  # Vehicle type as string
+            self.mot_state = data[4]  # Motion state as string
+            self.acc_status = data[5]  # Acceleration status as string
+            self.turning_status = data[6]  # Turning status as string
+            self.reserved = data[7:12]  # Reserved fields as list of strings
+
+    def parse_veh_type(self):
+        """
+        Parse the vehicle type and return the description.
+        """
+        veh_type_map = {
+            "1": "General-purpose vehicle",
+            "2": "Small vehicle",
+            "3": "Medium vehicle",
+            "4": "Large vehicle"
+        }
+        return veh_type_map.get(self.veh_type, "Unknown")
+
+    def parse_mot_state(self):
+        """
+        Parse the motion state and return the description.
+        """
+        mot_state_map = {
+            "1": "Stopped",
+            "2": "Moving"
+        }
+        return mot_state_map.get(self.mot_state, "Unknown")
+
+    def parse_acc_status(self):
+        """
+        Parse the acceleration status and return the description.
+        """
+        acc_status_map = {
+            "1": "None (No acceleration detected)",
+            "2": "Normal acceleration",
+            "3": "Rapid acceleration",
+            "4": "Normal deceleration",
+            "5": "Rapid deceleration"
+        }
+        return acc_status_map.get(self.acc_status, "Unknown")
+
+    def parse_turning_status(self):
+        """
+        Parse the turning status and return the description.
+        """
+        turning_status_map = {
+            "1": "None (No turning motion detected)",
+            "2": "Normal turn left",
+            "3": "Sharp turn left",
+            "4": "Normal turn right",
+            "5": "Sharp turn right"
+        }
+        return turning_status_map.get(self.turning_status, "Unknown")
+
+class QTMSENMSG(QTM):
+    """
+    PQTMSENMSG Message
+
+    Supports:
+    - MsgVer = 2: $PQTMSENMSG,2,<TimeStamp>,<IMU_Temp>,<IMU_GYRO_X>,<IMU_GYRO_Y>,<IMU_GYRO_Z>,<IMU_ACC_X>,<IMU_ACC_Y>,<IMU_ACC_Z>*<Checksum>
+    - MsgVer = 4: $PQTMSENMSG,4,<TimeStamp>,<IMU_Temp>,<IMU_GYRO_X>,<IMU_GYRO_Y>,<IMU_GYRO_Z>,<IMU_ACC_X>,<IMU_ACC_Y>,<IMU_ACC_Z>*<Checksum>
+
+    Field Descriptions:
+    - MsgVer: Message version (2 or 4)
+    - TimeStamp: Time since power-on in milliseconds (string)
+    - IMU_Temp: IMU temperature in Celsius (string)
+    - IMU_GYRO_X/Y/Z: IMU gyroscope values for X, Y, Z axes in degrees per second (string)
+    - IMU_ACC_X/Y/Z: IMU accelerometer values for X, Y, Z axes in g (string)
+    """
+
+    fields = (
+        ('sentence_type', 'sentence_type'),  # Always "SENMSG"
+        ('MsgVer', 'msg_ver'),  # Message version
+    )
+
+    def __init__(self, manufacturer, data):
+        super(QTMSENMSG, self).__init__(manufacturer, data)
+        self.sentence_type = "SENMSG"
+        self.msg_ver = data[1]  # Message version
+
+        if self.msg_ver in ["2", "4"]:
+            # Common fields for both MsgVer = 2 and 4
+            self.timestamp = data[2]  # Time since power-on as string
+            self.imu_temp = data[3]  # IMU temperature as string
+            self.imu_gyro_x = data[4]  # IMU gyroscope X-axis as string
+            self.imu_gyro_y = data[5]  # IMU gyroscope Y-axis as string
+            self.imu_gyro_z = data[6]  # IMU gyroscope Z-axis as string
+            self.imu_acc_x = data[7]  # IMU accelerometer X-axis as string
+            self.imu_acc_y = data[8]  # IMU accelerometer Y-axis as string
+            self.imu_acc_z = data[9]  # IMU accelerometer Z-axis as string
+        else:
+            raise ValueError("Unsupported MsgVer: Only 2 and 4 are supported.")
+
+class QTMDRPVA(QTM):
+    """
+    PQTMDRPVA Message
+
+    Supports:
+    - $PQTMDRPVA,<MsgVer>,<Timestamp>,<Time>,<SolType>,<Lat>,<Lon>,<Alt>,<Sep>,<VelN>,<VelE>,<VelD>,<Spd>,<Roll>,<Pitch>,<Heading>*<Checksum>
+
+    Field Descriptions:
+    - MsgVer: Message version (Always 1 for this version)
+    - Timestamp: Milliseconds since module turn-on (string)
+    - Time: UTC time in hhmmss.sss format (string)
+    - SolType: Solution type (0 = No fix, 1 = GNSS only, 2 = Combination (GNSS + DR), 3 = DR only) (string)
+    - Lat: Latitude in degrees (string)
+    - Lon: Longitude in degrees (string)
+    - Alt: Altitude in meters (string)
+    - Sep: Geoidal separation in meters (string)
+    - VelN: North velocity in m/s (string)
+    - VelE: East velocity in m/s (string)
+    - VelD: Down velocity in m/s (string)
+    - Spd: Ground speed in m/s (string)
+    - Roll: Roll angle in degrees, range: -180.000000 to 180.000000 (string)
+    - Pitch: Pitch angle in degrees, range: -90.000000 to 90.000000 (string)
+    - Heading: Heading in degrees, range: 0.000000 to 360.000000 (string)
+    """
+
+    fields = (
+        ('sentence_type', 'sentence_type'),  # Always "DRPVA"
+        ('MsgVer', 'msg_ver'),  # Message version
+        ('Timestamp', 'timestamp'),  # Milliseconds since turn-on
+        ('Time', 'time'),  # UTC time
+        ('SolType', 'sol_type'),  # Solution type
+        ('Lat', 'latitude'),  # Latitude
+        ('Lon', 'longitude'),  # Longitude
+        ('Alt', 'altitude'),  # Altitude
+        ('Sep', 'sep'),  # Geoidal separation
+        ('VelN', 'vel_n'),  # North velocity
+        ('VelE', 'vel_e'),  # East velocity
+        ('VelD', 'vel_d'),  # Down velocity
+        ('Spd', 'speed'),  # Ground speed
+        ('Roll', 'roll'),  # Roll angle
+        ('Pitch', 'pitch'),  # Pitch angle
+        ('Heading', 'heading')  # Heading
+    )
+
+    def __init__(self, manufacturer, data):
+        super(QTMDRPVA, self).__init__(manufacturer, data)
+        self.sentence_type = "DRPVA"
+        self.msg_ver = data[1]  # Message version as string
+        self.timestamp = data[2]  # Timestamp as string
+        self.time = data[3]  # UTC time as string
+        self.sol_type = self.parse_solution_type(data[4])  # Parse Solution type
+        self.latitude = data[5]  # Latitude as string
+        self.longitude = data[6]  # Longitude as string
+        self.altitude = data[7]  # Altitude as string
+        self.sep = data[8]  # Geoidal separation as string
+        self.vel_n = data[9]  # North velocity as string
+        self.vel_e = data[10]  # East velocity as string
+        self.vel_d = data[11]  # Down velocity as string
+        self.speed = data[12]  # Ground speed as string
+        self.roll = data[13]  # Roll angle as string
+        self.pitch = data[14]  # Pitch angle as string
+        self.heading = data[15]  # Heading as string
+
+    @staticmethod
+    def parse_solution_type(value):
+        """
+        Parse the solution type and return the corresponding description.
+        """
+        sol_type_map = {
+            "0": "No fix",
+            "1": "GNSS only",
+            "2": "Combination (GNSS + DR)",
+            "3": "DR only"
+        }
+        return sol_type_map.get(value, "Unknown")
+
+class QTMVEHATT(QTM):
+    """
+    PQTMVEHATT Message
+
+    Supports:
+    - $PQTMVEHATT,<MsgVer>,<Timestamp>,<Roll>,<Pitch>,<Heading>,<Acc_Roll>,<Acc_Pitch>,<Acc_Heading>*<Checksum>
+
+    Field Descriptions:
+    - MsgVer: Message version (Always 1 for this version)
+    - Timestamp: Milliseconds since power-on (string)
+    - Roll: Vehicle roll angle in degrees, range: -180.000000 to 180.000000 (string)
+    - Pitch: Vehicle pitch angle in degrees, range: -90.000000 to 90.000000 (string)
+    - Heading: Vehicle heading angle in degrees, range: 0.000000 to 360.000000 (string)
+    - Acc_Roll: Vehicle roll accuracy in degrees, range: 0.000000 to 360.000000 (string)
+    - Acc_Pitch: Vehicle pitch accuracy in degrees, range: 0.000000 to 180.000000 (string)
+    - Acc_Heading: Vehicle heading accuracy in degrees, range: 0.000000 to 360.000000 (string)
+    """
+
+    fields = (
+        ('sentence_type', 'sentence_type'),  # Always "VEHATT"
+        ('MsgVer', 'msg_ver'),  # Message version
+        ('Timestamp', 'timestamp'),  # Milliseconds since power-on
+        ('Roll', 'roll'),  # Roll angle
+        ('Pitch', 'pitch'),  # Pitch angle
+        ('Heading', 'heading'),  # Heading angle
+        ('Acc_Roll', 'acc_roll'),  # Roll accuracy
+        ('Acc_Pitch', 'acc_pitch'),  # Pitch accuracy
+        ('Acc_Heading', 'acc_heading')  # Heading accuracy
+    )
+
+    def __init__(self, manufacturer, data):
+        super(QTMVEHATT, self).__init__(manufacturer, data)
+        self.sentence_type = "VEHATT"
+        self.msg_ver = data[1]  # Message version as string
+        self.timestamp = data[2]  # Timestamp as string
+        self.roll = data[3]  # Roll angle as string
+        self.pitch = data[4]  # Pitch angle as string
+        self.heading = data[5]  # Heading angle as string
+        self.acc_roll = data[6]  # Roll accuracy as string
+        self.acc_pitch = data[7]  # Pitch accuracy as string
+        self.acc_heading = data[8]  # Heading accuracy as string

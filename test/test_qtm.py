@@ -368,4 +368,222 @@ def test_pqtmls():
     assert msg.dn == "7"  # Day of the week: Saturday
     assert msg.lsf == "18"  # Leap second count after changes
 
+def test_pqtmdrcal():
+    """Test PQTMDRCAL Message with example data."""
+    # Example of a PQTMDRCAL message
+    data = "$PQTMDRCAL,1,0,1*5C"
+    msg = pynmea2.parse(data)
 
+    assert type(msg) == pynmea2.qtm.QTMDRCAL
+    assert msg.sentence_type == "DRCAL"
+    assert msg.msg_ver == "1"  # Message version
+    assert msg.cal_state == "Not calibrated"  # DR calibration state
+    assert msg.nav_type == "GNSS only"  # Navigation type
+
+def test_pqtmimutype():
+    """Test PQTMIMUTYPE Message with example data."""
+    # Example of a PQTMIMUTYPE message
+    data = "$PQTMIMUTYPE,1,2*52"
+    msg = pynmea2.parse(data)
+
+    assert type(msg) == pynmea2.qtm.QTMIMUTYPE
+    assert msg.sentence_type == "IMUTYPE"
+    assert msg.msg_ver == "1"  # Message version
+    assert msg.status == "IMU initialization successful"  # IMU initialization status
+
+def test_pqtmvehmsg():
+    """Test PQTMVEHMSG Message with different MsgVer examples."""
+
+    # Example for MsgVer = 1
+    data1 = "$PQTMVEHMSG,1,0,3.6*1C"
+    msg1 = pynmea2.parse(data1)
+    assert type(msg1) == pynmea2.qtm.QTMVEHMSG
+    assert msg1.sentence_type == "VEHMSG"
+    assert msg1.msg_ver == "1"
+    assert msg1.timestamp == "0"
+    assert msg1.parameters["VehSpeed"] == 3.6
+
+    # Example for MsgVer = 2
+    data2 = "$PQTMVEHMSG,2,0,100,1*18"
+    msg2 = pynmea2.parse(data2)
+    assert msg2.msg_ver == "2"
+    assert msg2.timestamp == "0"
+    assert msg2.parameters["WheelTickCNT"] == 100
+    assert msg2.parameters["FWD_Ind"] == "Forward"
+
+    # Example for MsgVer = 3
+    data3 = "$PQTMVEHMSG,3,0,3.6,3.6,3.6,3.6*19"
+    msg3 = pynmea2.parse(data3)
+    assert msg3.msg_ver == "3"
+    assert msg3.parameters["LF_Spd"] == 3.6
+    assert msg3.parameters["RF_Spd"] == 3.6
+    assert msg3.parameters["LR_Spd"] == 3.6
+    assert msg3.parameters["RR_Spd"] == 3.6
+    assert msg3.parameters["RR_Spd"] == 3.6
+
+    # Example for MsgVer = 4
+    data4 = "$PQTMVEHMSG,4,0,100,100,100,100,1*03"
+    msg4 = pynmea2.parse(data4)
+    assert msg4.msg_ver == "4"
+    assert msg4.parameters["LF_TickCNT"] == 100
+    assert msg4.parameters["RF_TickCNT"] == 100
+    assert msg4.parameters["LR_TickCNT"] == 100
+    assert msg4.parameters["RR_TickCNT"] == 100
+    assert msg4.parameters["FWD_Ind"] == "Forward"
+
+def test_pqtmins():
+    """Test PQTMINS Message with example data."""
+    # Example of a PQTMINS message
+    data = "$PQTMINS,240951,1,31.82222216,117.11578436,62.555605,-0.004233,0.005535,-0.004011,0.00,0.00,127.41*40"
+    msg = pynmea2.parse(data)
+
+    assert type(msg) == pynmea2.qtm.QTMINS
+    assert msg.sentence_type == "INS"
+    assert msg.timestamp == "240951"
+    assert msg.sol_type == "DR not ready. GNSS, roll, pitch, and relative heading ready."
+    assert msg.latitude == "31.82222216"
+    assert msg.longitude == "117.11578436"
+    assert msg.height == "62.555605"
+    assert msg.vel_n == "-0.004233"
+    assert msg.vel_e == "0.005535"
+    assert msg.vel_d == "-0.004011"
+    assert msg.roll == "0.0"
+    assert msg.pitch == "0.0"
+    assert msg.yaw == "127.41"
+
+def test_pqtmgps():
+    """Test PQTMGPS Message with example data."""
+    # Example of a PQTMGPS message
+    data = "$PQTMGPS,86139,94183,31.82218794,117.11579022,65.755080,0.027,94.68,2.533952,0.555471,0.886183,29,3*6B"
+    msg = pynmea2.parse(data)
+
+    assert type(msg) == pynmea2.qtm.QTMGPS
+    assert msg.sentence_type == "GPS"
+    assert msg.timestamp == "86139"
+    assert msg.tow == "94183"
+    assert msg.latitude == "31.82218794"
+    assert msg.longitude == "117.11579022"
+    assert msg.altitude == "65.755080"
+    assert msg.speed == "0.027"
+    assert msg.heading == "94.68"
+    assert msg.accuracy == "2.533952"
+    assert msg.hdop == "0.555471"
+    assert msg.pdop == "0.886183"
+    assert msg.num_sat_used == "29"
+    assert msg.fix_mode == "3D fix (including RTK float or RTK fixed)"
+
+def test_pqtmvehmot():
+    """Test PQTMVEHMOT Message with both MsgVer examples."""
+
+    # Example for MsgVer = 1
+    data1 = "$PQTMVEHMOT,1,0.288124,0.159930*0A"
+    msg1 = pynmea2.parse(data1)
+    assert type(msg1) == pynmea2.qtm.QTMVEHMOT
+    assert msg1.sentence_type == "VEHMOT"
+    assert msg1.msg_ver == "1"
+    assert msg1.peak_acceleration == "0.288124"
+    assert msg1.peak_angular_rate == "0.159930"
+
+    # Example for MsgVer = 2
+    data2 = "$PQTMVEHMOT,2,204159.000,1,2,1,1,,,,,*1D"
+    msg2 = pynmea2.parse(data2)
+    assert msg2.msg_ver == "2"
+    assert msg2.utc == "204159.000"
+    assert msg2.veh_type == "1"
+    assert msg2.mot_state == "2"
+    assert msg2.acc_status == "1"
+    assert msg2.turning_status == "1"
+    assert msg2.reserved == ["", "", "", "", ""]
+
+def test_pqtmsenmsg():
+    """Test PQTMSENMSG Message with both MsgVer examples."""
+
+    # Example for MsgVer = 2
+    data2 = "$PQTMSENMSG,2,1000,22.21,0.124521,1.241541,0.912451,0.145785,1.241541,8.954214*2D"
+    msg2 = pynmea2.parse(data2)
+    assert type(msg2) == pynmea2.qtm.QTMSENMSG
+    assert msg2.sentence_type == "SENMSG"
+    assert msg2.msg_ver == "2"
+    assert msg2.timestamp == "1000"
+    assert msg2.imu_temp == "22.21"
+    assert msg2.imu_gyro_x == "0.124521"
+    assert msg2.imu_gyro_y == "1.241541"
+    assert msg2.imu_gyro_z == "0.912451"
+    assert msg2.imu_acc_x == "0.145785"
+    assert msg2.imu_acc_y == "1.241541"
+    assert msg2.imu_acc_z == "8.954214"
+
+    # Example for MsgVer = 4
+    data4 = "$PQTMSENMSG,4,1000,22.21,0.124521,1.241541,0.912451,0.145785,1.241541,8.954214*2B"
+    msg4 = pynmea2.parse(data4)
+    assert msg4.msg_ver == "4"
+    assert msg4.timestamp == "1000"
+    assert msg4.imu_temp == "22.21"
+    assert msg4.imu_gyro_x == "0.124521"
+    assert msg4.imu_gyro_y == "1.241541"
+    assert msg4.imu_gyro_z == "0.912451"
+    assert msg4.imu_acc_x == "0.145785"
+    assert msg4.imu_acc_y == "1.241541"
+    assert msg4.imu_acc_z == "8.954214"
+
+def test_pqtmdrpva():
+    """Test PQTMDRPVA Message with example data."""
+
+    # Example with no fix
+    data1 = "$PQTMDRPVA,1,1000,163355.000,0,,,,,,,,,,,*7C"
+    msg1 = pynmea2.parse(data1)
+    assert type(msg1) == pynmea2.qtm.QTMDRPVA
+    assert msg1.sentence_type == "DRPVA"
+    assert msg1.msg_ver == "1"
+    assert msg1.timestamp == "1000"
+    assert msg1.time == "163355.000"
+    assert msg1.sol_type == "No fix"  # Human-readable description
+    assert msg1.latitude == ""
+    assert msg1.longitude == ""
+    assert msg1.altitude == ""
+    assert msg1.sep == ""
+    assert msg1.vel_n == ""
+    assert msg1.vel_e == ""
+    assert msg1.vel_d == ""
+    assert msg1.speed == ""
+    assert msg1.roll == ""
+    assert msg1.pitch == ""
+    assert msg1.heading == ""
+
+    # Example with GNSS + DR fix
+    data2 = "$PQTMDRPVA,1,75000,083737.000,2,31.12738291,117.26372910,34.212,5.267,3.212,2.928,0.238,4.346,0.392663,1.300793,0.030088*5E"
+    msg2 = pynmea2.parse(data2)
+    assert msg2.msg_ver == "1"
+    assert msg2.timestamp == "75000"
+    assert msg2.time == "083737.000"
+    assert msg2.sol_type == "Combination (GNSS + DR)"  # Human-readable description
+    assert msg2.latitude == "31.12738291"
+    assert msg2.longitude == "117.26372910"
+    assert msg2.altitude == "34.212"
+    assert msg2.sep == "5.267"
+    assert msg2.vel_n == "3.212"
+    assert msg2.vel_e == "2.928"
+    assert msg2.vel_d == "0.238"
+    assert msg2.speed == "4.346"
+    assert msg2.roll == "0.392663"
+    assert msg2.pitch == "1.300793"
+    assert msg2.heading == "0.030088"
+
+
+def test_pqtmvehatt():
+    """Test PQTMVEHATT Message with example data."""
+
+    # Example data
+    data = "$PQTMVEHATT,1,1000,10.002154,20.235412,160.145185,1.254123,5.451214,5.012154*3D"
+    msg = pynmea2.parse(data)
+
+    assert type(msg) == pynmea2.qtm.QTMVEHATT
+    assert msg.sentence_type == "VEHATT"
+    assert msg.msg_ver == "1"
+    assert msg.timestamp == "1000"
+    assert msg.roll == "10.002154"
+    assert msg.pitch == "20.235412"
+    assert msg.heading == "160.145185"
+    assert msg.acc_roll == "1.254123"
+    assert msg.acc_pitch == "5.451214"
+    assert msg.acc_heading == "5.012154"
