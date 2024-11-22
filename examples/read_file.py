@@ -1,6 +1,6 @@
 import pynmea2
 
-file = open('examples/data.log', encoding='utf-8')
+file = open('data.log', encoding='utf-8') # Replaced example/data.log with data.log
 
 for line in file.readlines():
     try:
