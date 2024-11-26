@@ -9,7 +9,7 @@ class NMEAStreamReader(object):
     '''
     Reads NMEA sentences from a stream.
     '''
-    def __init__(self, stream=None, errors='raise'):
+    def __init__(self, stream=None, errors='raise', validate=True):
         '''
         Create NMEAStreamReader object.
 
@@ -23,6 +23,8 @@ class NMEAStreamReader(object):
                                 stream, and continue reading at the next line
             `'ignore'`          completely ignore and suppress the error, and
                                 continue reading at the next line
+
+        `validate`: If `False`, do not perform checksum validation on the incoming data.
         '''
 
         if errors not in ERRORS:
@@ -30,6 +32,7 @@ class NMEAStreamReader(object):
                     .format(ERRORS, errors))
 
         self.errors = errors
+        self.validate = validate
         self.stream = stream
         self.buffer = ''
 
@@ -50,7 +53,7 @@ class NMEAStreamReader(object):
 
         for line in lines:
             try:
-                msg = nmea.NMEASentence.parse(line)
+                msg = nmea.NMEASentence.parse(line, check=self.validate)
                 yield msg
             except nmea.ParseError as e:
                 if self.errors == 'raise':
