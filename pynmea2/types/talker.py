@@ -1107,3 +1107,15 @@ class HEV(TalkerSentence):
     Heave
     """
     fields = (("Heave", "heave", float),)
+
+# Used by AIRMAR and some other sonar/depth instruments.
+# The talker ID is IN (Integrated Navigation — often used by Airmar)
+# and the sentence type THS stands for Transducer Heading and Status.
+# Example: '$INTHS,304.5,A*25'
+class THS(TalkerSentence):
+    """ Transducer Heading and Status
+    """
+    fields = (
+        ("Heading", "heading", Decimal),
+        ("Status", "status"),
+    )

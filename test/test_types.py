@@ -351,3 +351,12 @@ def test_MTA():
     assert msg.sentence_type == 'MTA'
     assert msg.temperature == 10.0
     assert msg.units == 'C'
+
+def test_THS():
+    data = "$INTHS,304.5,A*25"
+    msg = pynmea2.parse(data)
+    assert msg.render() == data
+    assert msg.talker == 'IN'
+    assert msg.sentence_type == 'THS'
+    assert msg.heading == 304.5
+    assert msg.status == 'A'
