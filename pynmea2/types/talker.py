@@ -1119,3 +1119,15 @@ class THS(TalkerSentence):
         ("Heading", "heading", Decimal),
         ("Status", "status"),
     )
+
+# Example: '$--MMB,x.x,I,1004.6,B*03'
+class MMB(TalkerSentence):
+    """
+    Barometer
+    """
+    fields = (
+      ("PressureINHG", "pressure_ingh", Decimal),
+      ("UnitINHG", "unit_ingh"),
+      ("PressureBars", "pressure_bars", Decimal),
+      ("UnitBars", "unit_bars")
+    )
