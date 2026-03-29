@@ -360,3 +360,12 @@ def test_THS():
     assert msg.sentence_type == 'THS'
     assert msg.heading == 304.5
     assert msg.status == 'A'
+
+def test_MMB():
+    data = "$WIMMB,,,1004.6,B*03"
+    msg = pynmea2.parse(data)
+    assert msg.render() == data
+    assert msg.talker == 'WI'
+    assert msg.sentence_type == 'MMB'
+    assert msg.pressure_bars == 1004.6
+    assert msg.unit_bars == "B"
