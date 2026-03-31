@@ -87,7 +87,7 @@ class NMEASentence(NMEASentenceBase):
         return reduce(operator.xor, map(ord, nmea_str), 0)
 
     @staticmethod
-    def parse(line, check=False):
+    def parse(line, check=False, ignore_wrong_checksum=False):
         '''
         parse(line)
 
@@ -111,7 +111,7 @@ class NMEASentence(NMEASentenceBase):
         if checksum:
             cs1 = int(checksum, 16)
             cs2 = NMEASentence.checksum(nmea_str)
-            if cs1 != cs2:
+            if cs1 != cs2 and not ignore_wrong_checksum:
                 raise ChecksumError(
                     'checksum does not match: %02X != %02X' % (cs1, cs2), data)
         elif check:
