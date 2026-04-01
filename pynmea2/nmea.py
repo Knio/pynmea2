@@ -118,6 +118,14 @@ class NMEASentence(NMEASentenceBase):
             raise ChecksumError(
                 'strict checking requested but checksum missing', data)
 
+
+        # For PQTM messages, extract the manufacturer (always "QTM") and subtype from concatenated type
+        if sentence_type.startswith("PQTM") and len(sentence_type) > 4:
+            manufacturer = "QTM"
+            sentence_type = sentence_type[4:]  # Extract "SAVEPAR" part
+            data.insert(0, sentence_type)  # Add sentence_type to data for class handling
+            manufacturer += sentence_type  # Create full type for lookup
+
         talker_match = NMEASentence.talker_re.match(sentence_type)
         if talker_match:
             talker = talker_match.group('talker')
@@ -242,4 +250,4 @@ class ProprietarySentence(NMEASentence):
         self.data = list(data)
 
     def identifier(self):
-        return 'P%s' % (self.manufacturer)
+        return 'P%s' % self.manufacturer
