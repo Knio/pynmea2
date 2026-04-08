@@ -21,7 +21,7 @@ def test_proprietary_2():
     msg = pynmea2.parse(data)
     assert msg.manufacturer == 'LCJ'
     assert msg.data == ['E81B8', '64A0', '2800', '2162', '0E', '']
-    assert repr(msg) == "<ProprietarySentence() data=['E81B8', '64A0', '2800', '2162', '0E', '']>"
+    assert repr(msg) == "<ProprietarySentence(_extra1='E81B8', _extra2='64A0', _extra3='2800', _extra4='2162', _extra5='0E', _extra6='')>"
     assert msg.render(checksum=False) == data
 
 
