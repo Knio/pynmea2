@@ -1131,3 +1131,12 @@ class MMB(TalkerSentence):
       ("PressureBars", "pressure_bars", float),
       ("UnitBars", "unit_bars")
     )
+
+class MHU(TalkerSentence):
+    """Relative humidity."""
+    fields = (
+        ('Relative Humidity', 'relative_humidity', Decimal),
+        ('Absolute Humidity', 'absolute_humidity', Decimal),
+        ('Dew Point Temperature', 'dew_point_temperature', Decimal),
+        ('Temperature Unit', 'temperature_unit', str),
+    )

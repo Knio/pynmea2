@@ -369,3 +369,36 @@ def test_MMB():
     assert msg.sentence_type == 'MMB'
     assert msg.pressure_bars == 1004.6
     assert msg.unit_bars == "B"
+
+def test_MHU():
+    data = "$WIMHU,83.8,,,*53"
+    msg = pynmea2.parse(data)
+    assert msg.render() == data
+    assert msg.talker == 'WI'
+    assert msg.sentence_type == 'MHU'
+    assert msg.relative_humidity == Decimal('83.8')
+    assert msg.absolute_humidity is None
+    assert msg.dew_point_temperature is None
+    assert msg.temperature_unit is None
+
+def test_MHU_all_fields():
+    data = "$WIMHU,83.8,12.5,25.5,C*14"
+    msg = pynmea2.parse(data)
+    assert msg.render() == data
+    assert msg.talker == 'WI'
+    assert msg.sentence_type == 'MHU'
+    assert msg.relative_humidity == Decimal('83.8')
+    assert msg.absolute_humidity == Decimal('12.5')
+    assert msg.dew_point_temperature == Decimal('25.5')
+    assert msg.temperature_unit == 'C'
+
+def test_MHU_other_talker():
+    data = "$HCMHU,55.2,10.1,14.3,C*02"
+    msg = pynmea2.parse(data)
+    assert msg.render() == data
+    assert msg.talker == 'HC'
+    assert msg.sentence_type == 'MHU'
+    assert msg.relative_humidity == Decimal('55.2')
+    assert msg.absolute_humidity == Decimal('10.1')
+    assert msg.dew_point_temperature == Decimal('14.3')
+    assert msg.temperature_unit == 'C'
