@@ -245,11 +245,19 @@ class QuerySentence(NMEASentence):
         return '%s%sQ,%s' % (self.talker, self.listener, self.sentence_type)
 
 
+def _create_proprietary_sentence(sentence_type):
+    """Allocate a pickled sentence without invoking subtype dispatch."""
+    return object.__new__(sentence_type)
+
+
 class ProprietarySentence(NMEASentence):
     sentence_types = {}
     def __init__(self, manufacturer, data):
         self.manufacturer = manufacturer
         self.data = list(data)
+
+    def __reduce__(self):
+        return _create_proprietary_sentence, (type(self),), self.__dict__
 
     def identifier(self):
         return 'P%s' % (self.manufacturer)

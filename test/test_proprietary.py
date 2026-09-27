@@ -1,5 +1,6 @@
 import pynmea2
 import datetime
+import pickle
 
 def test_proprietary_1():
     # A sample proprietary sentence from a LCJ Capteurs
@@ -98,6 +99,31 @@ def test_srf():
     msg = pynmea2.parse(data)
     assert type(msg) == pynmea2.srf.SRF
     assert msg.render(checksum=False) == data
+
+
+def test_pickle_roundtrip():
+    sentences = (
+        '$PSRF100,0,1200,8,1,1',
+        '$PSRF156,1',
+        '$PTNL,PJT,NAD83(Conus),CaliforniaZone 4 0404',
+        '$PTNLDG,44.0,33.0,287.0,100,0,4,1,0,,,',
+        '$PLCJ,5F01,66FC,AA,9390,6373',
+        '$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,',
+    )
+    for sentence in sentences:
+        msg = pynmea2.parse(sentence)
+        if isinstance(msg, pynmea2.srf.SRF100):
+            msg.baud = '9600'
+        if isinstance(msg, pynmea2.tnl.TNLDG):
+            msg.strength = 44
+        msg.note = 'retained state'
+        msg.data_alias = msg.data
+        for protocol in range(pickle.HIGHEST_PROTOCOL + 1):
+            restored = pickle.loads(pickle.dumps(msg, protocol))
+            assert type(restored) is type(msg)
+            assert restored.__dict__ == msg.__dict__
+            assert restored.data_alias is restored.data
+            assert restored.render() == msg.render()
 
 
 def test_grm():
