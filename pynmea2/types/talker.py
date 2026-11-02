@@ -56,6 +56,30 @@ class ALR(TalkerSentence):
     )
 
 
+class ALC(TalkerSentence):
+    """ Cyclic alert list
+        $--ALC,xx,xx,xx,xx,aaa,x.x,x.x,x.x,...,aaa,x.x,x.x,x.x*hh<CR><LF>
+    """
+    fields = (
+        ('Total number of sentences for this message', 'num_sentences', int),
+        ('Sentence number', 'sentence_num', int),
+        ('Sequential message identifier', 'seq_message_id', int),
+        ('Number of alert entries', 'num_alert_entries', int),
+        ('Manufacturer mnemonic code 1', 'manufacturer_1'),
+        ('Alert identifier 1', 'alert_id_1', int),
+        ('Alert instance 1', 'alert_instance_1', int),
+        ('Revision counter 1', 'revision_counter_1', int),
+        ('Manufacturer mnemonic code 2', 'manufacturer_2'),
+        ('Alert identifier 2', 'alert_id_2', int),
+        ('Alert instance 2', 'alert_instance_2', int),
+        ('Revision counter 2', 'revision_counter_2', int),
+        ('Manufacturer mnemonic code 3', 'manufacturer_3'),
+        ('Alert identifier 3', 'alert_id_3', int),
+        ('Alert instance 3', 'alert_instance_3', int),
+        ('Revision counter 3', 'revision_counter_3', int),
+    )
+
+
 class APA(TalkerSentence):
     """ Autopilot Sentence "A"
     """
@@ -335,6 +359,31 @@ class HDT(TalkerSentence):
     fields = (
         ("Heading", "heading", Decimal),
         ("True", "hdg_true"),
+    )
+
+
+class HTD(TalkerSentence):
+    """ Heading/track control data
+        $--HTD,a,x.x,a,a,a,x.x,x.x,x.x,x.x,x.x,x.x,x.x,a,a,a,a,x.x*hh<CR><LF>
+    """
+    fields = (
+        ('Override', 'override'),
+        ('Commanded rudder angle', 'commanded_rudder_angle', Decimal),
+        ('Commanded rudder direction', 'commanded_rudder_direction'),
+        ('Selected steering mode', 'selected_steering_mode'),
+        ('Turn mode', 'turn_mode'),
+        ('Commanded rudder limit', 'commanded_rudder_limit', Decimal),
+        ('Commanded off-heading limit', 'commanded_off_heading_limit', Decimal),
+        ('Commanded radius of turn', 'commanded_radius_of_turn', Decimal),
+        ('Commanded rate of turn', 'commanded_rate_of_turn', Decimal),
+        ('Commanded heading-to-steer', 'commanded_heading_to_steer', Decimal),
+        ('Commanded off-track limit', 'commanded_off_track_limit', Decimal),
+        ('Commanded track', 'commanded_track', Decimal),
+        ('Heading reference in use', 'heading_reference_in_use'),
+        ('Rudder status', 'rudder_status'),
+        ('Off-heading status', 'off_heading_status'),
+        ('Off-track status', 'off_track_status'),
+        ('Vessel heading', 'vessel_heading', Decimal),
     )
 
 
@@ -1132,4 +1181,22 @@ class MMB(TalkerSentence):
       ("UnitINHG", "unit_ingh"),
       ("PressureBars", "pressure_bars", float),
       ("UnitBars", "unit_bars")
+    )
+
+
+class POS(TalkerSentence):
+    """ Device position and ship dimensions report or configuration command
+        $--POS,cc,xx,a,x.x,x.x,x.x,a,x.x,x.x,a*hh<CR><LF>
+    """
+    fields = (
+        ('Equipment identification', 'equipment_id'),
+        ('Equipment number', 'equipment_num', int),
+        ('Position validity flag (A=valid, V=invalid)', 'position_validity'),
+        ('Position X-coordinate, meters', 'pos_x', Decimal),
+        ('Position Y-coordinate, meters', 'pos_y', Decimal),
+        ('Position Z-coordinate, meters', 'pos_z', Decimal),
+        ('Ship\'s width/length validity flag (A=valid, V=invalid)', 'dimensions_validity'),
+        ('Ship\'s width, meters', 'ship_width', Decimal),
+        ('Ship\'s length, meters', 'ship_length', Decimal),
+        ('Sentence status flag (R=report, C=configuration command)', 'status'),
     )

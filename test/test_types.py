@@ -387,3 +387,80 @@ def test_MMB():
     assert msg.sentence_type == 'MMB'
     assert msg.pressure_bars == 1004.6
     assert msg.unit_bars == "B"
+
+
+def test_HTD():
+    data = '$AGHTD,V,0.3,R,M,N,35.0,30.0,0.5,30.0,,0.000,,T,A,A,A,14.5*4E'
+    msg = pynmea2.parse(data)
+    assert isinstance(msg, pynmea2.HTD)
+    assert msg.talker == 'AG'
+    assert msg.sentence_type == 'HTD'
+    assert msg.override == 'V'
+    assert msg.commanded_rudder_angle == Decimal('0.3')
+    assert msg.commanded_rudder_direction == 'R'
+    assert msg.selected_steering_mode == 'M'
+    assert msg.turn_mode == 'N'
+    assert msg.commanded_rudder_limit == Decimal('35.0')
+    assert msg.commanded_off_heading_limit == Decimal('30.0')
+    assert msg.commanded_radius_of_turn == Decimal('0.5')
+    assert msg.commanded_rate_of_turn == Decimal('30.0')
+    assert msg.commanded_heading_to_steer is None
+    assert msg.commanded_off_track_limit == Decimal('0.000')
+    assert msg.commanded_track is None
+    assert msg.heading_reference_in_use == 'T'
+    assert msg.rudder_status == 'A'
+    assert msg.off_heading_status == 'A'
+    assert msg.off_track_status == 'A'
+    assert msg.vessel_heading == Decimal('14.5')
+    assert msg.render() == data
+
+
+def test_POS():
+    data = '$VDPOS,VD,01,A,0.0,0.0,,V,,,R*08'
+    msg = pynmea2.parse(data)
+    assert isinstance(msg, pynmea2.POS)
+    assert msg.talker == 'VD'
+    assert msg.sentence_type == 'POS'
+    assert msg.equipment_id == 'VD'
+    assert msg.equipment_num == 1
+    assert msg.position_validity == 'A'
+    assert msg.pos_x == Decimal('0.0')
+    assert msg.pos_y == Decimal('0.0')
+    assert msg.pos_z is None
+    assert msg.dimensions_validity == 'V'
+    assert msg.ship_width is None
+    assert msg.ship_length is None
+    assert msg.status == 'R'
+    assert msg.render() == data
+
+
+@pytest.mark.parametrize('data, seq_message_id', [
+    ('$VDALC,01,01,59,0*60', 59),
+    ('$AIALC,01,01,46,0*74', 46),
+])
+def test_ALC_without_alert_entries(data, seq_message_id):
+    msg = pynmea2.parse(data)
+    assert isinstance(msg, pynmea2.ALC)
+    assert msg.sentence_type == 'ALC'
+    assert msg.num_sentences == 1
+    assert msg.sentence_num == 1
+    assert msg.seq_message_id == seq_message_id
+    assert msg.num_alert_entries == 0
+    assert msg.manufacturer_1 == ''
+    assert msg.alert_id_1 is None
+    assert msg.render() == data
+
+
+def test_ALC_with_alert_entry():
+    data = '$FBALC,02,01,03,01,FEB,01,02,03*0A'
+    msg = pynmea2.parse(data)
+    assert isinstance(msg, pynmea2.ALC)
+    assert msg.num_sentences == 2
+    assert msg.sentence_num == 1
+    assert msg.seq_message_id == 3
+    assert msg.num_alert_entries == 1
+    assert msg.manufacturer_1 == 'FEB'
+    assert msg.alert_id_1 == 1
+    assert msg.alert_instance_1 == 2
+    assert msg.revision_counter_1 == 3
+    assert msg.render() == data
