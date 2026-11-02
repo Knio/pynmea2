@@ -215,6 +215,24 @@ def test_ZDA():
     assert msg.datetime == datetime.datetime(2008, 7, 6, 1, 2, 3, 50000, tzinfo=datetime.timezone.utc)
     assert msg.localdatetime == datetime.datetime(2008, 7, 5, 17, 32, 3, 50000, tzinfo=msg.tzinfo)
 
+
+def test_RMC_blank_time_or_date_datetime_is_none():
+    # No fix: the date and time fields are blank, so .datetime is None.
+    msg = pynmea2.parse('$GPRMC,,V,,,,,,,,,N')
+    assert isinstance(msg, pynmea2.RMC)
+    assert msg.datetime is None
+    # Blank time with a valid date
+    msg = pynmea2.parse('$GPRMC,,A,4807.038,N,01131.000,E,,,230394,,')
+    assert msg.datetime is None
+
+
+def test_ZDA_blank_fields_datestamp_is_none():
+    msg = pynmea2.parse('$GPZDA,,,,,,')
+    assert isinstance(msg, pynmea2.ZDA)
+    assert msg.datestamp is None
+    assert msg.datetime is None
+
+
 def test_VPW():
     data = "$XXVPW,1.2,N,3.4,M"
     msg = pynmea2.parse(data)

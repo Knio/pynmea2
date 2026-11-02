@@ -114,6 +114,8 @@ class DatetimeFix(object):
     #pylint: disable=no-member
     @property
     def datetime(self):
+        if self.datestamp is None or self.timestamp is None:
+            return None
         return datetime.datetime.combine(self.datestamp, self.timestamp)
 
 

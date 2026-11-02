@@ -547,6 +547,8 @@ class ZDA(TalkerSentence, DatetimeFix):
 
     @property
     def datestamp(self):
+        if self.year is None or self.month is None or self.day is None:
+            return None
         return datetime.date(year=self.year, month=self.month, day=self.day)
 
     @property
