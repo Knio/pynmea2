@@ -23,7 +23,13 @@ def timestamp(s):
     datetime.time object
     '''
     ms_s = s[6:]
-    ms = ms_s and int(float(ms_s) * 1000000) or 0
+    if ms_s.startswith('.'):
+        # Parse the fractional seconds as an exact integer count of
+        # microseconds. Going through float() truncates inexactly, e.g.
+        # int(float('.00397') * 1000000) == 3969 instead of 3970.
+        ms = int((ms_s[1:] + '000000')[:6])
+    else:
+        ms = 0
 
     t = datetime.time(
         hour=int(s[0:2]),

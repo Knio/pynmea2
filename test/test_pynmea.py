@@ -127,6 +127,35 @@ def test_timestamp():
     assert pynmea2.nmea_utils.timestamp('115919.1234567').microsecond == 123456
 
 
+def test_timestamp_fractional_seconds_exact():
+    ts = pynmea2.nmea_utils.timestamp
+    # Fractional seconds with up to 6 digits are exactly representable in
+    # microseconds and must not be truncated through a binary float:
+    # int(float('.00397') * 1000000) == 3969, but .00397 s is exactly 3970 us.
+    assert ts('120000.00397').microsecond == 3970
+    assert ts('120000.00399').microsecond == 3990
+    assert ts('120000.00785').microsecond == 7850
+
+    # Every 5-digit fraction must round-trip exactly (1153 of these were
+    # previously off by one microsecond).
+    for i in range(0, 100000):
+        assert ts('120000.%05d' % i).microsecond == i * 10
+
+    # More than 6 fractional digits are truncated (not rounded), and the
+    # result never overflows datetime's 0..999999 microsecond range.
+    assert ts('120000.1234567').microsecond == 123456
+    assert ts('120000.9999999').microsecond == 999999
+
+    # A timestamp without a fractional part has zero microseconds.
+    assert ts('120000').microsecond == 0
+
+    # The fix also applies through the public parse() entry point.
+    msg = pynmea2.parse(
+        '$GPGGA,181032.00397,3926.276,N,07739.361,W,0,00,,,M,,M,,*5F',
+        checksums='my_data_is_corrupt')
+    assert msg.timestamp.microsecond == 3970
+
+
 def test_corrupt_message():
     # checksum= parameter acts as intended
     valid_checksum =    '$CCGPQ,GGA*2B'
