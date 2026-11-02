@@ -33,8 +33,20 @@ def test_fail():
     with pytest.raises(pynmea2.ParseError):
         pynmea2.parse('FOOBAR')
 
-    with pytest.raises(pynmea2.SentenceTypeError):
-        pynmea2.parse('$GPABC,1,2,3')
+
+def test_unknown_talker_sentence():
+    data = '$GPABC,1,2,3*4B'
+    msg = pynmea2.parse(data)
+    assert type(msg) == pynmea2.TalkerSentence
+    assert msg.talker == 'GP'
+    assert msg.sentence_type == 'ABC'
+    assert msg.data == ['1', '2', '3']
+    assert msg.render() == data
+
+
+def test_unknown_talker_sentence_bad_checksum():
+    with pytest.raises(pynmea2.ChecksumError):
+        pynmea2.parse('$GPABC,1,2,3*00')
 
 
 def test_mixin():

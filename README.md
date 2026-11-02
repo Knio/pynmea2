@@ -89,6 +89,8 @@ For example, `latitude` and `longitude` properties exist as helpers to access th
 "-19°29′02.7000″"
 ```
 
+Sentence types that pynmea2 has no definition for are still parsed: a talker sentence is returned as a plain `TalkerSentence` and a proprietary sentence as a plain `ProprietarySentence`, with the raw field values in `data`. Input that is not an NMEA sentence still raises `ParseError`.
+
 
 ## Checksums
 

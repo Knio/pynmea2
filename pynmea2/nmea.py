@@ -132,12 +132,7 @@ class NMEASentence(NMEASentenceBase):
         if talker_match:
             talker = talker_match.group('talker')
             sentence = talker_match.group('sentence')
-            cls = TalkerSentence.sentence_types.get(sentence)
-
-            if not cls:
-                # TODO instantiate base type instead of fail
-                raise SentenceTypeError(
-                    'Unknown sentence type %s' % sentence_type, line)
+            cls = TalkerSentence.sentence_types.get(sentence, TalkerSentence)
             return cls(talker, sentence, data)
 
         query_match = NMEASentence.query_re.match(sentence_type)
