@@ -9,7 +9,10 @@ from ...nmea_utils import *
 class UBX(nmea.ProprietarySentence):
     sentence_types = {}
 
-    def __new__(_cls, manufacturer, data):
+    def __new__(_cls, manufacturer=None, data=None):
+        if manufacturer is None and data is None:
+            # Restore the saved class without running subtype dispatch.
+            return object.__new__(_cls)
         name = manufacturer + data[1]
         cls = _cls.sentence_types.get(name, _cls)
         return super(UBX, cls).__new__(cls)
