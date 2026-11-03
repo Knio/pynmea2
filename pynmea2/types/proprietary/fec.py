@@ -38,7 +38,7 @@ class FECGPatt(FEC):
 
 class FECGPhve(FEC):
     """
-        Furuno GPatt Message
+        Furuno GPhve Message
 
         $PFEC,GPhve,xx.xxx,A*hh<CR><LF>
         $PFEC: Talker identifier
@@ -52,4 +52,5 @@ class FECGPhve(FEC):
         ("R", "_r"),
         ("Subtype", "subtype"),
         ("Heave", "heave", float),
+        ("Status", "status"),
     )
