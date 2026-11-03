@@ -146,7 +146,11 @@ class NMEASentence(NMEASentenceBase):
         if proprietary_match:
             manufacturer = proprietary_match.group('manufacturer')
             cls = ProprietarySentence.sentence_types.get(manufacturer, ProprietarySentence)
-            return cls(manufacturer, data)
+            try:
+                return cls(manufacturer, data)
+            except IndexError:
+                raise ParseError(
+                    'insufficient data for proprietary sentence', line)
 
         raise ParseError(
             'could not parse sentence type: %r' % sentence_type, line)
