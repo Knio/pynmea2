@@ -4,12 +4,13 @@ from . import nmea
 __all__ = ['NMEAStreamReader']
 
 ERRORS = ('raise', 'yield', 'ignore')
+CHECKSUMS = ('check', 'required', 'my_data_is_corrupt')
 
 class NMEAStreamReader(object):
     '''
     Reads NMEA sentences from a stream.
     '''
-    def __init__(self, stream=None, errors='raise'):
+    def __init__(self, stream=None, errors='raise', checksums='check'):
         '''
         Create NMEAStreamReader object.
 
@@ -23,12 +24,21 @@ class NMEAStreamReader(object):
                                 stream, and continue reading at the next line
             `'ignore'`          completely ignore and suppress the error, and
                                 continue reading at the next line
+
+        `checksums`: checksum policy passed to NMEASentence.parse:
+            'check' (default), 'required', or 'my_data_is_corrupt'.
+            Accepting an invalid checksum does not validate the message data.
         '''
 
         if errors not in ERRORS:
             raise ValueError('errors must be one of {!r} (was: {!r})'
                     .format(ERRORS, errors))
 
+        if checksums not in CHECKSUMS:
+            raise ValueError('checksums must be one of {!r} (was: {!r})'
+                             .format(CHECKSUMS, checksums))
+
+        self.checksums = checksums
         self.errors = errors
         self.stream = stream
         self.buffer = ''
@@ -50,7 +60,7 @@ class NMEAStreamReader(object):
 
         for line in lines:
             try:
-                msg = nmea.NMEASentence.parse(line)
+                msg = nmea.NMEASentence.parse(line, checksums=self.checksums)
                 yield msg
             except nmea.ParseError as e:
                 if self.errors == 'raise':

@@ -106,6 +106,17 @@ parse has an optional argument:
 
 A note about invalid checksums: if a checksum is invalid, it is more likely than not that the sentence values themselves are corrupt, so be wary of using them without further validation. The corruption may also cause parsing errors which could raise `ParseError` even before the `checksums=` parameter takes effect, so you will still have to handle an exception
 
+`NMEAStreamReader(stream=None, errors='raise', checksums='check')` accepts the
+same checksum policies. The default behavior is unchanged. For example,
+`NMEAStreamReader(checksums='required')` rejects sentences without checksums;
+`NMEAStreamReader(checksums='my_data_is_corrupt')` also parses sentences with
+incorrect checksums, subject to the data-corruption caveat above.
+
+The `errors` option still controls what happens when parsing fails: `'raise'`
+raises the error, `'yield'` returns it in the stream, and `'ignore'` drops the
+failed sentence. It does not change the checksum policy. Invalid `checksums`
+values raise `ValueError` when the stream reader is created.
+
 
 ## Generating
 
