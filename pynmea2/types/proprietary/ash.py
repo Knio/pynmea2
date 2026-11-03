@@ -14,10 +14,13 @@ class ASH(nmea.ProprietarySentence):
     Generic Ashtech Response Message
     '''
     sentence_types = {}
-    def __new__(_cls, manufacturer, data):
+    def __new__(_cls, manufacturer=None, data=None):
         '''
         Return the correct sentence type based on the first field
         '''
+        if manufacturer is None and data is None:
+            # Restore the saved class without running subtype dispatch.
+            return object.__new__(_cls)
         sentence_type = data[1]
         name = manufacturer + 'R' + sentence_type
         if name not in _cls.sentence_types:

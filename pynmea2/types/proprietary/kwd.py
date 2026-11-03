@@ -9,7 +9,10 @@ from ... import nmea_utils
 class KLD(nmea.ProprietarySentence):
     sentence_types = {}
 
-    def __new__(_cls, manufacturer, data):
+    def __new__(_cls, manufacturer=None, data=None):
+        if manufacturer is None and data is None:
+            # Restore the saved class without running subtype dispatch.
+            return object.__new__(_cls)
         name = manufacturer + data[0]
         cls = _cls.sentence_types.get(name, _cls)
         return super(KLD, cls).__new__(cls)
@@ -21,7 +24,10 @@ class KLD(nmea.ProprietarySentence):
 class KND(nmea.ProprietarySentence):
     sentence_types = {}
 
-    def __new__(_cls, manufacturer, data):
+    def __new__(_cls, manufacturer=None, data=None):
+        if manufacturer is None and data is None:
+            # Restore the saved class without running subtype dispatch.
+            return object.__new__(_cls)
         name = manufacturer + data[0]
         cls = _cls.sentence_types.get(name, _cls)
         return super(KND, cls).__new__(cls)
@@ -33,7 +39,10 @@ class KND(nmea.ProprietarySentence):
 class KLS(nmea.ProprietarySentence):
     sentence_types = {}
 
-    def __new__(_cls, manufacturer, data):
+    def __new__(_cls, manufacturer=None, data=None):
+        if manufacturer is None and data is None:
+            # Restore the saved class without running subtype dispatch.
+            return object.__new__(_cls)
         name = manufacturer + data[0]
         cls = _cls.sentence_types.get(name, _cls)
         return super(KLS, cls).__new__(cls)
@@ -45,7 +54,10 @@ class KLS(nmea.ProprietarySentence):
 class KNS(nmea.ProprietarySentence):
     sentence_types = {}
 
-    def __new__(_cls, manufacturer, data):
+    def __new__(_cls, manufacturer=None, data=None):
+        if manufacturer is None and data is None:
+            # Restore the saved class without running subtype dispatch.
+            return object.__new__(_cls)
         name = manufacturer + data[0]
         cls = _cls.sentence_types.get(name, _cls)
         return super(KNS, cls).__new__(cls)
@@ -58,7 +70,10 @@ class KNS(nmea.ProprietarySentence):
 class KWD(nmea.ProprietarySentence):
     sentence_types = {}
 
-    def __new__(_cls, manufacturer, data):
+    def __new__(_cls, manufacturer=None, data=None):
+        if manufacturer is None and data is None:
+            # Restore the saved class without running subtype dispatch.
+            return object.__new__(_cls)
         name = manufacturer + data[0]
         cls = _cls.sentence_types.get(name, _cls)
         return super(KWD, cls).__new__(cls)

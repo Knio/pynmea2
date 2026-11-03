@@ -19,7 +19,10 @@ def _leading_empty_fields(data):
 class ANZ(nmea.ProprietarySentence):
     sentence_types = {}
 
-    def __new__(_cls, manufacturer, data):
+    def __new__(_cls, manufacturer=None, data=None):
+        if manufacturer is None and data is None:
+            # Restore the saved class without running subtype dispatch.
+            return object.__new__(_cls)
         leading = _leading_empty_fields(data)
         sentence_id = data[leading] if leading < len(data) else None
         name = manufacturer + sentence_id if sentence_id else manufacturer
