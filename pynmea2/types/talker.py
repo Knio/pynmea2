@@ -236,6 +236,8 @@ class GRS(TalkerSentence):
         ('SV 10 Residual (m)', 'sv_res_10', float),
         ('SV 11 Residual (m)', 'sv_res_11', float),
         ('SV 12 Residual (m)', 'sv_res_12', float),
+        ('GNSS System ID', 'system_id'),
+        ('GNSS Signal ID', 'signal_id'),
     )
 
 class BWW(TalkerSentence):

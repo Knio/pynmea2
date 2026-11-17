@@ -326,6 +326,41 @@ def test_GRS():
     assert msg.sv_res_07 == None
 
 
+@pytest.mark.parametrize('data, system_id, signal_id', [
+    ('$GNGRS,104148.00,1,2.6,2.2,-1.6,-1.1,-1.7,-1.5,5.8,1.7,,,,,1,1*52',
+     '1', '1'),
+    ('$GNGRS,121519.00,1,0.2,-1.4,-1.9,3.0,-0.2,1.2,-0.8,-1.2,,,,,3,7*70',
+     '3', '7'),
+])
+def test_GRS_gnss_identifiers(data, system_id, signal_id):
+    msg = pynmea2.parse(data)
+    assert msg.system_id == system_id
+    assert msg.signal_id == signal_id
+    assert len(msg.data) == 16
+    assert msg.sv_res_12 is None
+    assert msg.render() == data
+
+
+@pytest.mark.parametrize('data, system_id, signal_id', [
+    ('$GNGRS,162047.00,1,0.6,0.1,-16.6,-0.8,-0.1,0.5,,,,,,*41', '', ''),
+    ('$GNGRS,162047.00,1,0.6,0.1,-16.6,-0.8,-0.1,0.5,,,,,,,,*41', '', ''),
+    ('$GNGRS,162047.00,1,0.6,0.1,-16.6,-0.8,-0.1,0.5,,,,,,,3*5E', '3', ''),
+    ('$GNGRS,162047.00,1,0.6,0.1,-16.6,-0.8,-0.1,0.5,,,,,,,3,*72', '3', ''),
+])
+def test_GRS_missing_gnss_identifiers(data, system_id, signal_id):
+    msg = pynmea2.parse(data)
+    assert msg.system_id == system_id
+    assert msg.signal_id == signal_id
+    assert msg.timestamp == datetime.time(
+        16, 20, 47, tzinfo=datetime.timezone.utc)
+    assert msg.residuals_mode == 1
+    assert msg.sv_res_01 == 0.6
+    assert msg.sv_res_06 == 0.5
+    assert msg.sv_res_07 is None
+    assert msg.sv_res_12 is None
+    assert msg.render() == data
+
+
 def test_HBT():
     data = "$AIHBT,30,A,1*09"
     msg = pynmea2.parse(data)
