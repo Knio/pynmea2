@@ -602,7 +602,11 @@ class ZDA(TalkerSentence, DatetimeFix):
 
     @property
     def tzinfo(self):
-        return TZInfo(self.local_zone, self.local_zone_minutes)
+        minutes = self.local_zone_minutes
+        # Read the original hour field to retain the sign of -00.
+        if isinstance(minutes, int) and str(self.data[self.name_to_idx['local_zone']]).startswith('-'):
+            minutes = -abs(minutes)
+        return TZInfo(self.local_zone, minutes)
 
     @property
     def localdatetime(self):
