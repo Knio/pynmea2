@@ -208,12 +208,24 @@ def test_ZDA():
     assert msg.day == 6
     assert msg.month == 7
     assert msg.year == 2008
-    assert msg.tzinfo.utcoffset(0) == datetime.timedelta(hours=-8, minutes=30)
+    assert msg.tzinfo.utcoffset(0) == datetime.timedelta(hours=-8, minutes=-30)
     assert msg.local_zone == -8
     assert msg.local_zone_minutes == 30
     assert msg.datestamp == datetime.date(2008, 7, 6)
     assert msg.datetime == datetime.datetime(2008, 7, 6, 1, 2, 3, 50000, tzinfo=datetime.timezone.utc)
-    assert msg.localdatetime == datetime.datetime(2008, 7, 5, 17, 32, 3, 50000, tzinfo=msg.tzinfo)
+    assert msg.localdatetime == datetime.datetime(2008, 7, 5, 16, 32, 3, 50000, tzinfo=msg.tzinfo)
+
+
+@pytest.mark.parametrize('zone, expected_minutes', [
+    ('-05,15', -315),
+    ('-00,30', -30),
+    ('+00,30', 30),
+    ('+05,45', 345),
+    ('-08,00', -480),
+])
+def test_ZDA_offset_minutes_follow_hour_sign(zone, expected_minutes):
+    msg = pynmea2.parse('$GPZDA,010203,06,07,2008,' + zone)
+    assert msg.tzinfo.utcoffset(None) == datetime.timedelta(minutes=expected_minutes)
 
 
 def test_RMC_blank_time_or_date_datetime_is_none():
