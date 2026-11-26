@@ -320,6 +320,37 @@ class GSV(TalkerSentence):
     )  # 00-99 dB
 
 
+    @property
+    def _signal_id_index(self):
+        # Three header fields, zero to four four-field satellite groups,
+        # then an optional signal ID (NMEA 4.10).
+        count = len(self.data)
+        if 4 <= count <= 20 and count % 4 == 0:
+            return count - 1
+        return None
+
+    @property
+    def signal_id(self):
+        """GNSS signal ID, or an empty string for sentences without one."""
+        index = self._signal_id_index
+        return self.data[index] if index is not None else ''
+
+    def __getattr__(self, name):
+        index = type(self).name_to_idx.get(name)
+        if index is not None and index == self._signal_id_index:
+            return ''
+        return super(GSV, self).__getattr__(name)
+
+    def __setattr__(self, name, value):
+        index = type(self).name_to_idx.get(name)
+        if (index is not None and 'data' in self.__dict__ and
+                index == self._signal_id_index):
+            # Treat the absent satellite field like any other field beyond
+            # the sentence length, instead of overwriting the signal ID.
+            raise IndexError('Satellite field is absent from GSV sentence')
+        return super(GSV, self).__setattr__(name, value)
+
+
 class HBT(TalkerSentence):
     """ Heartbeat supervision sentence
         Format: $--HBT,<1>,<2>,<3>*hh<CR><LF>
